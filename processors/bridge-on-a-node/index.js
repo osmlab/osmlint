@@ -16,6 +16,6 @@ module.exports = function(mbtilesPath, bbox, callback) {
     .on('reduce', function(result) {
     })
     .on('end', function() {
-        callback();
+        callback && callback();
     });
 };
