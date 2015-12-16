@@ -2,11 +2,11 @@
 var tileReduce = require('tile-reduce');
 var path = require('path');
 
-module.exports = function(mbtilesPath, bbox, callback) {
+module.exports = function (mbtilesPath, bbox, callback) {
     tileReduce({
         bbox: area,
         zoom: 12,
-        map: path.join(__dirname, '/missing-layer-bridges.js'),
+        map: path.join(__dirname, '/map.js'),
         sources: [{
             name: 'osm',
             mbtiles: argv.mbtiles,

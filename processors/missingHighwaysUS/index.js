@@ -6,7 +6,7 @@ module.exports = function(qaTilesPath, tigerTilesPath, bbox, callback) {
   tileReduce({
       bbox: bbox,
       zoom: 12,
-      map: path.join(__dirname, '/missing-highway-names-us.js'),
+      map: path.join(__dirname, '/map.js'),
       sources: [{
         name: 'osm',
         mbtiles: qaTilesPath,

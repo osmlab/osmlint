@@ -2,17 +2,17 @@
 var tileReduce = require('tile-reduce');
 var path = require('path');
 
-module.exports = function (mbtilesPath, bbox, callback) {
+module.exports = function(mbtilesPath, bbox, callback) {
     tileReduce({
-        bbox: area,
+        bbox: bbox,
         zoom: 12,
-        map: path.join(__dirname, '/untagged-ways.js'),
+        map: path.join(__dirname, '/map.js'),
         sources: [{
             name: 'osm',
-            mbtiles: argv.mbtiles,
+            mbtiles: mbtilesPath,
             raw: false
-        }]
-    })
+            }]
+        })
     .on('reduce', function(result) {
     })
     .on('end', function() {
