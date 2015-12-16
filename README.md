@@ -14,6 +14,10 @@ processors.bridgeOnNode('./osm.mbtiles', [-122.1, 36.9, -121.9, 37.0], function(
 });
 ```
 
+### CLI
+`osmlint-<processor> <mbtiles-path> <bbox>`
+Example: `osmlint-bridgeOnNode <mbtiles-path> <bbox>`
+
 ## Available processors
 
 ### Bridge tag on node 
