@@ -10,7 +10,7 @@ Data analysis with [OSM QA Tiles](http://osmlab.github.io/osm-qa-tiles/)! TileRe
 // Outputs nodes with bridge tags to stdout
 var processors = require('osm-qa-tiles-processors');
 bridgeOnNode('./osm.mbtiles', [-122.1, 36.9, -121.9, 37.0], function() {
-    console.log('done);
+    console.log('done');
 });
 ```
 
