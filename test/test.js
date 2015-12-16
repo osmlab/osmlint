@@ -1,4 +1,4 @@
 var processors = require('../index.js');
-var bbox = [-122.05862045288086, 36.93768132842635, -121.97296142578124, 37.00378647456494];
+var bbox = [7.4068451, 43.723259, 7.4422073, 43.752901];
 
-processors.bridgeOnNode(__dirname + '/osm.mbtiles', bbox);
+processors.bridgeOnNode(__dirname + '/monaco.mbtiles', bbox);
