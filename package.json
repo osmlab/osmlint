@@ -5,7 +5,11 @@
     "test": "eslint src test processors/*/*.js && tap -R spec test/test.js"
   },
   "bin": {
-    "osmlint-bridgeOnNode": "processors/bridgeOnNode/bridgeOnNode"
+    "osmlint-bridgeOnNode": "processors/bridgeOnNode/bridgeOnNode",
+    "osmlint-filterDate": "processors/filterDate/filterDate",
+    "osmlint-filterUsers": "processors/filterUsers/filterUsers",
+    "osmlint-missingLayerBridges": "processors/missingLayerBridges/missingLayerBridges",
+    "osmlint-untaggedWays": "processors/untaggedWays/untaggedWays"
   },
   "repository": {
     "type": "git",
