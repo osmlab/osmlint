@@ -10,10 +10,11 @@ var mbtiles = path.join(__dirname, '/data/monaco.mbtiles');
 
 test('Filter Users', function(t) {
   var result = fs.readFileSync(path.join(__dirname, '/output/filterUsers.json'), 'utf-8');
-  var result = processors.filterUsers(mbtiles, bbox);
-  processors.filterUsers(mbtiles, bbox)
-  t.equal(result, result, 'equal');
-  t.end();
+  var output = processors.filterUsers(mbtiles, bbox, function() {
+    t.equal(result, output, 'equal');
+    t.end();
+  });
+
 });
 
 
