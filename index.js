@@ -1,7 +1,8 @@
 'use strict'
 
 module.exports = {
-    'bridgeOnNode': require('./processors/bridge-on-a-node')
+    'bridgeOnNode': require('./processors/bridge-on-a-node'),
+    'filterTime': require('./processors/filter-time'),
 };
 // require('./processors/duplicated-nodes');
 // require('./processors/filter-time');

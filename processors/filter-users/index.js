@@ -1,23 +1,21 @@
 'use strict'
 var tileReduce = require('tile-reduce');
-var turf = require('turf');
-var argv = require('minimist')(process.argv.slice(2));
 var path = require('path');
-var fs = require('fs');
-var area = JSON.parse(argv.area);
-var fc = turf.featurecollection([]);
 
-tileReduce({
-    bbox: area,
-    zoom: 12,
-    map: path.join(__dirname, '/filter-users.js'),
-    sources: [{
-        name: 'osm',
-        mbtiles: argv.mbtiles,
-        raw: false
-        }]
+module.exports = function(mbtilesPath, bbox, callback) {
+    tileReduce({
+        bbox: bbox,
+        zoom: 12,
+        map: path.join(__dirname, '/filter-users.js'),
+        sources: [{
+            name: 'osm',
+            mbtiles: mbtilesPath,
+            raw: false
+            }]
+        })
+    .on('reduce', function(result) {
     })
-.on('reduce', function(result) {
-})
-.on('end', function() {
-});
+    .on('end', function() {
+        callback && callback();
+    });
+};
