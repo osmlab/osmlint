@@ -1,4 +1,4 @@
-# OSM QA Tiles Processors
+# Processors for OSM QA Tiles
 
 *TileReduce processors for OSM QA Tiles*
 
