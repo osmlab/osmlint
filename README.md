@@ -16,11 +16,11 @@ processors.bridgeOnNode('./osm.mbtiles', [-122.1, 36.9, -121.9, 37.0], function(
 
 ## Available processors
 
-### Bridge tag on node `processors.bridgeOnNode`
+### Bridge tag on node 
 
 Identifies invalid nodes with [`bridge=*` tags](http://wiki.openstreetmap.org/wiki/Key:bridge) and sends them to `stdout`.
 
-```sh javascript
+```javascript
 processors.bridgeOnNode(mbTilesFile, boundingBox);
 ```
 
@@ -28,7 +28,7 @@ processors.bridgeOnNode(mbTilesFile, boundingBox);
 
 Creates a new MBTiles file with only tiles newer than given date.
 
-```sh javascript
+```javascript
 processors.filterTime(mbTilesFile, boundingBox);
 ```
 
@@ -36,7 +36,7 @@ processors.filterTime(mbTilesFile, boundingBox);
 
 Creates a new MBTiles file with only tiles containing geometries by given users.
 
-```sh javascript
+```javascript
 processors.filterUsers(mbTilesFile, boundingBox);
 ```
 
@@ -44,7 +44,7 @@ processors.filterUsers(mbTilesFile, boundingBox);
 
 Identifies bridges with a missing [`layer tag`](http://wiki.openstreetmap.org/wiki/Key:layer) and sends them to `stdout`.
 
-```sh javascript
+```javascript
 processors.missingLayerBridges(mbTilesFile, boundingBox);
 ```
 
@@ -52,7 +52,7 @@ processors.missingLayerBridges(mbTilesFile, boundingBox);
 
 Identifies ways with no tags at all and sends them to `stdout`.
 
-```sh javascript
+```javascript
 processors.untaggedWays(mbTilesFile, boundingBox);
 ```
 
