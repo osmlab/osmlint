@@ -6,12 +6,12 @@ module.exports = function(mbtilesPath, bbox, callback) {
     tileReduce({
         bbox: bbox,
         zoom: 12,
-        map: path.join(__dirname, '/bridge-on-a-node.js'),
+        map: path.join(__dirname, '/map.js'),
         sources: [{
-          name: 'osm',
-          mbtiles: mbtilesPath,
-          raw: false
-      }]
+            name: 'osm',
+            mbtiles: mbtilesPath,
+            raw: false
+        }]
     })
     .on('reduce', function(result) {
     })
