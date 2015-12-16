@@ -24,7 +24,7 @@ Identifies invalid nodes with [`bridge=*` tags](http://wiki.openstreetmap.org/wi
 processors.bridgeOnNode(mbTilesFile, boundingBox);
 ```
 
-### Filter by date `processors.filterTime`
+### Filter by date
 
 Creates a new MBTiles file with only tiles newer than given date.
 
@@ -38,6 +38,14 @@ Creates a new MBTiles file with only tiles containing geometries by given users.
 
 ```javascript
 processors.filterUsers(mbTilesFile, boundingBox);
+```
+
+### Missing highways in the US
+
+Compares OpenStreetMap to US Tiger data and outputs difference as geojson files to stdout.
+
+```javascript
+processors.missingHighwaysUS(mbTilesFileOSM, mbTilesFileTIGER, boundingBox);
 ```
 
 ### Missing layer tag on bridges
