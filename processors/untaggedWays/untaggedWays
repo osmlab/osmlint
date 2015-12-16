@@ -1,0 +1,15 @@
+#!/usr/bin/env node
+'use strict';
+
+var untaggedWays = require('./');
+
+if (process.argv.length < 3) {
+    console.log('Usage: osmlint-untaggedWays <mbtiles path> <bbox>');
+    return;
+}
+
+var mbtilesPath = process.argv[2];
+var bbox = JSON.parse(process.argv[3]);
+
+untaggedWays(mbtilesPath, bbox);
+
