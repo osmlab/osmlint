@@ -1,12 +1,15 @@
 {
-  "name": "osm-qa-tiles-processors",
+  "name": "osmlint",
   "version": "0.0.1",
   "scripts": {
     "test": "eslint src test processors/*/*.js && tap -R spec test/test.js"
   },
+  "bin": {
+    "osmlint-bridgeOnNode": "processors/bridgeOnNode/bridgeOnNode"
+  },
   "repository": {
     "type": "git",
-    "url": "https://github.com/osmlab/osm-qa-tiles-processors.git"
+    "url": "https://github.com/osmlab/osmlint.git"
   },
   "dependencies": {
     "minimist": "^1.1.1",
