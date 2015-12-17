@@ -1,4 +1,4 @@
-# Processors for OSM QA Tiles
+# OSM Lint
 
 *TileReduce processors for OSM QA Tiles*
 
