@@ -6,7 +6,8 @@ var argv = require('minimist')(process.argv.slice(2));
 
 var usage = function() {
     console.log('Usage: osmlint <processor> --<options> <arguments ...>');
-    console.log('Type osmlint --processors for available processors.');
+    console.log('  Example: osmlint bridgeonnode --zoom=15 --bbox="[7.4, 43.7, 7.4, 43.7]" osm.mbtiles');
+    console.log('  Type osmlint --processors for available processors.');
 };
 
 (function() {
@@ -20,7 +21,6 @@ var usage = function() {
 
     var processor = (function(name) {
         var processors = fs.readdirSync(__dirname + '/processors/');
-        var processor = 0;
         for (var i = 0; i < processors.length; i++) {
             if (processors[i].toLowerCase() == name) {
                 return require(__dirname + '/processors/' + processors[i]);
@@ -34,6 +34,6 @@ var usage = function() {
         return usage();
     }
     var bbox = argv.bbox ? JSON.parse(argv.bbox) : null;
-    var zl = argv.zl ? parseInt(argv.zl) : 12;
-    processor.apply(null, [bbox, zl].concat(argv._.slice(1)));
+    var zoom = argv.zoom ? parseInt(argv.zoom) : 12;
+    processor.apply(null, [bbox, zoom].concat(argv._.slice(1)));
 })();
