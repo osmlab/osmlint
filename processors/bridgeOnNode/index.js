@@ -1,11 +1,12 @@
 'use strict'
 var tileReduce = require('tile-reduce');
 var path = require('path');
+var fs = require('fs');
 
-module.exports = function(mbtilesPath, bbox, callback) {
+module.exports = function(bbox, zl, mbtilesPath, callback) {
     tileReduce({
         bbox: bbox,
-        zoom: 12,
+        zoom: zl,
         map: path.join(__dirname, '/map.js'),
         sources: [{
           name: 'osm',
