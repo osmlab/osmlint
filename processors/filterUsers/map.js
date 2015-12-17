@@ -1,4 +1,5 @@
 'use strict'
+var turf = require('turf');
 var users = require('./users.json');
 
 module.exports = function(tileLayers, tile, writeData, done) {
@@ -9,7 +10,8 @@ module.exports = function(tileLayers, tile, writeData, done) {
     });
 
     if (result.length > 0) {
-        writeData(JSON.stringify(result) + '\n');
+        var fc = turf.featurecollection(result);
+        writeData(JSON.stringify(fc) + '\n');
     }
 
     done(null, null);

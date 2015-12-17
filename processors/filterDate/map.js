@@ -1,6 +1,7 @@
 'use strict';
 var time = require('time')(Date);
 var today = (time.time() - 7 * 24 * 60 * 60);
+var turf = require('turf');
 
 module.exports = function(tileLayers, tile, writeData, done) {
     var layer = tileLayers.osm.osm;
@@ -8,7 +9,8 @@ module.exports = function(tileLayers, tile, writeData, done) {
         return (obj.properties._timestamp >= today);
     });
     if (changeset.length > 0) {
-        writeData(JSON.stringify(changeset) + '\n');
+        var fc = turf.featurecollection(changeset);
+        writeData(JSON.stringify(fc) + '\n');
     }
 
     done(null, null);

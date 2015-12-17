@@ -40,7 +40,9 @@ module.exports = function(tileLayers, tile, writeData, done) {
       });
     });
   }
-  writeData(JSON.stringify(result) + '\n');
+
+  var fc = turf.featurecollection(result);
+  writeData(JSON.stringify(fc) + '\n');
   done(null, null);
 };
 
