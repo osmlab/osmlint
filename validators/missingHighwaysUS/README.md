@@ -7,11 +7,11 @@ This analyzer find unnamed highways  where is possible add a name from Tiger.
 - [tiger](https://s3.amazonaws.com/mapbox/tile-reduce-watchbot/mbtiles/tiger2015.mbtiles)
 
 
-#### BBox
+#### bbox
 
 `[-126.70395,24.536232,-66.498871,49.446059]`
 
 
 #### Run
 
-`node index.js --area [-126.70395,24.536232,-66.498871,49.446059] --mbtiles  /path/to/latest.planet.mbtiles --mbtiles_tiger /path/to/tiger2015.mbtiles`
+`osmlint missinghighwaysus --box="[7.4, 43.7, 7.4, 43.7]" --zoom=15 osm.mbtiles tiger.mbtiles`

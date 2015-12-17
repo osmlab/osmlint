@@ -4,36 +4,35 @@ osmlint bridgeonnode
 
   Identifies invalid nodes with bridge=* tags and sends them to stdout.
 
-  osmlint bridgeonnode --box="[7.4, 43.7, 7.4, 43.7]" --zoom=15 osm.mbtiles
+  osmlint bridgeonnode --bbox="[7.4, 43.7, 7.4, 43.7]" --zoom=15 osm.mbtiles
 
 osmlint filterdate
 
-  Creates a new MBTiles file with tiles newer than given date.
+  Filters features added/modified and sends them to stdout.
 
-  osmlint filterdate --box="[7.4, 43.7, 7.4, 43.7]" --zoom=15 osm.mbtiles
+  osmlint filterdate --bbox="[7.4, 43.7, 7.4, 43.7]" --zoom=15 osm.mbtiles
 
 osmlint filterusers
 
-  Creates a new MBTiles file with only tiles containing geometries by
-  given users.
+  Filters features touched by a set of users and sends them to stdout.
 
-  osmlint filterusers --box="[7.4, 43.7, 7.4, 43.7]" --zoom=15 osm.mbtiles
+  osmlint filterusers --bbox="[7.4, 43.7, 7.4, 43.7]" --zoom=15 osm.mbtiles
 
 osmlint missinghighwaysus
 
   Compares OpenStreetMap to US Tiger data and outputs difference as geojson
   files to stdout.
 
-  osmlint missinghighwaysus --box="[7.4, 43.7, 7.4, 43.7]" --zoom=15 osm.mbtiles tiger.mbtiles
+  osmlint missinghighwaysus --bbox="[7.4, 43.7, 7.4, 43.7]" --zoom=15 osm.mbtiles tiger.mbtiles
 
 osmlint missinglayerbridges
 
   Identifies bridges with a missing layer tag and sends them to stdout.
 
-  osmlint missinglayerbridges --box="[7.4, 43.7, 7.4, 43.7]" --zoom=15 osm.mbtiles tiger.mbtiles
+  osmlint missinglayerbridges --bbox="[7.4, 43.7, 7.4, 43.7]" --zoom=15 osm.mbtiles tiger.mbtiles
 
 osmlint untaggedways
 
-  Identifies ways with no tags at all and sends them to `stdout`.
+  Identifies ways with no tags at all and sends them to stdout.
 
-  osmlint untaggedways --box="[7.4, 43.7, 7.4, 43.7]" --zoom=15 osm.mbtiles
+  osmlint untaggedways --bbox="[7.4, 43.7, 7.4, 43.7]" --zoom=15 osm.mbtiles
