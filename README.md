@@ -17,7 +17,7 @@ npm install && npm link
 ### Command line
 
 ```sh
-osmlint bridgeonnode --box="[7.4, 43.7, 7.4, 43.7]" --zl=15 osm.mbtiles
+osmlint bridgeonnode --bbox="[7.4, 43.7, 7.4, 43.7]" --zoom=15 osm.mbtiles
 ```
 
 ### Javascript
