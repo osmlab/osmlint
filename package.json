@@ -2,7 +2,7 @@
   "name": "osmlint",
   "version": "0.0.1",
   "scripts": {
-    "test": "eslint src test processors/*/*.js && tap -R spec test/test.js"
+    "test": "eslint src test validators/*/*.js && tap -R spec test/test.js"
   },
   "bin": {
     "osmlint": "cli.js"

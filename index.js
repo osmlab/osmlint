@@ -1,9 +1,9 @@
 'use strict'
 
 module.exports = {
-    'bridgeOnNode': require('./processors/bridgeOnNode'),
-    'filterDate': require('./processors/filterDate'),
-    'filterUsers': require('./processors/filterUsers'),
-    'missingLayerBridges': require('./processors/missingLayerBridges'),
-    'untaggedWays': require('./processors/untaggedWays')
+    'bridgeOnNode': require('./validators/bridgeOnNode'),
+    'filterDate': require('./validators/filterDate'),
+    'filterUsers': require('./validators/filterUsers'),
+    'missingLayerBridges': require('./validators/missingLayerBridges'),
+    'untaggedWays': require('./validators/untaggedWays')
 };
