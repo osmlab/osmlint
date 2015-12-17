@@ -1,4 +1,5 @@
 'use strict'
+var turf = require('turf');
 
 module.exports = function(tileLayers, tile, writeData, done) {
     var layer = tileLayers.osm.osm;
@@ -7,7 +8,8 @@ module.exports = function(tileLayers, tile, writeData, done) {
     });
 
     if (result.length > 0) {
-        writeData(JSON.stringify(result) + '\n');
+        var fc = turf.featurecollection(result);
+        writeData(JSON.stringify(fc) + '\n');
     }
 
     done(null, null);
