@@ -1,8 +1,6 @@
 # OSM Lint
 
-*Validate OSM data with TileReduce and OSM QA Tiles*
-
-Data analysis with [OSM QA Tiles](http://osmlab.github.io/osm-qa-tiles/)! TileReduce processors for validating OSM QA Tiles wrapped up as a node module.
+Validate OpenStreetMap data with [OSM QA Tiles](http://osmlab.github.io/osm-qa-tiles/). OSM Lint is a selection of validators built with [TileReduce](https://github.com/mapbox/tile-reduce) for validating OSM QA Tiles. Use from the command line or as a node module.
 
 ## Installation
 
