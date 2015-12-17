@@ -4,6 +4,7 @@ var test = require('tap').test;
 var path = require('path');
 var fs = require('fs');
 var processors = require('../index.js');
+var bbox = [7.4003220,43.721274,7.4562836,43.754017];
 
 var bbox = [7.4068451, 43.723259, 7.4422073, 43.752901];
 var mbtiles = path.join(__dirname, '/data/monaco.mbtiles');
