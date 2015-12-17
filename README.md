@@ -31,7 +31,7 @@ require('osmlint').bridgeOnNode([-122.1, 36.9, -121.9, 37.0], 15, './osm.mbtiles
 
 ## Available processors
 
-See `processors.txt` in this repository.
+See `[processors.txt](https://github.com/osmlab/osmlint/blob/master/processors.txt)`.
 
 ## Test
 
