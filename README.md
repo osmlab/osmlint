@@ -7,7 +7,7 @@ Validate OpenStreetMap data with [OSM QA Tiles](http://osmlab.github.io/osm-qa-t
 ```sh
 git clone https://github.com/osmlab/osmlint.git
 cd osmlint
-npm install && npm link
+npm install -g && npm link
 ```
 
 ## Usage
