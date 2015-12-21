@@ -3,10 +3,10 @@ var tileReduce = require('tile-reduce');
 var path = require('path');
 var fs = require('fs');
 
-module.exports = function(bbox, zl, mbtilesPath, callback) {
+module.exports = function(opts, mbtilesPath, callback) {
     tileReduce({
-        bbox: bbox,
-        zoom: zl,
+        bbox: opts.bbox,
+        zoom: opts.zl,
         map: path.join(__dirname, '/map.js'),
         sources: [{
           name: 'osm',
