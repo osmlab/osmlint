@@ -6,6 +6,7 @@ module.exports = function(tileLayers, tile, writeData, done) {
   var result = layer.features.filter(function(val) {
     if (val.properties.bridge && (val.geometry.type === 'LineString')) {
       if (!val.properties.layer) {
+        val.properties._osmlint = 'missinglayerbridges';
         return true;
       }
     }

@@ -32,7 +32,8 @@ module.exports = function(tileLayers, tile, writeData, done) {
         if (nodes.features.length >= (tiger_points.features.length / 2) && line.properties.FULLNAME) {
           var properties = {
             "_osm_way_id": way.properties._osm_way_id,
-            "name": line.properties.FULLNAME
+            "name": line.properties.FULLNAME,
+            "_osmlint": "missinghighwayus"
           };
           way.properties = properties;
           result.features.push(way);
