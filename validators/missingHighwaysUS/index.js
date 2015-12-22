@@ -5,7 +5,7 @@ var path = require('path');
 module.exports = function(opts, qaTilesPath, tigerTilesPath, callback) {
   tileReduce({
     bbox: opts.bbox,
-    zoom: opts.zl,
+    zoom: opts.zoom,
     map: path.join(__dirname, '/map.js'),
     sources: [{
       name: 'osm',
