@@ -35,5 +35,9 @@ var usage = function() {
   }
   var bbox = argv.bbox ? JSON.parse(argv.bbox) : null;
   var zoom = argv.zoom ? parseInt(argv.zoom) : 12;
-  validator.apply(null, [bbox, zoom].concat(argv._.slice(1)));
+  var opts = {
+    bbox: bbox,
+    zoom: zoom
+  };
+  validator.apply(null, [opts].concat(argv._.slice(1)));
 })();
