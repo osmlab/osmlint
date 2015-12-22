@@ -22,7 +22,7 @@ osmlint bridgeonnode --bbox="[7.4, 43.7, 7.4, 43.7]" --zoom=15 osm.mbtiles
 
 ```javascript
 // Outputs nodes with bridge tags to stdout
-require('osmlint').bridgeOnNode([-122.1, 36.9, -121.9, 37.0], 15, './osm.mbtiles', function() {
+require('osmlint').bridgeOnNode({bbox: [-122.1, 36.9, -121.9, 37.0], zoom: 15}, './osm.mbtiles', function() {
     console.log('done');
 });
 ```
