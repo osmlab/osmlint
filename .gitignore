@@ -11,6 +11,7 @@
 *.bz2
 *.pbf
 *.mbtiles
-!us.geojson
+!osm.levycounty.mbtiles
+!tiger2015.levycounty.mbtiles
 .DS_Store
 *.*~

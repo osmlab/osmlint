@@ -16,7 +16,7 @@ module.exports = function(tileLayers, tile, writeData, done) {
   var osm = tileLayers.osm.osm;
   var tiger = tileLayers.tiger.tiger2015;
   var osm_fc = osm.features.filter(function(val) {
-    return (val.properties.highway && (val.geometry.type === 'LineString') && preserve_type[val.properties.highway] && !val.properties.name)
+    return (val.properties.highway && (val.geometry.type === 'LineString') && preserve_type[val.properties.highway] && !val.properties.name && !val.properties.ref)
   });
   var tiger_fc = tiger.features.filter(function(val) {
     return (val.properties.FULLNAME && (val.geometry.type === 'LineString'))
@@ -41,20 +41,6 @@ module.exports = function(tileLayers, tile, writeData, done) {
       });
     });
   }
-
-  var fc = turf.featurecollection(result);
-  writeData(JSON.stringify(fc) + '\n');
+  writeData(JSON.stringify(result) + '\n');
   done(null, null);
 };
-
-function void_names(str) {
-  str = str.toLowerCase();
-  var names = ['unnamed', 'us highway'];
-  var exist = false;
-  for (var i = 0; i < names.length; i++) {
-    if (str.indexOf(names[i]) > -1) {
-      exist = true;
-    }
-  }
-  return exist;
-}
