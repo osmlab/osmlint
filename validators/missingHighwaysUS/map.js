@@ -21,7 +21,7 @@ module.exports = function(tileLayers, tile, writeData, done) {
   var tiger_fc = tiger.features.filter(function(val) {
     return (val.properties.FULLNAME && (val.geometry.type === 'LineString'))
   });
-  var result = turf.featurecollection([]);
+  var fc = turf.featurecollection([]);
   if (osm_fc.length > 0) {
     osm_fc.forEach(function(way) {
       var buffer = turf.buffer(way, 0.004, 'miles');
@@ -36,11 +36,11 @@ module.exports = function(tileLayers, tile, writeData, done) {
             "_osmlint": "missinghighwayus"
           };
           way.properties = properties;
-          result.features.push(way);
+          fc.features.push(way);
         }
       });
     });
   }
-  writeData(JSON.stringify(result) + '\n');
+  writeData(JSON.stringify(fc) + '\n');
   done(null, null);
 };
