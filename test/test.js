@@ -17,29 +17,28 @@ var opts = {
   zoom: zoom
 };
 var opts_missingHighwaysUS = {
-  bbox: [-83.0759,29.0201,-82.4290,29.6141],
+  bbox: [-83.0759, 29.0201, -82.4290, 29.6141],
   zoom: zoom
 };
 
-// test('bridgeOnNode', function(t) {
-//   processors.bridgeOnNode(opts, mbtiles, t.end);
-// });
-// test('filterDate', function(t) {
-//   processors.filterDate(opts, mbtiles, t.end);
-// });
-// test('filterUsers', function(t) {
-//   processors.filterUsers(opts, mbtiles, t.end);
-// });
-// test('missingLayerBridges', function(t) {
-//   processors.missingLayerBridges(opts, mbtiles, t.end);
-// });
-// test('untaggedWays', function(t) {
-//   processors.untaggedWays(opts, mbtiles, t.end);
-// });
-// test('missingHighwaysUS', function(t) {
-//   processors.missingHighwaysUS(opts_missingHighwaysUS, osm_levycounty_mbties,tiger2015_levycounty_mbtiles, t.end);
-// });
-
+test('bridgeOnNode', function(t) {
+  processors.bridgeOnNode(opts, mbtiles, t.end);
+});
+test('filterDate', function(t) {
+  processors.filterDate(opts, mbtiles, t.end);
+});
+test('filterUsers', function(t) {
+  processors.filterUsers(opts, mbtiles, t.end);
+});
+test('missingLayerBridges', function(t) {
+  processors.missingLayerBridges(opts, mbtiles, t.end);
+});
+test('untaggedWays', function(t) {
+  processors.untaggedWays(opts, mbtiles, t.end);
+});
+test('missingHighwaysUS', function(t) {
+  processors.missingHighwaysUS(opts_missingHighwaysUS, osm_levycounty_mbties, tiger2015_levycounty_mbtiles, t.end);
+});
 test('unclosedWays', function(t) {
   processors.unclosedWays(opts, mbtiles, t.end);
 });
