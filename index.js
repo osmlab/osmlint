@@ -6,5 +6,6 @@ module.exports = {
   'filterUsers': require('./validators/filterUsers'),
   'missingLayerBridges': require('./validators/missingLayerBridges'),
   'untaggedWays': require('./validators/untaggedWays'),
-  'missingHighwaysUS': require('./validators/missingHighwaysUS')
+  'missingHighwaysUS': require('./validators/missingHighwaysUS'),
+  'selfIntersecting': require('./validators/selfIntersecting')
 };
