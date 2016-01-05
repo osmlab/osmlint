@@ -9,20 +9,13 @@ module.exports = function(tileLayers, tile, writeData, done) {
   });
   result = result.filter(function(road) {
     var coordinates = road.geometry.coordinates;
-    var firts_coor = coordinates[0];
-    var last_coor = coordinates[coordinates.length - 1];
-    if (firts_coor[0] === last_coor[0] && firts_coor[1] === last_coor[1]) {
-      return false;
-    }
-    var map = {};
-    var flag = false;
-    coordinates.forEach(function(coor) {
-      if (map[coor.join(',')]) {
-        flag = true;
+    for (var i = 0; i < coordinates.length - 1; i++) {
+      var line = turf.linestring([coordinates[i], coordinates[i + 1]]);
+      var intersect = turf.intersect(line, road);
+      if (intersect.geometry.type !== 'LineString') {
+        return true;
       }
-      map[coor.join(',')] = true;
-    });
-    return flag;
+    }
   });
   if (result.length > 0) {
     var fc = turf.featurecollection(result);
