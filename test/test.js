@@ -39,3 +39,6 @@ test('untaggedWays', function(t) {
 test('missingHighwaysUS', function(t) {
   processors.missingHighwaysUS(opts_missingHighwaysUS, osm_levycounty_mbties,tiger2015_levycounty_mbtiles, t.end);
 });
+test('selfIntersecting', function(t) {
+  processors.selfIntersecting(opts, mbtiles, t.end);
+});
