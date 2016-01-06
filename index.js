@@ -7,5 +7,6 @@ module.exports = {
   'missingLayerBridges': require('./validators/missingLayerBridges'),
   'untaggedWays': require('./validators/untaggedWays'),
   'missingHighwaysUS': require('./validators/missingHighwaysUS'),
-  'selfIntersecting': require('./validators/selfIntersecting')
+  'selfIntersecting': require('./validators/selfIntersecting'),
+  'unclosedWays': require('./validators/unclosedWays')
 };
