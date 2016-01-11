@@ -11,13 +11,15 @@ var bbox = [7.4068451, 43.723259, 7.4422073, 43.752901];
 var zoom = 12;
 var mbtiles = path.join(__dirname, '/fixtures/monaco.mbtiles');
 
-var osm_levycounty_mbties = path.join(__dirname, '/fixtures/osm.levycounty.mbtiles');
-var tiger2015_levycounty_mbtiles = path.join(__dirname, '/fixtures/tiger2015.levycounty.mbtiles');
-
 var opts = {
   bbox: bbox,
   zoom: zoom
 };
+
+// Parameters for testing missingHighwaysUS
+var osm_levycounty_mbties = path.join(__dirname, '/fixtures/osm.levycounty.mbtiles');
+var tiger2015_levycounty_mbtiles = path.join(__dirname, '/fixtures/tiger2015.levycounty.mbtiles');
+
 var opts_missingHighwaysUS = {
   bbox: [-83.0759, 29.0201, -82.4290, 29.6141],
   zoom: zoom
@@ -30,7 +32,7 @@ test('filterDate', function(t) {
     var logs = logInterceptor.end();
     for (var i = 0; i < logs.length; i++) {
       var geoJSON = JSON.parse(logs[i]);
-      t.comment('* Pass :' + (i + 1));
+      t.comment('Pass: ' + (i + 1));
       t.equal(GJV.isGeoJSONObject(geoJSON), true, 'Should be a GeoJSON');
       t.equal(GJV.isFeatureCollection(geoJSON), true, 'Should be a FeatureCollection');
     }
@@ -45,7 +47,7 @@ test('filterUsers', function(t) {
     var logs = logInterceptor.end();
     for (var i = 0; i < logs.length; i++) {
       var geoJSON = JSON.parse(logs[i]);
-      t.comment('* Pass :' + (i + 1));
+      t.comment('Pass: ' + (i + 1));
       t.equal(GJV.isGeoJSONObject(geoJSON), true, 'Should be a GeoJSON');
       t.equal(GJV.isFeatureCollection(geoJSON), true, 'Should be a FeatureCollection');
     }
@@ -60,7 +62,7 @@ test('bridgeOnNode', function(t) {
     var logs = logInterceptor.end();
     for (var i = 0; i < logs.length; i++) {
       var geoJSON = JSON.parse(logs[i]);
-      t.comment('* Pass :' + (i + 1));
+      t.comment('Pass: ' + (i + 1));
       t.equal(GJV.isGeoJSONObject(geoJSON), true, 'Should be a GeoJSON');
       t.equal(GJV.isFeatureCollection(geoJSON), true, 'Should be a FeatureCollection');
       if (geoJSON.features.length > 0) {
@@ -79,7 +81,7 @@ test('missingLayerBridges', function(t) {
     var logs = logInterceptor.end();
     for (var i = 0; i < logs.length; i++) {
       var geoJSON = JSON.parse(logs[i]);
-      t.comment('* Pass :' + (i + 1));
+      t.comment('Pass: ' + (i + 1));
       t.equal(GJV.isGeoJSONObject(geoJSON), true, 'Should be a GeoJSON');
       t.equal(GJV.isFeatureCollection(geoJSON), true, 'Should be a FeatureCollection');
       if (geoJSON.features.length > 0) {
@@ -98,7 +100,7 @@ test('selfIntersecting', function(t) {
     var logs = logInterceptor.end();
     for (var i = 0; i < logs.length; i++) {
       var geoJSON = JSON.parse(logs[i]);
-      t.comment('* Pass :' + (i + 1));
+      t.comment('Pass: ' + (i + 1));
       t.equal(GJV.isGeoJSONObject(geoJSON), true, 'Should be a GeoJSON');
       t.equal(GJV.isFeatureCollection(geoJSON), true, 'Should be a FeatureCollection');
       if (geoJSON.features.length > 0) {
@@ -117,7 +119,7 @@ test('unclosedWays', function(t) {
     var logs = logInterceptor.end();
     for (var i = 0; i < logs.length; i++) {
       var geoJSON = JSON.parse(logs[i]);
-      t.comment('* Pass :' + (i + 1));
+      t.comment('Pass: ' + (i + 1));
       t.equal(GJV.isGeoJSONObject(geoJSON), true, 'Should be a GeoJSON');
       t.equal(GJV.isFeatureCollection(geoJSON), true, 'Should be a FeatureCollection');
       if (geoJSON.features.length > 0) {
@@ -136,7 +138,7 @@ test('untaggedWays', function(t) {
     var logs = logInterceptor.end();
     for (var i = 0; i < logs.length; i++) {
       var geoJSON = JSON.parse(logs[i]);
-      t.comment('* Pass :' + (i + 1));
+      t.comment('Pass: ' + (i + 1));
       t.equal(GJV.isGeoJSONObject(geoJSON), true, 'Should be a GeoJSON');
       t.equal(GJV.isFeatureCollection(geoJSON), true, 'Should be a FeatureCollection');
       if (geoJSON.features.length > 0) {
@@ -155,7 +157,7 @@ test('missingHighwaysUS', function(t) {
     var logs = logInterceptor.end();
     for (var i = 0; i < logs.length; i++) {
       var geoJSON = JSON.parse(logs[i]);
-      t.comment('* Pass :' + (i + 1));
+      t.comment('Pass: ' + (i + 1));
       t.equal(GJV.isGeoJSONObject(geoJSON), true, 'Should be a GeoJSON');
       t.equal(GJV.isFeatureCollection(geoJSON), true, 'Should be a FeatureCollection');
       if (geoJSON.features.length > 0) {
