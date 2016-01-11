@@ -3,7 +3,6 @@
 var test = require('tap').test;
 var GJV = require("geojson-validation");
 var logInterceptor = require('log-interceptor');
-
 var path = require('path');
 var fs = require('fs');
 var processors = require('../index.js');
@@ -29,9 +28,12 @@ test('filterDate', function(t) {
   logInterceptor();
   processors.filterDate(opts, mbtiles, function() {
     var logs = logInterceptor.end();
-    var geoJSON = JSON.parse(logs[0]);
-    t.equal(GJV.isGeoJSONObject(geoJSON), true, 'Should be a GeoJSON');
-    t.equal(GJV.isFeatureCollection(geoJSON), true, 'Should be a FeatureCollection');
+    for (var i = 0; i < logs.length; i++) {
+      var geoJSON = JSON.parse(logs[i]);
+      t.comment('* Pass :' + (i + 1));
+      t.equal(GJV.isGeoJSONObject(geoJSON), true, 'Should be a GeoJSON');
+      t.equal(GJV.isFeatureCollection(geoJSON), true, 'Should be a FeatureCollection');
+    }
     t.end();
   });
 });
@@ -41,9 +43,12 @@ test('filterUsers', function(t) {
   logInterceptor();
   processors.filterUsers(opts, mbtiles, function() {
     var logs = logInterceptor.end();
-    var geoJSON = JSON.parse(logs[0]);
-    t.equal(GJV.isGeoJSONObject(geoJSON), true, 'Should be a GeoJSON');
-    t.equal(GJV.isFeatureCollection(geoJSON), true, 'Should be a FeatureCollection');
+    for (var i = 0; i < logs.length; i++) {
+      var geoJSON = JSON.parse(logs[i]);
+      t.comment('* Pass :' + (i + 1));
+      t.equal(GJV.isGeoJSONObject(geoJSON), true, 'Should be a GeoJSON');
+      t.equal(GJV.isFeatureCollection(geoJSON), true, 'Should be a FeatureCollection');
+    }
     t.end();
   });
 });
@@ -53,12 +58,15 @@ test('bridgeOnNode', function(t) {
   logInterceptor();
   processors.bridgeOnNode(opts, mbtiles, function() {
     var logs = logInterceptor.end();
-    var geoJSON = JSON.parse(logs[0]);
-    t.equal(GJV.isGeoJSONObject(geoJSON), true, 'Should be a GeoJSON');
-    t.equal(GJV.isFeatureCollection(geoJSON), true, 'Should be a FeatureCollection');
-    if (geoJSON.features.length > 0) {
-      t.equal(geoJSON.features[0].properties._osmlint, 'bridgeonnode', 'Should be bridgeonnode');
-      t.equal(geoJSON.features[0].geometry.type, 'Point', 'Should be  Point');
+    for (var i = 0; i < logs.length; i++) {
+      var geoJSON = JSON.parse(logs[i]);
+      t.comment('* Pass :' + (i + 1));
+      t.equal(GJV.isGeoJSONObject(geoJSON), true, 'Should be a GeoJSON');
+      t.equal(GJV.isFeatureCollection(geoJSON), true, 'Should be a FeatureCollection');
+      if (geoJSON.features.length > 0) {
+        t.equal(geoJSON.features[0].properties._osmlint, 'bridgeonnode', 'Should be bridgeonnode');
+        t.equal(geoJSON.features[0].geometry.type, 'Point', 'Should be  Point');
+      }
     }
     t.end();
   });
@@ -69,12 +77,15 @@ test('missingLayerBridges', function(t) {
   logInterceptor();
   processors.missingLayerBridges(opts, mbtiles, function() {
     var logs = logInterceptor.end();
-    var geoJSON = JSON.parse(logs[0]);
-    t.equal(GJV.isGeoJSONObject(geoJSON), true, 'Should be a GeoJSON');
-    t.equal(GJV.isFeatureCollection(geoJSON), true, 'Should be a FeatureCollection');
-    if (geoJSON.features.length > 0) {
-      t.equal(geoJSON.features[0].properties._osmlint, 'missinglayerbridges', 'Should be missinglayerbridges');
-      t.equal(geoJSON.features[0].geometry.type, 'LineString', 'Should be  Point');
+    for (var i = 0; i < logs.length; i++) {
+      var geoJSON = JSON.parse(logs[i]);
+      t.comment('* Pass :' + (i + 1));
+      t.equal(GJV.isGeoJSONObject(geoJSON), true, 'Should be a GeoJSON');
+      t.equal(GJV.isFeatureCollection(geoJSON), true, 'Should be a FeatureCollection');
+      if (geoJSON.features.length > 0) {
+        t.equal(geoJSON.features[0].properties._osmlint, 'missinglayerbridges', 'Should be missinglayerbridges');
+        t.equal(geoJSON.features[0].geometry.type, 'LineString', 'Should be  Point');
+      }
     }
     t.end();
   });
@@ -85,12 +96,15 @@ test('selfIntersecting', function(t) {
   logInterceptor();
   processors.selfIntersecting(opts, mbtiles, function() {
     var logs = logInterceptor.end();
-    var geoJSON = JSON.parse(logs[0]);
-    t.equal(GJV.isGeoJSONObject(geoJSON), true, 'Should be a GeoJSON');
-    t.equal(GJV.isFeatureCollection(geoJSON), true, 'Should be a FeatureCollection');
-    if (geoJSON.features.length > 0) {
-      t.equal(geoJSON.features[0].properties._osmlint, 'selfintersecting', 'Should be selfintersecting');
-      t.equal(geoJSON.features[0].geometry.type, 'LineString', 'Should be  LineString');
+    for (var i = 0; i < logs.length; i++) {
+      var geoJSON = JSON.parse(logs[i]);
+      t.comment('* Pass :' + (i + 1));
+      t.equal(GJV.isGeoJSONObject(geoJSON), true, 'Should be a GeoJSON');
+      t.equal(GJV.isFeatureCollection(geoJSON), true, 'Should be a FeatureCollection');
+      if (geoJSON.features.length > 0) {
+        t.equal(geoJSON.features[0].properties._osmlint, 'selfintersecting', 'Should be selfintersecting');
+        t.equal(geoJSON.features[0].geometry.type, 'LineString', 'Should be  LineString');
+      }
     }
     t.end();
   });
@@ -101,12 +115,15 @@ test('unclosedWays', function(t) {
   logInterceptor();
   processors.unclosedWays(opts, mbtiles, function() {
     var logs = logInterceptor.end();
-    var geoJSON = JSON.parse(logs[0]);
-    t.equal(GJV.isGeoJSONObject(geoJSON), true, 'Should be a GeoJSON');
-    t.equal(GJV.isFeatureCollection(geoJSON), true, 'Should be a FeatureCollection');
-    if (geoJSON.features.length > 0) {
-      t.equal(geoJSON.features[0].properties._osmlint, 'unclosedways', 'Should be unclosedways');
-      t.equal(geoJSON.features[0].geometry.type, 'LineString', 'Should be  LineString');
+    for (var i = 0; i < logs.length; i++) {
+      var geoJSON = JSON.parse(logs[i]);
+      t.comment('* Pass :' + (i + 1));
+      t.equal(GJV.isGeoJSONObject(geoJSON), true, 'Should be a GeoJSON');
+      t.equal(GJV.isFeatureCollection(geoJSON), true, 'Should be a FeatureCollection');
+      if (geoJSON.features.length > 0) {
+        t.equal(geoJSON.features[0].properties._osmlint, 'unclosedways', 'Should be unclosedways');
+        t.equal(geoJSON.features[0].geometry.type, 'LineString', 'Should be  LineString');
+      }
     }
     t.end();
   });
@@ -117,12 +134,15 @@ test('untaggedWays', function(t) {
   logInterceptor();
   processors.untaggedWays(opts, mbtiles, function() {
     var logs = logInterceptor.end();
-    var geoJSON = JSON.parse(logs[0]);
-    t.equal(GJV.isGeoJSONObject(geoJSON), true, 'Should be a GeoJSON');
-    t.equal(GJV.isFeatureCollection(geoJSON), true, 'Should be a FeatureCollection');
-    if (geoJSON.features.length > 0) {
-      t.equal(geoJSON.features[0].properties._osmlint, 'untaggedway', 'Should be untaggedway');
-      t.equal(geoJSON.features[0].geometry.type, 'LineString', 'Should be  LineString');
+    for (var i = 0; i < logs.length; i++) {
+      var geoJSON = JSON.parse(logs[i]);
+      t.comment('* Pass :' + (i + 1));
+      t.equal(GJV.isGeoJSONObject(geoJSON), true, 'Should be a GeoJSON');
+      t.equal(GJV.isFeatureCollection(geoJSON), true, 'Should be a FeatureCollection');
+      if (geoJSON.features.length > 0) {
+        t.equal(geoJSON.features[0].properties._osmlint, 'untaggedway', 'Should be untaggedway');
+        t.equal(geoJSON.features[0].geometry.type, 'LineString', 'Should be  LineString');
+      }
     }
     t.end();
   });
@@ -133,12 +153,15 @@ test('missingHighwaysUS', function(t) {
   logInterceptor();
   processors.missingHighwaysUS(opts_missingHighwaysUS, osm_levycounty_mbties, tiger2015_levycounty_mbtiles, function() {
     var logs = logInterceptor.end();
-    var geoJSON = JSON.parse(logs[0]);
-    t.equal(GJV.isGeoJSONObject(geoJSON), true, 'Should be a GeoJSON');
-    t.equal(GJV.isFeatureCollection(geoJSON), true, 'Should be a FeatureCollection');
-    if (geoJSON.features.length > 0) {
-      t.equal(geoJSON.features[0].properties._osmlint, 'missinghighwayus', 'Should be missinghighwayus');
-      t.equal(geoJSON.features[0].geometry.type, 'LineString', 'Should be  LineString');
+    for (var i = 0; i < logs.length; i++) {
+      var geoJSON = JSON.parse(logs[i]);
+      t.comment('* Pass :' + (i + 1));
+      t.equal(GJV.isGeoJSONObject(geoJSON), true, 'Should be a GeoJSON');
+      t.equal(GJV.isFeatureCollection(geoJSON), true, 'Should be a FeatureCollection');
+      if (geoJSON.features.length > 0) {
+        t.equal(geoJSON.features[0].properties._osmlint, 'missinghighwayus', 'Should be missinghighwayus');
+        t.equal(geoJSON.features[0].geometry.type, 'LineString', 'Should be  LineString');
+      }
     }
     t.end();
   });
