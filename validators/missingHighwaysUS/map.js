@@ -30,12 +30,8 @@ module.exports = function(tileLayers, tile, writeData, done) {
         var nodes;
         nodes = turf.within(tiger_points, buffer);
         if (nodes.features.length >= (tiger_points.features.length / 2) && line.properties.FULLNAME) {
-          var properties = {
-            "_osm_way_id": way.properties._osm_way_id,
-            "name": line.properties.FULLNAME,
-            "_osmlint": "missinghighwayus"
-          };
-          way.properties = properties;
+          way.properties._osmlint = 'missinghighwayus';
+          way.properties.name = line.properties.FULLNAME;
           result.push(way);
         }
       });
