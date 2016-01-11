@@ -21,6 +21,9 @@
   "devDependencies": {
     "eslint": "^1.10.2",
     "eslint-config-mourner": "^1.0.1",
-    "tap": "^2.3.1"
+    "geojson-validation": "^0.1.6",
+    "log-interceptor": "^1.0.0",
+    "tap": "^2.3.1",
+    "tap-spec": "^4.1.1"
   }
 }

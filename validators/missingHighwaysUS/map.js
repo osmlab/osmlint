@@ -41,6 +41,8 @@ module.exports = function(tileLayers, tile, writeData, done) {
       });
     });
   }
+
   writeData(JSON.stringify(fc) + '\n');
   done(null, null);
+
 };

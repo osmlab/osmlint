@@ -11,7 +11,7 @@ module.exports = function(tileLayers, tile, writeData, done) {
   var buffer = turf.buffer(bboxlinestring, 0.0005, 'miles').features[0];
 
   var result = layer.features.filter(function(val) {
-    val.properties._osmlint = 'unclosedWays';
+    val.properties._osmlint = 'unclosedways';
     var value_type = (
       preserve_type.area[val.properties.area] ||
       preserve_type.building[val.properties.building] ||
@@ -32,9 +32,8 @@ module.exports = function(tileLayers, tile, writeData, done) {
     }
   });
 
-  if (result.length > 0) {
-    var fc = turf.featurecollection(result);
-    writeData(JSON.stringify(fc) + '\n');
-  }
+  var fc = turf.featurecollection(result);
+  writeData(JSON.stringify(fc) + '\n');
+
   done(null, null);
 };
