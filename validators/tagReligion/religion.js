@@ -7,7 +7,7 @@ module.exports = {
       'muslim': true
     },
     throw: "religion without denomination",
-    value: function(val) {
+    assess: function(val) {
       if (this.feature_type && this.match[val.properties.religion] && !val.properties.denomination) {
         val.properties.throw = this.throw;
         return true;
@@ -60,7 +60,7 @@ module.exports = {
       uniting: true
     },
     throw: "unknown christian denomination",
-    value: function(val) {
+    assess: function(val) {
       if (this.feature_type && this.match[val.properties.religion] && !this.nomatch[val.properties.denomination]) {
         val.properties.throw = this.throw;
         return true;
@@ -82,7 +82,7 @@ module.exports = {
       sunni: true
     },
     throw: "unknown muslim denomination",
-    value: function(val) {
+    assess: function(val) {
       if (this.feature_type && this.match[val.properties.religion] && !this.nomatch[val.properties.denomination]) {
         val.properties.throw = this.throw;
         return true;
@@ -113,22 +113,22 @@ module.exports = {
       ultra_orthodox: true
     },
     throw: "unknown jewish denomination",
-    value: function(val) {
+    assess: function(val) {
       if (this.feature_type && this.match[val.properties.religion] && !this.nomatch[val.properties.denomination]) {
         val.properties.throw = this.throw;
         return true;
       }
     }
   },
-  values: function(val) {
+  assess: function(val) {
     var flag = false;
-    if (this.denomination.value(val)) {
+    if (this.denomination.assess(val)) {
       flag = true;
-    } else if (this.christian.value(val)) {
+    } else if (this.christian.assess(val)) {
       flag = true;
-    } else if (this.muslim.value(val)) {
+    } else if (this.muslim.assess(val)) {
       flag = true;
-    } else if (this.jewish.value(val)) {
+    } else if (this.jewish.assess(val)) {
       flag = true;
     }
     return flag;
