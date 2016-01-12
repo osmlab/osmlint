@@ -5,7 +5,7 @@ var religion = require('./religion');
 module.exports = function(tileLayers, tile, writeData, done) {
   var layer = tileLayers.osm.osm;
   var result = layer.features.filter(function(val) {
-    return religion.value(val);
+    return religion.values(val);
   });
 
   var fc = turf.featurecollection(result);

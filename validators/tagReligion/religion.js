@@ -1,5 +1,5 @@
 module.exports = {
-  without_denomination: {
+  denomination: {
     feature_type: true,
     match: {
       'christian': true,
@@ -8,12 +8,13 @@ module.exports = {
     },
     throw: "religion without denomination",
     value: function(val) {
-      if (this.feature_type && this.match[val.properties.religion]) {
-        return !val.properties.denomination;
+      if (this.feature_type && this.match[val.properties.religion] && !val.properties.denomination) {
+        val.properties.throw = this.throw;
+        return true;
       }
     }
   },
-  unknown_christian_denomination: {
+  christian: {
     feature_type: true,
     match: {
       'christian': true
@@ -60,12 +61,13 @@ module.exports = {
     },
     throw: "unknown christian denomination",
     value: function(val) {
-      if (this.feature_type && this.match[val.properties.religion]) {
-        return !this.nomatch[val.properties.denomination];
+      if (this.feature_type && this.match[val.properties.religion] && !this.nomatch[val.properties.denomination]) {
+        val.properties.throw = this.throw;
+        return true;
       }
     }
   },
-  unknown_muslim_denomination: {
+  muslim: {
     feature_type: true,
     match: {
       'muslim': true
@@ -81,12 +83,13 @@ module.exports = {
     },
     throw: "unknown muslim denomination",
     value: function(val) {
-      if (this.feature_type && this.match[val.properties.religion]) {
-        return !this.nomatch[val.properties.denomination];
+      if (this.feature_type && this.match[val.properties.religion] && !this.nomatch[val.properties.denomination]) {
+        val.properties.throw = this.throw;
+        return true;
       }
     }
   },
-  unknown_jewish_denomination: {
+  jewish: {
     feature_type: true,
     match: {
       'jewish': true
@@ -111,26 +114,23 @@ module.exports = {
     },
     throw: "unknown jewish denomination",
     value: function(val) {
-      if (this.feature_type && this.match[val.properties.religion]) {
-        return !this.nomatch[val.properties.denomination];
+      if (this.feature_type && this.match[val.properties.religion] && !this.nomatch[val.properties.denomination]) {
+        val.properties.throw = this.throw;
+        return true;
       }
     }
   },
-  value: function(val) {
-    if (this.without_denomination.value(val)) {
-      val.properties.throw = this.without_denomination.throw;
-      return true;
-    } else if (this.unknown_christian_denomination.value(val)) {
-      val.properties.throw = this.unknown_christian_denomination.throw;
-      return true;
-    } else if (this.unknown_muslim_denomination.value(val)) {
-      val.properties.throw = this.unknown_muslim_denomination.throw;
-      return true;
-    } else if (this.unknown_jewish_denomination.value(val)) {
-      val.properties.throw = this.unknown_jewish_denomination.throw;
-      return true;
-    } else {
-      return false;
+  values: function(val) {
+    var flag = false;
+    if (this.denomination.value(val)) {
+      flag = true;
+    } else if (this.christian.value(val)) {
+      flag = true;
+    } else if (this.muslim.value(val)) {
+      flag = true;
+    } else if (this.jewish.value(val)) {
+      flag = true;
     }
+    return flag;
   }
 };
