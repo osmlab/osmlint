@@ -1,10 +1,9 @@
 'use strict';
 
 var test = require('tap').test;
-var GJV = require("geojson-validation");
+var GJV = require('geojson-validation');
 var logInterceptor = require('log-interceptor');
 var path = require('path');
-var fs = require('fs');
 var processors = require('../index.js');
 
 var bbox = [7.4068451, 43.723259, 7.4422073, 43.752901];
@@ -17,10 +16,10 @@ var opts = {
 };
 
 // Parameters for testing missingHighwaysUS
-var osm_levycounty_mbties = path.join(__dirname, '/fixtures/osm.levycounty.mbtiles');
-var tiger2015_levycounty_mbtiles = path.join(__dirname, '/fixtures/tiger2015.levycounty.mbtiles');
+var osmLevyCountyTiles = path.join(__dirname, '/fixtures/osm.levycounty.mbtiles');
+var tiger2015LevyCountyTiles = path.join(__dirname, '/fixtures/tiger2015.levycounty.mbtiles');
 
-var opts_missingHighwaysUS = {
+var optsMissingHighwaysUS = {
   bbox: [-83.0759, 29.0201, -82.4290, 29.6141],
   zoom: zoom
 };
@@ -153,7 +152,7 @@ test('untaggedWays', function(t) {
 
 test('missingHighwaysUS', function(t) {
   logInterceptor();
-  processors.missingHighwaysUS(opts_missingHighwaysUS, osm_levycounty_mbties, tiger2015_levycounty_mbtiles, function() {
+  processors.missingHighwaysUS(optsMissingHighwaysUS, osmLevyCountyTiles, tiger2015LevyCountyTiles, function() {
     var logs = logInterceptor.end();
     for (var i = 0; i < logs.length; i++) {
       var geoJSON = JSON.parse(logs[i]);
