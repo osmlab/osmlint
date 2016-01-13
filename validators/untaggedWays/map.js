@@ -1,4 +1,5 @@
-'use strict'
+'use strict';
+
 var _ = require('underscore');
 var turf = require('turf');
 
@@ -7,7 +8,7 @@ module.exports = function(tileLayers, tile, writeData, done) {
   var result = [];
   var values = layer.features.filter(function(val) {
     var hasKeys = _.allKeys(val.properties).filter(function(k) {
-      return k.charAt(0) != '_';
+      return k.charAt(0) !== '_';
     }).length === 0;
     if (hasKeys) {
       val.properties._osmlint = 'untaggedway';
@@ -16,9 +17,9 @@ module.exports = function(tileLayers, tile, writeData, done) {
   });
 
   values = values.filter(function(value) {
-    var first_coor = value.geometry.coordinates[0];
-    var end_coor = value.geometry.coordinates[value.geometry.coordinates.length - 1];
-    if (first_coor[0] === end_coor[0] && first_coor[0] === end_coor[0]) {
+    var firstCoord = value.geometry.coordinates[0];
+    var endCoord = value.geometry.coordinates[value.geometry.coordinates.length - 1];
+    if (firstCoord[0] === endCoord[0] && firstCoord[0] === endCoord[0]) {
       value.geometry.type = 'Polygon';
       value.geometry.coordinates = [value.geometry.coordinates];
       var kinks = turf.kinks(value);

@@ -1,6 +1,6 @@
-'use strict'
+'use strict';
 var turf = require('turf');
-var preserve_type = require('./value_area');
+var preserveType = require('./value_area');
 
 module.exports = function(tileLayers, tile, writeData, done) {
   var layer = tileLayers.osm.osm;
@@ -12,20 +12,21 @@ module.exports = function(tileLayers, tile, writeData, done) {
 
   var result = layer.features.filter(function(val) {
     val.properties._osmlint = 'unclosedways';
-    var value_type = (
-      preserve_type.area[val.properties.area] ||
-      preserve_type.building[val.properties.building] ||
-      preserve_type.landuse[val.properties.landuse] ||
-      preserve_type.aeroway[val.properties.aeroway] ||
-      preserve_type.leisure[val.properties.leisure] ||
-      preserve_type.natural[val.properties.natural] ||
-      preserve_type.man_made[val.properties.man_made]);
+    var valueType = (
+      preserveType.area[val.properties.area] ||
+      preserveType.building[val.properties.building] ||
+      preserveType.landuse[val.properties.landuse] ||
+      preserveType.aeroway[val.properties.aeroway] ||
+      preserveType.leisure[val.properties.leisure] ||
+      preserveType.natural[val.properties.natural] ||
+      preserveType.man_made[val.properties.man_made]
+    );
 
-    if (val.geometry.type === 'LineString' && value_type) {
+    if (val.geometry.type === 'LineString' && valueType) {
       var coordinates = val.geometry.coordinates;
-      var first_coor = coordinates[0];
-      var last_coor = coordinates[coordinates.length - 1];
-      if (turf.inside(turf.point(first_coor), buffer) || turf.inside(turf.point(last_coor), buffer)) {
+      var firstCoord = coordinates[0];
+      var lastCoord = coordinates[coordinates.length - 1];
+      if (turf.inside(turf.point(firstCoord), buffer) || turf.inside(turf.point(lastCoord), buffer)) {
         return false;
       }
       return true;

@@ -9,7 +9,7 @@ module.exports = function(tileLayers, tile, writeData, done) {
   var result = layer.features.filter(function(obj) {
     return (obj.properties._timestamp >= today);
   });
-  
+
   var fc = turf.featurecollection(result);
   writeData(JSON.stringify(fc) + '\n');
 

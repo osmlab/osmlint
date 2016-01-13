@@ -1,4 +1,4 @@
-'use strict'
+'use strict';
 var turf = require('turf');
 
 module.exports = function(tileLayers, tile, writeData, done) {
@@ -9,9 +9,9 @@ module.exports = function(tileLayers, tile, writeData, done) {
   });
   result = result.filter(function(val) {
     var highway = val;
-    var road_length = val.geometry.coordinates.length;
+    var roadLength = val.geometry.coordinates.length;
     var intersect = turf.intersect(highway, val);
-    if (intersect.geometry.coordinates.length > road_length) {
+    if (intersect.geometry.coordinates.length > roadLength) {
       return true;
     }
   });

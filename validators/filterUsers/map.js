@@ -1,4 +1,4 @@
-'use strict'
+'use strict';
 var turf = require('turf');
 var users = require('./users.json');
 

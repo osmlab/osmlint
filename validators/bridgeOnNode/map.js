@@ -1,4 +1,4 @@
-'use strict'
+'use strict';
 var turf = require('turf');
 
 // Identify Point geometries with a bridge tag.
