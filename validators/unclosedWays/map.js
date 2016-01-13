@@ -5,10 +5,10 @@ var preserveType = require('./value_area');
 module.exports = function(tileLayers, tile, writeData, done) {
   var layer = tileLayers.osm.osm;
   var bbox = turf.extent(layer);
-  var bboxlinestring = turf.bboxPolygon(bbox);
-  bboxlinestring.geometry.type = 'LineString';
-  bboxlinestring.geometry.coordinates = bboxlinestring.geometry.coordinates[0];
-  var buffer = turf.buffer(bboxlinestring, 0.0005, 'miles').features[0];
+  var bboxLineString = turf.bboxPolygon(bbox);
+  bboxLineString.geometry.type = 'LineString';
+  bboxLineString.geometry.coordinates = bboxLineString.geometry.coordinates[0];
+  var buffer = turf.buffer(bboxLineString, 0.0005, 'miles').features[0];
 
   var result = layer.features.filter(function(val) {
     val.properties._osmlint = 'unclosedways';
