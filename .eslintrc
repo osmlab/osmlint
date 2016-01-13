@@ -1,0 +1,10 @@
+{
+  "extends": "mourner",
+  "rules": {
+    "indent": [2, 2],
+    "space-before-function-paren": 0,
+    "consistent-return": 0,
+    "no-unused-expressions": 0,
+    "camelcase": 1
+  }
+}

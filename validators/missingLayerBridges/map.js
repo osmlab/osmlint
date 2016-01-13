@@ -1,4 +1,4 @@
-'use strict'
+'use strict';
 var turf = require('turf');
 
 module.exports = function(tileLayers, tile, writeData, done) {

@@ -1,3 +1,5 @@
+'use strict';
+
 module.exports = {
   natural: { //false = linestring and Polygon
     'wood': true,

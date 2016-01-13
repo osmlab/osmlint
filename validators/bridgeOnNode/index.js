@@ -1,7 +1,6 @@
-'use strict'
+'use strict';
 var tileReduce = require('tile-reduce');
 var path = require('path');
-var fs = require('fs');
 
 module.exports = function(opts, mbtilesPath, callback) {
   tileReduce({
@@ -14,8 +13,7 @@ module.exports = function(opts, mbtilesPath, callback) {
       raw: false
     }]
   })
-  .on('reduce', function(result) {
-  })
+  .on('reduce', function() {})
   .on('end', function() {
     callback && callback();
   });
