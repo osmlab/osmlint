@@ -36,3 +36,9 @@ osmlint untaggedways
   Identifies ways with no tags at all and sends them to stdout.
 
   osmlint untaggedways --bbox="[7.4, 43.7, 7.4, 43.7]" --zoom=15 osm.mbtiles
+
+osmlint selfintersectinghighways
+
+  Identifies self intersecting highways.
+
+  osmlint selfintersectinghighways --bbox="[7.4, 43.7, 7.4, 43.7]" --zoom=15 osm.mbtiles
