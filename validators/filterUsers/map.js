@@ -2,6 +2,7 @@
 var turf = require('turf');
 var users = require('./users.json');
 
+// Filter features touched by list of users defined by users.json
 module.exports = function(tileLayers, tile, writeData, done) {
   var layer = tileLayers.osm.osm;
   var result = layer.features.filter(function(val) {

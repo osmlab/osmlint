@@ -1,6 +1,7 @@
 'use strict'
 var turf = require('turf');
 
+// Identify Point geometries with a bridge tag.
 module.exports = function(tileLayers, tile, writeData, done) {
   var layer = tileLayers.osm.osm;
   var result = layer.features.filter(function(val) {

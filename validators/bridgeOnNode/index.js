@@ -13,8 +13,7 @@ module.exports = function(opts, mbtilesPath, callback) {
       raw: false
     }]
   })
-  .on('reduce', function() {
-  })
+  .on('reduce', function() {})
   .on('end', function() {
     callback && callback();
   });

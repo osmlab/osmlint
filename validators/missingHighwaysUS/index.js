@@ -17,7 +17,7 @@ module.exports = function(opts, qaTilesPath, tigerTilesPath, callback) {
       raw: false
     }]
   })
-  .on('reduce', function(result) {})
+  .on('reduce', function() {})
   .on('end', function() {
     callback && callback();
   });
