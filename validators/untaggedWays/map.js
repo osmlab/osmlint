@@ -3,6 +3,7 @@
 var _ = require('underscore');
 var turf = require('turf');
 
+// Find untagged ways.
 module.exports = function(tileLayers, tile, writeData, done) {
   var layer = tileLayers.osm.osm;
   var result = [];
