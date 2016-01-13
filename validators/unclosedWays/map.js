@@ -2,6 +2,7 @@
 var turf = require('turf');
 var preserveType = require('./value_area');
 
+// Find unclosed ways.
 module.exports = function(tileLayers, tile, writeData, done) {
   var layer = tileLayers.osm.osm;
   var bbox = turf.extent(layer);
