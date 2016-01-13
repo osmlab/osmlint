@@ -93,9 +93,9 @@ test('missingLayerBridges', function(t) {
 });
 
 
-test('selfIntersecting', function(t) {
+test('selfIntersectingHighways', function(t) {
   logInterceptor();
-  processors.selfIntersecting(opts, mbtiles, function() {
+  processors.selfIntersectingHighways(opts, mbtiles, function() {
     var logs = logInterceptor.end();
     for (var i = 0; i < logs.length; i++) {
       var geoJSON = JSON.parse(logs[i]);
@@ -103,7 +103,7 @@ test('selfIntersecting', function(t) {
       t.equal(GJV.isGeoJSONObject(geoJSON), true, 'Should be a GeoJSON');
       t.equal(GJV.isFeatureCollection(geoJSON), true, 'Should be a FeatureCollection');
       if (geoJSON.features.length > 0) {
-        t.equal(geoJSON.features[0].properties._osmlint, 'selfintersecting', 'Should be selfintersecting');
+        t.equal(geoJSON.features[0].properties._osmlint, 'selfintersectinghighways', 'Should be selfintersecting');
         t.equal(geoJSON.features[0].geometry.type, 'LineString', 'Should be  LineString');
       }
     }
