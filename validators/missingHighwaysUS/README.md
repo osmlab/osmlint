@@ -1,6 +1,6 @@
 # Missing highway names in USA
 
-This analyzer find unnamed highways  where is possible add a name from Tiger.
+Find new street names by comparing latest US Census Bureau TIGER data to OpenStreetMap.
 
 #### List of Mbtiles
 
