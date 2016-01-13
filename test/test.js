@@ -26,6 +26,7 @@ var optsMissingHighwaysUS = {
 
 
 test('filterDate', function(t) {
+  t.plan(2);
   logInterceptor();
   processors.filterDate(opts, mbtiles, function() {
     var logs = logInterceptor.end();
@@ -41,6 +42,7 @@ test('filterDate', function(t) {
 
 
 test('filterUsers', function(t) {
+  t.plan(2);
   logInterceptor();
   processors.filterUsers(opts, mbtiles, function() {
     var logs = logInterceptor.end();
@@ -56,6 +58,7 @@ test('filterUsers', function(t) {
 
 
 test('bridgeOnNode', function(t) {
+  t.plan(2);
   logInterceptor();
   processors.bridgeOnNode(opts, mbtiles, function() {
     var logs = logInterceptor.end();
@@ -75,6 +78,7 @@ test('bridgeOnNode', function(t) {
 
 
 test('missingLayerBridges', function(t) {
+  t.plan(4);
   logInterceptor();
   processors.missingLayerBridges(opts, mbtiles, function() {
     var logs = logInterceptor.end();
@@ -94,6 +98,7 @@ test('missingLayerBridges', function(t) {
 
 
 test('selfIntersectingHighways', function(t) {
+  t.plan(4);
   logInterceptor();
   processors.selfIntersectingHighways(opts, mbtiles, function() {
     var logs = logInterceptor.end();
@@ -113,6 +118,7 @@ test('selfIntersectingHighways', function(t) {
 
 
 test('unclosedWays', function(t) {
+  t.plan(4);
   logInterceptor();
   processors.unclosedWays(opts, mbtiles, function() {
     var logs = logInterceptor.end();
@@ -132,6 +138,7 @@ test('unclosedWays', function(t) {
 
 
 test('untaggedWays', function(t) {
+  t.plan(4);
   logInterceptor();
   processors.untaggedWays(opts, mbtiles, function() {
     var logs = logInterceptor.end();
@@ -151,6 +158,7 @@ test('untaggedWays', function(t) {
 
 
 test('missingHighwaysUS', function(t) {
+  t.plan(164);
   logInterceptor();
   processors.missingHighwaysUS(optsMissingHighwaysUS, osmLevyCountyTiles, tiger2015LevyCountyTiles, function() {
     var logs = logInterceptor.end();
