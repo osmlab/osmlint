@@ -14,10 +14,10 @@ module.exports = function(tileLayers, tile, writeData, done) {
   var osm = tileLayers.osm.osm;
   var tiger = tileLayers.tiger.tiger2015;
   var osmFC = osm.features.filter(function(val) {
-    return (val.properties.highway && (val.geometry.type === 'LineString') && preserveType[val.properties.highway] && !val.properties.name && !val.properties.ref);
+    return val.properties.highway && (val.geometry.type === 'LineString') && preserveType[val.properties.highway] && !val.properties.name && !val.properties.ref;
   });
   var tigerFC = tiger.features.filter(function(val) {
-    return (val.properties.FULLNAME && (val.geometry.type === 'LineString'));
+    return val.properties.FULLNAME && (val.geometry.type === 'LineString');
   });
   var result = [];
   if (osmFC.length > 0) {
