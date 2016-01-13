@@ -1,5 +1,7 @@
 # OSM Lint
 
+_Work in progress and changing fast._
+
 Validate OpenStreetMap data with [OSM QA Tiles](http://osmlab.github.io/osm-qa-tiles/). OSM Lint is a selection of validators built with [TileReduce](https://github.com/mapbox/tile-reduce) for validating OSM QA Tiles. Use from the command line or as a node module.
 
 ## Installation
