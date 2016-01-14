@@ -5,11 +5,11 @@ var _ = require('underscore');
 module.exports = function(tileLayers, tile, writeData, done) {
   var layer = tileLayers.osm.osm;
   var buildings = {};
-  var listofpoints = {};
+  var pointspergrid = {};
   var bbox = turf.extent(layer);
   var squareGrid = turf.squareGrid(bbox, 0.1, 'kilometers');
   squareGrid.features.map(function(poly, k) {
-    poly.properties.id = (k + 1);
+    poly.properties.id = k + 1;
     return poly;
   });
 
@@ -23,10 +23,10 @@ module.exports = function(tileLayers, tile, writeData, done) {
         buildings[val.properties._osm_way_id] = val;
         squareGrid.features.map(function(poly) {
           if (turf.inside(centroidPt, poly)) {
-            if (!listofpoints[poly.properties.id]) {
-              listofpoints[poly.properties.id] = [centroidPt];
+            if (!pointspergrid[poly.properties.id]) {
+              pointspergrid[poly.properties.id] = [centroidPt];
             } else {
-              listofpoints[poly.properties.id].push(centroidPt);
+              pointspergrid[poly.properties.id].push(centroidPt);
             }
           }
         });
@@ -36,7 +36,7 @@ module.exports = function(tileLayers, tile, writeData, done) {
   });
 
   var output = {};
-  _.each(listofpoints, function(v) {
+  _.each(pointspergrid, function(v) {
     var points = v;
     while (points.length > 0) {
       var point = points[0];
