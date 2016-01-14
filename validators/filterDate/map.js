@@ -10,8 +10,10 @@ module.exports = function(tileLayers, tile, writeData, done) {
     return (obj.properties._timestamp >= today);
   });
 
-  var fc = turf.featurecollection(result);
-  writeData(JSON.stringify(fc) + '\n');
+  if (result.length > 0) {
+    var fc = turf.featurecollection(result);
+    writeData(JSON.stringify(fc) + '\n');
+  }
 
   done(null, null);
 };

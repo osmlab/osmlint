@@ -9,8 +9,10 @@ module.exports = function(tileLayers, tile, writeData, done) {
     return users.hasOwnProperty(val.properties._user);
   });
 
-  var fc = turf.featurecollection(result);
-  writeData(JSON.stringify(fc) + '\n');
+  if (result.length > 0) {
+    var fc = turf.featurecollection(result);
+    writeData(JSON.stringify(fc) + '\n');
+  }
 
   done(null, null);
 };

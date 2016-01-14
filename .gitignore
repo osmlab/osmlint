@@ -10,8 +10,6 @@
 *.zip
 *.bz2
 *.pbf
-*.mbtiles
-!osm.levycounty.mbtiles
-!tiger2015.levycounty.mbtiles
+node_modules/
 .DS_Store
 *.*~
