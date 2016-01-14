@@ -30,6 +30,16 @@ var optsMissingHighwaysUS = {
   zoom: zoom
 };
 
+test('filterDate', function(t) {
+  t.plan(1);
+  logInterceptor();
+  processors.filterDate(opts, mbtiles, function() {
+    var logs = logInterceptor.end();
+    t.equal(logs.length, 0, 'No features returned');
+    t.end();
+  });
+});
+
 test('filterUsers', function(t) {
   t.plan(2);
   logInterceptor();
