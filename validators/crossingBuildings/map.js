@@ -43,7 +43,7 @@ module.exports = function(tileLayers, tile, writeData, done) {
     result.push(v);
   });
 
-  if (result.length > 3) {
+  if (result.length > 0) {
     var fc = turf.featurecollection(result);
     writeData(JSON.stringify(fc) + '\n');
   }
