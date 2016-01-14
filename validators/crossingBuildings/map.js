@@ -1,62 +1,41 @@
 'use strict';
 var turf = require('turf');
 var _ = require('underscore');
+var rbush = require('rbush');
 
 module.exports = function(tileLayers, tile, writeData, done) {
   var layer = tileLayers.osm.osm;
   var buildings = {};
-  var pointspergrid = {};
-  var bbox = turf.extent(layer);
-  var squareGrid = turf.squareGrid(bbox, 0.1, 'kilometers');
-  squareGrid.features.map(function(poly, k) {
-    poly.properties.id = k + 1;
-    return poly;
-  });
-
+  var bboxes = [];
   layer.features.forEach(function(val) {
     if (val.geometry.type === 'Polygon' && val.geometry.coordinates.length === 1 && val.properties.building === 'yes') {
       var kinks = turf.kinks(val);
       if (kinks.intersections.features.length === 0) {
         val.properties._osmlint = 'crossingbuildings';
-        var centroidPt = turf.centroid(val);
-        centroidPt.properties.id = val.properties._osm_way_id;
+        var bbox = turf.extent(val);
+        bbox.push(val.properties._osm_way_id);
+        bboxes.push(bbox);
         buildings[val.properties._osm_way_id] = val;
-        squareGrid.features.map(function(poly) {
-          if (turf.inside(centroidPt, poly)) {
-            if (!pointspergrid[poly.properties.id]) {
-              pointspergrid[poly.properties.id] = [centroidPt];
-            } else {
-              pointspergrid[poly.properties.id].push(centroidPt);
-            }
-          }
-        });
-        return true;
       }
     }
   });
-
+  var traceTree = rbush(bboxes.length);
+  traceTree.load(bboxes);
   var output = {};
-  _.each(pointspergrid, function(v) {
-    var points = v;
-    while (points.length > 0) {
-      var point = points[0];
-      points.splice(0, 1);
-      var j = points.length;
-      while (j--) {
-        var distance = turf.distance(point, points[j], 'kilometers');
-        if (distance < 0.9) {
-          var intersect = turf.intersect(buildings[point.properties.id], buildings[points[j].properties.id]);
-          if (intersect !== undefined && intersect.geometry.type === 'Polygon') {
-            var area = turf.area(intersect);
-            if (area > 0.1) {
-              output[point.properties.id] = buildings[point.properties.id];
-              output[points[j].properties.id] = buildings[points[j].properties.id];
-            }
-            break;
+  bboxes.forEach(function(bbox) {
+    var overlaps = traceTree.search(bbox);
+    overlaps.forEach(function(overlap) {
+      if (overlap[4] !== bbox[4]) {
+        var intersect = turf.intersect(buildings[overlap[4]], buildings[bbox[4]]);
+        if (intersect !== undefined && intersect.geometry.type === 'Polygon') {
+          var area = turf.area(intersect);
+          if (area > 0.4) {
+            output[overlap[4]] = buildings[overlap[4]];
+            output[bbox[4]] = buildings[bbox[4]];
           }
         }
       }
-    }
+    });
   });
 
   var result = [];
@@ -64,10 +43,9 @@ module.exports = function(tileLayers, tile, writeData, done) {
     result.push(v);
   });
 
-  if (result.length > 0) {
+  if (result.length > 3) {
     var fc = turf.featurecollection(result);
     writeData(JSON.stringify(fc) + '\n');
   }
-
   done(null, null);
 };
