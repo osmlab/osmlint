@@ -9,5 +9,5 @@ module.exports = {
   'missingHighwaysUS': require('./validators/missingHighwaysUS'),
   'selfIntersectingHighways': require('./validators/selfIntersectingHighways'),
   'unclosedWays': require('./validators/unclosedWays'),
-  'falseRoundabout': require('./validators/falseRoundabouts')
+  'falseRoundabouts': require('./validators/falseRoundabouts')
 };

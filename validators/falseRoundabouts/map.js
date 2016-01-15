@@ -12,7 +12,7 @@ module.exports = function(tileLayers, tile, writeData, done) {
       var end = turf.point(coordinates[coordinatesLength - 1]);
       var distance = turf.distance(start, end, 'kilometers');
       if (distance >= 0.02) {
-        val.properties._osmlint = 'falseroundabout';
+        val.properties._osmlint = 'falseroundabouts';
         return true;
       }
     }
