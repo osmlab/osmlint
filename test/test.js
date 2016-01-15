@@ -159,7 +159,7 @@ test('missingHighwaysUS', function(t) {
 
 
 test('crossingHighways', function(t) {
-  t.plan(2);
+  t.plan(1);
   logInterceptor();
   processors.crossingHighways(opts, mbtiles, function() {
     var logs = logInterceptor.end();
@@ -168,7 +168,7 @@ test('crossingHighways', function(t) {
       t.comment('Pass: ' + (i + 1));
       if (geoJSON.features.length > 0) {
         t.equal(geoJSON.features[0].properties._osmlint, 'crossinghighways', 'Should be crossinghighways');
-        t.equal(geoJSON.features[0].geometry.type, 'LineString', 'Should be LineString');
+        //geoJSON.features[0].geometry.type = LineString, Point, MultiPOint
       }
     }
     t.end();
