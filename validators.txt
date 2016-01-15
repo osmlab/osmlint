@@ -42,3 +42,9 @@ osmlint selfintersectinghighways
   Identifies self intersecting highways.
 
   osmlint selfintersectinghighways --bbox="[7.4, 43.7, 7.4, 43.7]" --zoom=15 osm.mbtiles
+
+osmlint falseroundabouts
+
+  Identifies false roundabouts.
+
+  osmlint falseroundabouts --bbox="[7.4, 43.7, 7.4, 43.7]" --zoom=15 osm.mbtiles
