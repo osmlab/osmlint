@@ -156,3 +156,20 @@ test('missingHighwaysUS', function(t) {
     t.end();
   });
 });
+
+test('falseRoundabouts', function(t) {
+  t.plan(2);
+  logInterceptor();
+  processors.falseRoundabouts(opts, mbtiles, function() {
+    var logs = logInterceptor.end();
+    for (var i = 0; i < logs.length; i++) {
+      var geoJSON = JSON.parse(logs[i]);
+      if (geoJSON.features.length) {
+        t.comment('Pass: ' + (i + 1));
+        t.equal(geoJSON.features[0].properties._osmlint, 'falseroundabouts', 'Should be falseroundabouts');
+        t.equal(geoJSON.features[0].geometry.type, 'LineString', 'Should be  LineString');
+      }
+    }
+    t.end();
+  });
+});
