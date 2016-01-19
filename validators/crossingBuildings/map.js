@@ -11,7 +11,6 @@ module.exports = function(tileLayers, tile, writeData, done) {
     if (val.geometry.type === 'Polygon' && val.geometry.coordinates.length === 1 && val.properties.building === 'yes') {
       var kinks = turf.kinks(val);
       if (kinks.intersections.features.length === 0) {
-        val.properties._osmlint = 'crossingbuildings';
         var bbox = turf.extent(val);
         bbox.push(val.properties._osm_way_id);
         bboxes.push(bbox);
@@ -19,6 +18,7 @@ module.exports = function(tileLayers, tile, writeData, done) {
       }
     }
   });
+
   var traceTree = rbush(bboxes.length);
   traceTree.load(bboxes);
   var output = {};
@@ -30,18 +30,19 @@ module.exports = function(tileLayers, tile, writeData, done) {
         if (intersect !== undefined && intersect.geometry.type === 'Polygon') {
           var area = turf.area(intersect);
           if (area > 0.4) {
-            output[overlap[4]] = buildings[overlap[4]];
-            output[bbox[4]] = buildings[bbox[4]];
+            var buildingA = buildings[overlap[4]];
+            buildingA.properties._osmlint = 'crossingbuildings';
+            var buildingB = buildings[bbox[4]];
+            buildingB.properties._osmlint = 'crossingbuildings';
+            output[overlap[4]] = buildingA;
+            output[bbox[4]] = buildingB;
           }
         }
       }
     });
   });
 
-  var result = [];
-  _.each(output, function(v) {
-    result.push(v);
-  });
+  var result = _.values(output);
 
   if (result.length > 0) {
     var fc = turf.featurecollection(result);
