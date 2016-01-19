@@ -26,42 +26,49 @@ module.exports = function(tileLayers, tile, writeData, done) {
       bboxes.push(bbox);
       highways[val.properties._osm_way_id] = {
         highway: val,
-        buffer: turf.buffer(val, 0.001, 'miles').features[0]
+        buffer: turf.buffer(val, 0.005, 'miles').features[0]
       };
     }
   });
 
-  var traceTree = rbush(bboxes.length);
-  traceTree.load(bboxes);
+  var highwaysTree = rbush(bboxes.length);
+  highwaysTree.load(bboxes);
 
   var output = {};
   bboxes.forEach(function(valueBbox) {
-    var overlapBboxes = traceTree.search(valueBbox);
-    var points = [];
-
-    overlapBboxes.forEach(function(overlapBbox) {
-
-      if (valueBbox[4] !== overlapBbox[4]) {
-        points = points.concat(_.flatten(highways[overlapBbox[4]].highway.geometry.coordinates));
-      }
-    });
-
+    var overlapBboxes = highwaysTree.search(valueBbox);
     var valueHighway = highways[valueBbox[4]].highway;
     var firstCoord = valueHighway.geometry.coordinates[0];
     var endCoord = valueHighway.geometry.coordinates[valueHighway.geometry.coordinates.length - 1];
 
-    if ((points.indexOf(firstCoord[0]) == -1 && points.indexOf(firstCoord[1]) == -1)) {
-      var firstPoint = turf.point(firstCoord);
-      var endPoint = turf.point(endCoord);
-      overlapBboxes.forEach(function(overlap) {
-        if (valueBbox[4] !== overlap[4]) {
-          if (turf.inside(firstPoint, highways[overlap[4]].buffer)) {
-
-            firstPoint.properties = {
-              highway_point: valueBbox[4],
-              highway: overlap[4]
-            };
-            output[valueBbox[4]] = firstPoint;
+    if (!_.isEqual(firstCoord, endCoord)) {
+      var latslons = [];
+      overlapBboxes.forEach(function(overlapBbox) {
+        if (valueBbox[4] !== overlapBbox[4]) {
+          latslons = latslons.concat(_.flatten(highways[overlapBbox[4]].highway.geometry.coordinates));
+        }
+      });
+      var overlapsFirstPoint = highwaysTree.search([firstCoord[0], firstCoord[1], firstCoord[0], firstCoord[1]]);
+      overlapsFirstPoint.forEach(function(overlapPoint) {
+        if (valueBbox[4] !== overlapPoint[4]) {
+          var props = {
+            near_point: valueBbox[4],
+            near_highway: overlapPoint[4],
+            _osmlint: 'nodeendingnearhighway'
+          };
+          if (latslons.indexOf(firstCoord[0]) == -1 && latslons.indexOf(firstCoord[1]) == -1) {
+            var firstPoint = turf.point(firstCoord);
+            if (turf.inside(firstPoint, highways[overlapPoint[4]].buffer)) {
+              firstPoint.properties = props;
+              output[valueBbox[4]] = firstPoint;
+            }
+          }
+          if (latslons.indexOf(endCoord[0]) == -1 && latslons.indexOf(endCoord[1]) == -1) {
+            var endPoint = turf.point(endCoord);
+            if (turf.inside(endPoint, highways[overlapPoint[4]].buffer)) {
+              endPoint.properties = props;
+              output[valueBbox[4]] = endPoint;
+            }
           }
         }
       });
