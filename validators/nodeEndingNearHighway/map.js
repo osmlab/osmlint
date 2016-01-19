@@ -48,27 +48,32 @@ module.exports = function(tileLayers, tile, writeData, done) {
           latslons = latslons.concat(_.flatten(highways[overlapBbox[4]].highway.geometry.coordinates));
         }
       });
+
+      var props = {
+        near_point: valueBbox[4],
+        _osmlint: 'nodeendingnearhighway'
+      };
+
       var overlapsFirstPoint = highwaysTree.search([firstCoord[0], firstCoord[1], firstCoord[0], firstCoord[1]]);
       overlapsFirstPoint.forEach(function(overlapPoint) {
-        if (valueBbox[4] !== overlapPoint[4]) {
-          var props = {
-            near_point: valueBbox[4],
-            near_highway: overlapPoint[4],
-            _osmlint: 'nodeendingnearhighway'
-          };
-          if (latslons.indexOf(firstCoord[0]) == -1 && latslons.indexOf(firstCoord[1]) == -1) {
-            var firstPoint = turf.point(firstCoord);
-            if (turf.inside(firstPoint, highways[overlapPoint[4]].buffer)) {
-              firstPoint.properties = props;
-              output[valueBbox[4]] = firstPoint;
-            }
+        if (valueBbox[4] !== overlapPoint[4] && latslons.indexOf(firstCoord[0]) == -1 && latslons.indexOf(firstCoord[1]) == -1) {
+          var firstPoint = turf.point(firstCoord);
+          if (turf.inside(firstPoint, highways[overlapPoint[4]].buffer)) {
+            props.near_highway = overlapPoint[4];
+            firstPoint.properties = props;
+            output[valueBbox[4]] = firstPoint;
           }
-          if (latslons.indexOf(endCoord[0]) == -1 && latslons.indexOf(endCoord[1]) == -1) {
-            var endPoint = turf.point(endCoord);
-            if (turf.inside(endPoint, highways[overlapPoint[4]].buffer)) {
-              endPoint.properties = props;
-              output[valueBbox[4]] = endPoint;
-            }
+        }
+      });
+
+      var overlapsEndPoint = highwaysTree.search([endCoord[0], endCoord[1], endCoord[0], endCoord[1]]);
+      overlapsEndPoint.forEach(function(overlapPoint) {
+        if (valueBbox[4] !== overlapPoint[4] && latslons.indexOf(endCoord[0]) == -1 && latslons.indexOf(endCoord[1]) == -1) {
+          var endPoint = turf.point(endCoord);
+          if (turf.inside(endPoint, highways[overlapPoint[4]].buffer)) {
+            props.near_highway = overlapPoint[4];
+            endPoint.properties = props;
+            output[valueBbox[4]] = endPoint;
           }
         }
       });
