@@ -16,6 +16,7 @@ module.exports = function(tileLayers, tile, writeData, done) {
     'residential': true,
     'unclassified': true,
     'living_street': true,
+    'road': true,
     'service': true
   };
 
@@ -34,54 +35,60 @@ module.exports = function(tileLayers, tile, writeData, done) {
   var highwaysTree = rbush(bboxes.length);
   highwaysTree.load(bboxes);
   var output = {};
+  var osmlint = 'nodeendingnearhighway';
   bboxes.forEach(function(valueBbox) {
     var valueHighway = highways[valueBbox[4]].highway;
     var firstCoord = valueHighway.geometry.coordinates[0];
+    var firstPoint = turf.point(firstCoord);
     var endCoord = valueHighway.geometry.coordinates[valueHighway.geometry.coordinates.length - 1];
-    var overlapsFirstPoint = highwaysTree.search([firstCoord[0], firstCoord[1], firstCoord[0], firstCoord[1]]);
-    var overlapsEndPoint = highwaysTree.search([endCoord[0], endCoord[1], endCoord[0], endCoord[1]]);
+    var endPoint = turf.point(endCoord);
+    var overlapsFirstPoint = highwaysTree.search(turf.extent(turf.buffer(firstPoint, 0.005, 'miles')));
+    var overlapsEndPoint = highwaysTree.search(turf.extent(turf.buffer(endPoint, 0.005, 'miles')));
     var overlapBboxes = overlapsFirstPoint.concat(overlapsEndPoint);
+
     if (!_.isEqual(firstCoord, endCoord)) {
-      var latslons = [];
+      var arrayCorrd = [];
       overlapBboxes.forEach(function(overlapBbox) {
         if (valueBbox[4] !== overlapBbox[4]) {
-          latslons = latslons.concat(_.flatten(highways[overlapBbox[4]].highway.geometry.coordinates));
+          arrayCorrd = arrayCorrd.concat(_.flatten(highways[overlapBbox[4]].highway.geometry.coordinates));
         }
       });
+
       var props = {
-        near_point: valueBbox[4],
-        _osmlint: 'nodeendingnearhighway'
+        wayA: valueBbox[4],
+        _osmlint: osmlint
       };
 
       overlapsFirstPoint.forEach(function(overlapPoint) {
-        if (valueBbox[4] !== overlapPoint[4] && latslons.indexOf(firstCoord[0]) == -1 && latslons.indexOf(firstCoord[1]) == -1) {
-          var firstPoint = turf.point(firstCoord);
+        if (valueBbox[4] !== overlapPoint[4] && (arrayCorrd.indexOf(firstCoord[0]) === -1 || arrayCorrd.indexOf(firstCoord[1]) === -1)) {
           if (turf.inside(firstPoint, highways[overlapPoint[4]].buffer)) {
-            props.near_highway = overlapPoint[4];
+            props.wayB = overlapPoint[4];
             firstPoint.properties = props;
             output[valueBbox[4]] = highways[valueBbox[4]].highway;
+            output[valueBbox[4]].properties._osmlint = osmlint;
             output[overlapPoint[4]] = highways[overlapPoint[4]].highway;
+            output[overlapPoint[4]].properties._osmlint = osmlint;
             if (valueBbox[4] > overlapPoint[4]) {
-              output[valueBbox[4] + '-' + overlapPoint[4]] = firstPoint;
+              output[valueBbox[4].toString().concat(overlapPoint[4]).concat('first')] = firstPoint;
             } else {
-              output[overlapPoint[4] + '-' + valueBbox[4]] = firstPoint;
+              output[overlapPoint[4].toString().concat(valueBbox[4]).concat('first')] = firstPoint;
             }
           }
         }
       });
-
       overlapsEndPoint.forEach(function(overlapPoint) {
-        if (valueBbox[4] !== overlapPoint[4] && latslons.indexOf(endCoord[0]) == -1 && latslons.indexOf(endCoord[1]) == -1) {
-          var endPoint = turf.point(endCoord);
+        if (valueBbox[4] !== overlapPoint[4] && (arrayCorrd.indexOf(endCoord[0]) === -1 || arrayCorrd.indexOf(endCoord[1]) === -1)) {
           if (turf.inside(endPoint, highways[overlapPoint[4]].buffer)) {
-            props.near_highway = overlapPoint[4];
+            props.wayB = overlapPoint[4];
             endPoint.properties = props;
             output[valueBbox[4]] = highways[valueBbox[4]].highway;
+            output[valueBbox[4]].properties._osmlint = osmlint;
             output[overlapPoint[4]] = highways[overlapPoint[4]].highway;
+            output[overlapPoint[4]].properties._osmlint = osmlint;
             if (valueBbox[4] > overlapPoint[4]) {
-              output[valueBbox[4] + '-' + overlapPoint[4]] = endPoint;
+              output[valueBbox[4].toString().concat(overlapPoint[4]).concat('end')] = endPoint;
             } else {
-              output[overlapPoint[4] + '-' + valueBbox[4]] = endPoint;
+              output[overlapPoint[4].toString().concat(valueBbox[4]).concat('end')] = endPoint;
             }
           }
         }
