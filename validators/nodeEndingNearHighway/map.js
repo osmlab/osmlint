@@ -5,6 +5,10 @@ var rbush = require('rbush');
 
 module.exports = function(tileLayers, tile, writeData, done) {
   var layer = tileLayers.osm.osm;
+  var bboxLineString = turf.bboxPolygon(turf.extent(layer));
+  bboxLineString.geometry.type = 'LineString';
+  bboxLineString.geometry.coordinates = bboxLineString.geometry.coordinates[0];
+  var bufferTile = turf.buffer(bboxLineString, 0.01, 'miles').features[0];
   var highways = {};
   var bboxes = [];
   var preserveHighways = {
@@ -42,10 +46,15 @@ module.exports = function(tileLayers, tile, writeData, done) {
     var firstPoint = turf.point(firstCoord);
     var endCoord = valueHighway.geometry.coordinates[valueHighway.geometry.coordinates.length - 1];
     var endPoint = turf.point(endCoord);
-    var overlapsFirstPoint = highwaysTree.search(turf.extent(turf.buffer(firstPoint, 0.005, 'miles')));
-    var overlapsEndPoint = highwaysTree.search(turf.extent(turf.buffer(endPoint, 0.005, 'miles')));
+    var overlapsFirstPoint = [];
+    if (!turf.inside(firstPoint, bufferTile)) {
+      overlapsFirstPoint = highwaysTree.search(turf.extent(turf.buffer(firstPoint, 0.005, 'miles')));
+    }
+    var overlapsEndPoint = [];
+    if (!turf.inside(endPoint, bufferTile)) {
+      overlapsEndPoint = highwaysTree.search(turf.extent(turf.buffer(endPoint, 0.005, 'miles')));
+    }
     var overlapBboxes = overlapsFirstPoint.concat(overlapsEndPoint);
-
     if (!_.isEqual(firstCoord, endCoord)) {
       var arrayCorrd = [];
       overlapBboxes.forEach(function(overlapBbox) {
@@ -53,7 +62,6 @@ module.exports = function(tileLayers, tile, writeData, done) {
           arrayCorrd = arrayCorrd.concat(_.flatten(highways[overlapBbox[4]].highway.geometry.coordinates));
         }
       });
-
       var props = {
         wayA: valueBbox[4],
         _osmlint: osmlint
@@ -76,6 +84,7 @@ module.exports = function(tileLayers, tile, writeData, done) {
           }
         }
       });
+
       overlapsEndPoint.forEach(function(overlapPoint) {
         if (valueBbox[4] !== overlapPoint[4] && (arrayCorrd.indexOf(endCoord[0]) === -1 || arrayCorrd.indexOf(endCoord[1]) === -1)) {
           if (turf.inside(endPoint, highways[overlapPoint[4]].buffer)) {
