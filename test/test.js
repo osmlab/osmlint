@@ -159,7 +159,7 @@ test('missingHighwaysUS', function(t) {
 
 
 test('crossingHighways', function(t) {
-  t.plan(1);
+  t.plan(3);
   logInterceptor();
   processors.crossingHighways(opts, mbtiles, function() {
     var logs = logInterceptor.end();
@@ -168,9 +168,11 @@ test('crossingHighways', function(t) {
       t.comment('Pass: ' + (i + 1));
       if (geoJSON.features.length > 0) {
         t.equal(geoJSON.features[0].properties._osmlint, 'crossinghighways', 'Should be crossinghighways');
-        //geoJSON.features[0].geometry.type = LineString, Point, MultiPOint
+        t.equal(geoJSON.features[0].geometry.type, 'LineString', 'Should be LineString');
+        t.equal(geoJSON.features[2].geometry.type, 'Point', 'Should be Point');
       }
     }
     t.end();
   });
 });
+

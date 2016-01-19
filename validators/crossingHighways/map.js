@@ -7,7 +7,7 @@ module.exports = function(tileLayers, tile, writeData, done) {
   var layer = tileLayers.osm.osm;
   var highways = {};
   var bboxes = [];
-  var preserve = {
+  var preserveType = {
     'motorway': true,
     'primary': true,
     'secondary': true,
@@ -15,12 +15,12 @@ module.exports = function(tileLayers, tile, writeData, done) {
     'trunk': true,
     'residential': true,
     'unclassified': true,
+    'living_street': true,
     'service': true
   };
 
   layer.features.forEach(function(val) {
-    if (preserve[val.properties.highway] && (val.geometry.type === 'LineString' || val.geometry.type === 'MultiLineString') && val.properties.layer === undefined) {
-      val.properties._osmlint = 'crossinghighways';
+    if (preserveType[val.properties.highway] && (val.geometry.type === 'LineString' || val.geometry.type === 'MultiLineString') && val.properties.layer === undefined) {
       var bbox = turf.extent(val);
       bbox.push(val.properties._osm_way_id);
       bboxes.push(bbox);
@@ -31,7 +31,6 @@ module.exports = function(tileLayers, tile, writeData, done) {
   var traceTree = rbush(bboxes.length);
   traceTree.load(bboxes);
   var output = {};
-  var result = [];
 
   bboxes.forEach(function(bbox) {
     var overlaps = traceTree.search(bbox);
@@ -39,16 +38,21 @@ module.exports = function(tileLayers, tile, writeData, done) {
       if (bbox[4] !== overlap[4]) {
         var intersect = turf.intersect(highways[overlap[4]], highways[bbox[4]]);
         if (intersect !== undefined && (intersect.geometry.type === 'Point' || intersect.geometry.type === 'MultiPoint')) {
-          var highwaycoors = _.flatten(highways[overlap[4]].geometry.coordinates);
-          highwaycoors.concat(_.flatten(highways[bbox[4]].geometry.coordinates));
-          var intersectcoors = _.flatten(intersect.geometry.coordinates);
-          if (_.difference(highwaycoors, intersectcoors).length === highwaycoors.length) {
-            output[overlap[4]] = highways[overlap[4]];
-            output[bbox[4]] = highways[bbox[4]];
+          var highwayCoord = _.flatten(highways[overlap[4]].geometry.coordinates);
+          highwayCoord.concat(_.flatten(highways[bbox[4]].geometry.coordinates));
+          var intersectCoord = _.flatten(intersect.geometry.coordinates);
+          if (_.difference(highwayCoord, intersectCoord).length === highwayCoord.length) {
+            var osmlint = 'crossinghighways';
+            var highwayA = highways[overlap[4]];
+            highwayA.properties._osmlint = osmlint;
+            var highwayB = highways[bbox[4]];
+            highwayB.properties._osmlint = osmlint;
+            output[overlap[4]] = highwayA;
+            output[bbox[4]] = highwayB;
             intersect.properties = {
-              way1: overlap[4],
-              way2: bbox[4],
-              _osmlint: 'crossinghighways'
+              wayA: overlap[4],
+              wayB: bbox[4],
+              _osmlint: osmlint
             };
             if (bbox[4] > overlap[4]) {
               output[bbox[4].toString().concat(overlap[4])] = intersect;
@@ -61,9 +65,7 @@ module.exports = function(tileLayers, tile, writeData, done) {
     });
   });
 
-  _.each(output, function(v) {
-    result.push(v);
-  });
+  var result = _.values(output);
 
   if (result.length > 0) {
     var fc = turf.featurecollection(result);
