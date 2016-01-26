@@ -9,7 +9,7 @@ module.exports = function(tileLayers, tile, writeData, done) {
   var waterways = {};
   var highwaybboxes = [];
   var waterwaybboxes = [];
-  var preserveHighways = {
+  var preserveType = {
     'motorway': true,
     'motorway_link': true,
     'primary': true,
@@ -24,6 +24,7 @@ module.exports = function(tileLayers, tile, writeData, done) {
     'unclassified': true,
     'living_street': true,
     'road': true
+    //'service': true
   };
   var dontPreserveWaterways = {
     'dam': true,
@@ -36,7 +37,7 @@ module.exports = function(tileLayers, tile, writeData, done) {
   for (var i = 0; i < layer.features.length; i++) {
     var val = layer.features[i];
     var bbox;
-    if (preserveHighways[val.properties.highway] && val.geometry.type === 'LineString' && val.properties.bridge === undefined && val.properties.tunnel === undefined && val.properties.ford === undefined) {
+    if (preserveType[val.properties.highway] && val.geometry.type === 'LineString' && val.properties.bridge === undefined && val.properties.tunnel === undefined && val.properties.ford === undefined) {
       bbox = turf.extent(val);
       bbox.push(val.properties._osm_way_id);
       highwaybboxes.push(bbox);
