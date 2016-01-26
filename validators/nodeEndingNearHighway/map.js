@@ -11,15 +11,20 @@ module.exports = function(tileLayers, tile, writeData, done) {
   var bufferLayer = turf.buffer(bboxLayer, 0.01, 'miles').features[0];
   var preserveType = {
     'motorway': true,
+    'motorway_link': true,
     'primary': true,
+    'primary_link': true,
     'secondary': true,
+    'secondary_link': true,
     'tertiary': true,
+    'tertiary_link': true,
     'trunk': true,
+    'trunk_link': true,
     'residential': true,
     'unclassified': true,
     'living_street': true,
-    'service': true,
-    'road': true
+    'road': true,
+    'service': true
   };
   var unit = 'meters';
   var distance = 2;
