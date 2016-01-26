@@ -11,6 +11,7 @@ var zoom = 12;
 var mbtiles = path.join(__dirname, '/fixtures/monaco.mbtiles');
 var bridgeOnNodeTiles = path.join(__dirname, '/fixtures/bridgeonnode.mbtiles');
 var nodeendingnearhighwayTiles = path.join(__dirname, '/fixtures/nodeendingnearhighway.mbtiles');
+var crossingwaterwayshighwaysTiles = path.join(__dirname, '/fixtures/crossingwaterwayshighways.mbtiles');
 
 var optsbridgeOnNode = {
   bbox: [114.445, 3.656, 126.376, 11.738],
@@ -188,6 +189,24 @@ test('nodeEndingNearHighway', function(t) {
         t.equal(geoJSON.features[0].properties._osmlint, 'nodeendingnearhighway', 'Should be nodeendingnearhighway');
         t.equal(geoJSON.features[0].geometry.type, 'LineString', 'Should be LineString');
         t.equal(geoJSON.features[5].geometry.type, 'Point', 'Should be Point');
+      }
+    }
+    t.end();
+  });
+});
+
+test('crossingWaterwaysHighways', function(t) {
+  t.plan(3);
+  logInterceptor();
+  processors.crossingWaterwaysHighways(opts, crossingwaterwayshighwaysTiles, function() {
+    var logs = logInterceptor.end();
+    for (var i = 0; i < logs.length; i++) {
+      var geoJSON = JSON.parse(logs[i]);
+      t.comment('Pass: ' + (i + 1));
+      if (geoJSON.features.length > 0) {
+        t.equal(geoJSON.features[0].properties._osmlint, 'crossingwaterwayshighways', 'Should be crossingwaterwayshighways');
+        t.equal(geoJSON.features[1].geometry.type, 'LineString', 'Should be LineString');
+        t.equal(geoJSON.features[4].geometry.type, 'Point', 'Should be Point');
       }
     }
     t.end();
