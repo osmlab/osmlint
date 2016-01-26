@@ -16,25 +16,30 @@ module.exports = function(tileLayers, tile, writeData, done) {
     'residential': true,
     'unclassified': true,
     'living_street': true,
-    'service': true
+    'service': true,
+    'road': true
   };
+  var osmlint = 'crossinghighways';
 
-  layer.features.forEach(function(val) {
+  for (var i = 0; i < layer.features.length; i++) {
+    var val = layer.features[i];
     if (preserveType[val.properties.highway] && (val.geometry.type === 'LineString' || val.geometry.type === 'MultiLineString') && val.properties.layer === undefined) {
-      var bbox = turf.extent(val);
-      bbox.push(val.properties._osm_way_id);
-      bboxes.push(bbox);
+      var bboxHighway = turf.extent(val);
+      bboxHighway.push(val.properties._osm_way_id);
+      bboxes.push(bboxHighway);
       highways[val.properties._osm_way_id] = val;
     }
-  });
+  }
 
   var traceTree = rbush(bboxes.length);
   traceTree.load(bboxes);
   var output = {};
 
-  bboxes.forEach(function(bbox) {
+  for (var j = 0; j < bboxes.length; j++) {
+    var bbox = bboxes[j];
     var overlaps = traceTree.search(bbox);
-    overlaps.forEach(function(overlap) {
+    for (var k = 0; k < overlaps.length; k++) {
+      var overlap = overlaps[k];
       if (bbox[4] !== overlap[4]) {
         var intersect = turf.intersect(highways[overlap[4]], highways[bbox[4]]);
         if (intersect !== undefined && (intersect.geometry.type === 'Point' || intersect.geometry.type === 'MultiPoint')) {
@@ -42,13 +47,10 @@ module.exports = function(tileLayers, tile, writeData, done) {
           highwayCoord.concat(_.flatten(highways[bbox[4]].geometry.coordinates));
           var intersectCoord = _.flatten(intersect.geometry.coordinates);
           if (_.difference(highwayCoord, intersectCoord).length === highwayCoord.length) {
-            var osmlint = 'crossinghighways';
-            var highwayA = highways[overlap[4]];
-            highwayA.properties._osmlint = osmlint;
-            var highwayB = highways[bbox[4]];
-            highwayB.properties._osmlint = osmlint;
-            output[overlap[4]] = highwayA;
-            output[bbox[4]] = highwayB;
+            highways[overlap[4]].properties._osmlint = osmlint;
+            highways[bbox[4]].properties._osmlint = osmlint;
+            output[overlap[4]] = highways[overlap[4]];
+            output[bbox[4]] = highways[bbox[4]];
             intersect.properties = {
               wayA: overlap[4],
               wayB: bbox[4],
@@ -62,8 +64,8 @@ module.exports = function(tileLayers, tile, writeData, done) {
           }
         }
       }
-    });
-  });
+    }
+  }
 
   var result = _.values(output);
 
@@ -74,3 +76,4 @@ module.exports = function(tileLayers, tile, writeData, done) {
 
   done(null, null);
 };
+

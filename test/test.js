@@ -157,7 +157,6 @@ test('missingHighwaysUS', function(t) {
   });
 });
 
-
 test('crossingHighways', function(t) {
   t.plan(3);
   logInterceptor();
@@ -175,4 +174,3 @@ test('crossingHighways', function(t) {
     t.end();
   });
 });
-
