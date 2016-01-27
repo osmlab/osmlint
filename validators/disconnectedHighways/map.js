@@ -13,7 +13,7 @@ module.exports = function(tileLayers, tile, writeData, done) {
   var bufferLayer = turf.buffer(bboxLayer, 0.01, 'miles').features[0];
   var highways = {};
   var bboxes = [];
-  var preserveHighways = {
+  var preserveType = {
     'motorway': true,
     'motorway_link': true,
     'primary': true,
@@ -30,16 +30,17 @@ module.exports = function(tileLayers, tile, writeData, done) {
     'road': true,
     'service': true
   };
+  var osmlint = 'unconnectedhighways';
 
   layer.features.forEach(function(val) {
-    if (val.geometry.type === 'LineString' && preserveHighways[val.properties.highway]) {
+    if (val.geometry.type === 'LineString' && val.properties.highway) {
       var bboxA = turf.extent(val);
       bboxA.push({
         id: val.properties._osm_way_id
       });
       bboxes.push(bboxA);
       highways[val.properties._osm_way_id] = val;
-    } else if (val.geometry.type === 'MultiLineString' && preserveHighways[val.properties.highway]) {
+    } else if (val.geometry.type === 'MultiLineString' && val.properties.highway) {
       var flat = flatten(val);
       var id = val.properties._osm_way_id + 'L';
       for (var f = 0; f < flat.length; f++) {
@@ -63,7 +64,7 @@ module.exports = function(tileLayers, tile, writeData, done) {
   for (var i = 0; i < bboxes.length; i++) {
     var valueBbox = bboxes[i];
     var valueHighway = highways[valueBbox[4].id];
-    valueHighway.properties._osmlint = 'disconnectedhighways';
+    valueHighway.properties._osmlint = osmlint;
     var firstCoord = valueHighway.geometry.coordinates[0];
     var endCoord = valueHighway.geometry.coordinates[valueHighway.geometry.coordinates.length - 1];
     if (!turf.inside(turf.point(firstCoord), bufferLayer) && !turf.inside(turf.point(endCoord), bufferLayer)) {
@@ -106,12 +107,21 @@ module.exports = function(tileLayers, tile, writeData, done) {
       }
     }
   }
-  var result = _.values(output);
+
+  var result = [];
+
+  _.each(output, function(road) {
+    if (preserveType[road.properties.highway]) {
+      result.push(road);
+    }
+  });
   if (result.length > 0) {
     var fc = turf.featurecollection(result);
     writeData(JSON.stringify(fc) + '\n');
   }
+
   done(null, null);
+
 };
 
 function distancePoint2Line(x, y, x1, y1, x2, y2) {
