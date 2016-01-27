@@ -12,5 +12,5 @@ module.exports = {
   'crossingHighways': require('./validators/crossingHighways'),
   'nodeEndingNearHighway': require('./validators/nodeEndingNearHighway'),
   'crossingWaterwaysHighways': require('./validators/crossingWaterwaysHighways'),
-  'disconnectedHighways': require('./validators/disconnectedHighways')
+  'unconnectedHighways': require('./validators/unconnectedHighways')
 };

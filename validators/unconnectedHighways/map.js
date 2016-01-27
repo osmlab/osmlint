@@ -82,7 +82,7 @@ module.exports = function(tileLayers, tile, writeData, done) {
         var valueCoordinates = geojsonCoords(valueHighway);
         var nearCoordinates = geojsonCoords(nearHighways);
         //filter all highways without any connection
-        if (_.intersection(_.flatten(valueCoordinates), _.flatten(nearCoordinates)).length === 0) {
+        if (_.intersection(_.flatten(valueCoordinates), _.flatten(nearCoordinates)).length < 2) {
           var obj = {};
           var arrf = [];
           var arre = [];

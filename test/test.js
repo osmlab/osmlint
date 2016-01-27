@@ -12,6 +12,7 @@ var mbtiles = path.join(__dirname, '/fixtures/monaco.mbtiles');
 var bridgeOnNodeTiles = path.join(__dirname, '/fixtures/bridgeonnode.mbtiles');
 var nodeendingnearhighwayTiles = path.join(__dirname, '/fixtures/nodeendingnearhighway.mbtiles');
 var crossingwaterwayshighwaysTiles = path.join(__dirname, '/fixtures/crossingwaterwayshighways.mbtiles');
+var unconnectedhighwaysTiles = path.join(__dirname, '/fixtures/unconnectedhighways.mbtiles');
 
 var optsbridgeOnNode = {
   bbox: [114.445, 3.656, 126.376, 11.738],
@@ -213,16 +214,16 @@ test('crossingWaterwaysHighways', function(t) {
   });
 });
 
-test('disconnectedHighways', function(t) {
+test('unconnectedHighways', function(t) {
   t.plan(2);
   logInterceptor();
-  processors.disconnectedHighways(opts, mbtiles, function() {
+  processors.unconnectedHighways(opts, unconnectedhighwaysTiles, function() {
     var logs = logInterceptor.end();
     for (var i = 0; i < logs.length; i++) {
       var geoJSON = JSON.parse(logs[i]);
       t.comment('Pass: ' + (i + 1));
       if (geoJSON.features.length > 0) {
-        t.equal(geoJSON.features[0].properties._osmlint, 'disconnectedhighways', 'Should be disconnectedhighways');
+        t.equal(geoJSON.features[0].properties._osmlint, 'unconnectedhighways', 'Should be unconnectedhighways');
         t.equal(geoJSON.features[0].geometry.type, 'LineString', 'Should be LineString');
       }
     }
