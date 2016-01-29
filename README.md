@@ -19,14 +19,14 @@ npm install -g && npm link
 ### Command line
 
 ```sh
-osmlint bridgeonnode --bbox="[7.4, 43.7, 7.4, 43.7]" --zoom=15 osm.mbtiles
+osmlint bridgeonnode --bbox="[7.4, 43.7, 7.4, 43.7]" --zoom=12 osm.mbtiles
 ```
 
 ### Javascript
 
 ```javascript
 // Outputs nodes with bridge tags to stdout
-require('osmlint').bridgeOnNode({bbox: [-122.1, 36.9, -121.9, 37.0], zoom: 15}, './osm.mbtiles', function() {
+require('osmlint').bridgeOnNode({bbox: [-122.1, 36.9, -121.9, 37.0], zoom: 12}, './osm.mbtiles', function() {
     console.log('done');
 });
 ```
