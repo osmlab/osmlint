@@ -42,3 +42,21 @@ osmlint selfintersectinghighways
   Identifies self intersecting highways.
 
   osmlint selfintersectinghighways --bbox="[7.4, 43.7, 7.4, 43.7]" --zoom=15 osm.mbtiles
+
+osmlint nodeendingnearhighway
+
+  Identifies highway nodes ending near another highway, when the two highways don't intersect, and sends them to stdout.
+
+  osmlint nodeendingnearhighway --bbox="[7.4, 43.7, 7.4, 43.7]" --zoom=15 osm.mbtiles
+
+osmlint crossingwaterwayshighways
+
+  Identifies faulty intersections of waterways and highways and sends them to stdout.
+
+  osmlint crossingwaterwayshighways --bbox="[7.4, 43.7, 7.4, 43.7]" --zoom=15 osm.mbtiles
+
+osmlint crossinghighways
+
+  Identifies missing intersections when two highways cross each other and sends them to stdout.
+
+  osmlint crossinghighways --bbox="[7.4, 43.7, 7.4, 43.7]" --zoom=15 osm.mbtiles
