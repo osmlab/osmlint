@@ -99,8 +99,8 @@ module.exports = function(tileLayers, tile, writeData, done) {
           }
           var minf = _.min(arrf);
           var mine = _.min(arre);
-          //min distance from first and end point to shortest segment should be > 5 meters
-          if (minf !== Infinity && minf > 5 && mine !== Infinity && mine > 5) {
+          //min distance from first and end point to shortest segment should be > 2 meters
+          if (minf !== Infinity && minf > 2 && mine !== Infinity && mine > 2) {
             output[valueBbox[4].id] = valueHighway;
           }
         }
