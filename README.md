@@ -45,5 +45,5 @@ osmlint will generate a newline separated list of geojson feature collections in
 
 ```
 osmlint filterusers --bbox="[62, 31, 70.5, 26.7]" --zoom=12 afghanistan.mbtiles > output.json
-python utils/merge_geojson.py output.json output.geojson
+python utils/merge_geojson.py output.json > output.geojson
 ```
