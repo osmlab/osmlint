@@ -1,3 +1,6 @@
+# Merge line seperated geojson feature collections into a single feature collection
+# Source: https://github.com/mapbox/peer-review/blob/master/utils/merge-geojson.py
+
 import json
 import sys
 
