@@ -9,9 +9,7 @@ Validate OpenStreetMap data with [OSM QA Tiles](http://osmlab.github.io/osm-qa-t
 ## Installation
 
 ```sh
-git clone https://github.com/osmlab/osmlint.git
-cd osmlint
-npm install -g && npm link
+npm install -g osmlint
 ```
 
 ## Usage
@@ -35,8 +33,10 @@ require('osmlint').bridgeOnNode({bbox: [-122.1, 36.9, -121.9, 37.0], zoom: 12}, 
 
 See [`validators.txt`](https://github.com/osmlab/osmlint/blob/master/validators.txt).
 
-## Test
+## Development
 
 ```sh
-npm install & npm test
+git clone https://github.com/osmlab/osmlint.git
+cd osmlint
+npm link
 ```
