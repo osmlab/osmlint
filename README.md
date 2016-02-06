@@ -38,5 +38,5 @@ See [`validators.txt`](https://github.com/osmlab/osmlint/blob/master/validators.
 ```sh
 git clone https://github.com/osmlab/osmlint.git
 cd osmlint
-npm link
+npm install
 ```
