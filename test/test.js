@@ -13,7 +13,7 @@ var bridgeOnNodeTiles = path.join(__dirname, '/fixtures/bridgeonnode.mbtiles');
 var nodeendingnearhighwayTiles = path.join(__dirname, '/fixtures/nodeendingnearhighway.mbtiles');
 var crossingwaterwayshighwaysTiles = path.join(__dirname, '/fixtures/crossingwaterwayshighways.mbtiles');
 var unconnectedhighwaysTiles = path.join(__dirname, '/fixtures/unconnectedhighways.mbtiles');
-var overlaphighwaysTiles = path.join(__dirname, '/fixtures/overlaphighways.mbtiles');
+// var overlaphighwaysTiles = path.join(__dirname, '/fixtures/overlaphighways.mbtiles');
 
 var optsbridgeOnNode = {
   bbox: [114.445, 3.656, 126.376, 11.738],
@@ -234,7 +234,7 @@ test('unconnectedHighways', function(t) {
 
 
 test('overlapHighways', function(t) {
-  processors.overlapHighways(opts, overlaphighwaysTiles, function() {
+  processors.overlapHighways(optsMissingHighwaysUS, osmLevyCountyTiles, function() {
     t.end();
   });
 });
