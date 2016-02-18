@@ -47,10 +47,10 @@ module.exports = function(tileLayers, tile, writeData, done) {
         var intersect = turf.intersect(highways[overlap[4]], highways[bbox[4]]);
         if (intersect !== undefined && (intersect.geometry.type === 'LineString' || intersect.geometry.type === 'MultiLineString')) {
           var coordinates = intersect.geometry.coordinates;
-          output[bbox[4] + 'p'] = turf.point(coordinates[0], {
+          output[coordinates[0].join('-')] = turf.point(coordinates[0], {
             _osmlint: osmlint
           });
-          output[overlap[4] + 'p'] = turf.point(coordinates[coordinates.length - 1], {
+          output[coordinates[coordinates.length - 1].join('-')] = turf.point(coordinates[coordinates.length - 1], {
             _osmlint: osmlint
           });
           highways[bbox[4]].properties._osmlint = osmlint;
