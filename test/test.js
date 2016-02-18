@@ -230,3 +230,10 @@ test('unconnectedHighways', function(t) {
     t.end();
   });
 });
+
+
+test('overlapHighways', function(t) {
+  processors.overlapHighways(opts, mbtiles, function() {
+    t.end();
+  });
+});

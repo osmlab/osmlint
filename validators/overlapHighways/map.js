@@ -2,7 +2,6 @@
 var turf = require('turf');
 var _ = require('underscore');
 var rbush = require('rbush');
-var geojsonCoords = require('geojson-coords');
 
 module.exports = function(tileLayers, tile, writeData, done) {
   var layer = tileLayers.osm.osm;
@@ -37,14 +36,22 @@ module.exports = function(tileLayers, tile, writeData, done) {
   for (var j = 0; j < bboxes.length; j++) {
     var bbox = bboxes[j];
     var overlaps = traceTree.search(bbox);
-    var highwayCordinates = _.flatten(geojsonCoords(highways[bbox[4]]));
     for (var k = 0; k < overlaps.length; k++) {
       var overlap = overlaps[k];
       if (bbox[4] !== overlap[4]) {
         var intersect = turf.intersect(highways[overlap[4]], highways[bbox[4]]);
         if (intersect !== undefined && (intersect.geometry.type === 'LineString')) {
+          var coordinates = intersect.geometry.coordinates;
+          output[bbox[4] + 'p'] = turf.point(coordinates[0], {
+            _osmlint: osmlint
+          });
+          output[overlap[4] + 'p'] = turf.point(coordinates[coordinates.length - 1], {
+            _osmlint: osmlint
+          });
+          highways[bbox[4]].properties._osmlint = osmlint;
+          highways[overlap[4]].properties._osmlint = osmlint;
           output[bbox[4]] = highways[bbox[4]];
-          output[bbox[4]] = highways[overlap[4]];
+          output[overlap[4]] = highways[overlap[4]];
         }
       }
     }
