@@ -9,21 +9,26 @@ module.exports = function(tileLayers, tile, writeData, done) {
   var bboxes = [];
   var preserveType = {
     'motorway': true,
+    'motorway_link': true,
     'primary': true,
+    'primary_link': true,
     'secondary': true,
+    'secondary_link': true,
     'tertiary': true,
+    'tertiary_link': true,
     'trunk': true,
+    'trunk_link': true,
     'residential': true,
     'unclassified': true,
     'living_street': true,
-    'service': true,
-    'road': true
+    'road': true,
+    'service': true
   };
   var osmlint = 'overlaphighways';
 
   for (var i = 0; i < layer.features.length; i++) {
     var val = layer.features[i];
-    if (preserveType[val.properties.highway] && (val.geometry.type === 'LineString' || val.geometry.type === 'MultiLineString') && val.properties.layer === undefined) {
+    if (preserveType[val.properties.highway] && (val.geometry.type === 'LineString' || val.geometry.type === 'MultiLineString')) {
       var bboxHighway = turf.extent(val);
       bboxHighway.push(val.properties._osm_way_id);
       bboxes.push(bboxHighway);
