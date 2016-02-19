@@ -28,7 +28,7 @@ module.exports = function(tileLayers, tile, writeData, done) {
 
   for (var i = 0; i < layer.features.length; i++) {
     var val = layer.features[i];
-    if (preserveType[val.properties.highway] && (val.geometry.type === 'LineString' || val.geometry.type === 'MultiLineString')) {
+    if (preserveType[val.properties.highway] && (val.geometry.type === 'LineString' || val.geometry.type === 'MultiLineString') && val.properties.layer === undefined) {
       var bboxHighway = turf.extent(val);
       bboxHighway.push(val.properties._osm_way_id);
       bboxes.push(bboxHighway);
