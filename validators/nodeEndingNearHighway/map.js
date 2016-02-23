@@ -2,6 +2,7 @@
 var turf = require('turf');
 var _ = require('underscore');
 var rbush = require('rbush');
+var flatten = require('geojson-flatten');
 
 module.exports = function(tileLayers, tile, writeData, done) {
   var layer = tileLayers.osm.osm;
@@ -10,24 +11,31 @@ module.exports = function(tileLayers, tile, writeData, done) {
   bboxLayer.geometry.coordinates = bboxLayer.geometry.coordinates[0];
   var bufferLayer = turf.buffer(bboxLayer, 0.01, 'miles').features[0];
   var preserveType = {
+    //major
     'motorway': true,
-    'motorway_link': true,
-    'primary': true,
-    'primary_link': true,
-    'secondary': true,
-    'secondary_link': true,
-    'tertiary': true,
-    'tertiary_link': true,
     'trunk': true,
-    'trunk_link': true,
-    'residential': true,
+    'primary': true,
+    'secondary': true,
+    'tertiary': true,
     'unclassified': true,
+    'residential': true,
+    'service': true,
+    'motorway_link': true,
+    'trunk_link': true,
+    'primary_link': true,
+    'secondary_link': true,
+    'tertiary_link': true,
     'living_street': true,
+    'pedestrian': true,
     'road': true,
-    'service': true
+    //minor
+    'track': true,
+    'footway': true,
+    'path': true,
+    'cycleway': true
   };
   var unit = 'meters';
-  var distance = 2;
+  var distance = 5;
   var highways = {};
   var bboxes = [];
   var output = {};
@@ -35,14 +43,32 @@ module.exports = function(tileLayers, tile, writeData, done) {
 
   for (var i = 0; i < layer.features.length; i++) {
     var val = layer.features[i];
+    // Linestring evaluation
     if (val.geometry.type === 'LineString' && preserveType[val.properties.highway]) {
       var bbox = turf.extent(val);
-      bbox.push(val.properties._osm_way_id);
+      bbox.push(val.properties._osm_way_id + 'L');
       bboxes.push(bbox);
-      highways[val.properties._osm_way_id] = {
+      highways[val.properties._osm_way_id+ 'L'] = {
         highway: val,
         buffer: turf.buffer(val, distance, unit).features[0]
       };
+    }
+    // MultiLineString evaluation, 
+    else if (val.geometry.type === 'MultiLineString' && preserveType[val.properties.highway]) {
+      var flat = flatten(val);
+      var id = val.properties._osm_way_id + 'L';
+      for (var f = 0; f < flat.length; f++) {
+        if (flat[f].geometry.type === 'LineString') {
+          var bbox = turf.extent(flat[f]);
+          var idFlat = id + 'M' + f;
+          bbox.push(idFlat);
+          bboxes.push(bbox);
+          highways[idFlat] = {
+            highway: flat[f],
+            buffer: turf.buffer(flat[f], distance, unit).features[0]
+          };
+        }
+      }
     }
   }
 
