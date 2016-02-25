@@ -27,7 +27,6 @@ var opts = {
 // Parameters for testing missingHighwaysUS
 var osmLevyCountyTiles = path.join(__dirname, '/fixtures/osm.levycounty.mbtiles');
 var tiger2015LevyCountyTiles = path.join(__dirname, '/fixtures/tiger2015.levycounty.mbtiles');
-
 var optsMissingHighwaysUS = {
   bbox: [-83.0759, 29.0201, -82.4290, 29.6141],
   zoom: zoom
@@ -238,7 +237,6 @@ test('unconnectedHighways', function(t) {
   });
 });
 
-
 test('overlapHighways', function(t) {
   t.plan(2);
   logInterceptor();
@@ -248,7 +246,7 @@ test('overlapHighways', function(t) {
       var geoJSON = JSON.parse(logs[i]);
       t.comment('Pass: ' + (i + 1));
       if (geoJSON.features.length > 0) {
-        t.equal(geoJSON.features[0].properties._osmlint, 'overlaphighways', 'Should be unconnectedhighways');
+        t.equal(geoJSON.features[0].properties._osmlint, 'overlaphighways', 'Should be overlaphighways');
         t.equal(geoJSON.features[0].geometry.type, 'LineString', 'Should be LineString');
       }
     }
