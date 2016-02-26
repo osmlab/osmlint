@@ -19,7 +19,6 @@ module.exports = function(tileLayers, tile, writeData, done) {
     'tertiary': true,
     'unclassified': true,
     'residential': true,
-    'service': true,
     'motorway_link': true,
     'trunk_link': true,
     'primary_link': true,
@@ -29,9 +28,11 @@ module.exports = function(tileLayers, tile, writeData, done) {
     'pedestrian': true,
     'road': true,
     //minor
+    'service': true,
     'track': true,
     'footway': true,
     'path': true
+
   };
   var unit = 'meters';
   var distance = 5;
@@ -43,7 +44,7 @@ module.exports = function(tileLayers, tile, writeData, done) {
   for (var i = 0; i < layer.features.length; i++) {
     var val = layer.features[i];
     // Linestring evaluation
-    if (val.geometry.type === 'LineString' && preserveType[val.properties.highway] && val.properties.layer === undefined) {
+    if (val.geometry.type === 'LineString' && preserveType[val.properties.highway]) {
       var bboxL = turf.extent(val);
       bboxL.push(val.properties._osm_way_id + 'L');
       bboxes.push(bboxL);
@@ -51,7 +52,7 @@ module.exports = function(tileLayers, tile, writeData, done) {
         highway: val,
         buffer: turf.buffer(val, distance, unit).features[0]
       };
-    } else if (val.geometry.type === 'MultiLineString' && preserveType[val.properties.highway] && val.properties.layer === undefined) { //MultiLineString evaluation
+    } else if (val.geometry.type === 'MultiLineString' && preserveType[val.properties.highway]) { //MultiLineString evaluation
       var flat = flatten(val);
       var id = val.properties._osm_way_id + 'L';
       for (var f = 0; f < flat.length; f++) {
@@ -99,7 +100,7 @@ module.exports = function(tileLayers, tile, writeData, done) {
       }
 
       var type;
-      if (valueHighway.properties.highway === 'track' || valueHighway.properties.highway === 'footway' || valueHighway.properties.highway === 'path') {
+      if (valueHighway.properties.highway === 'service' || valueHighway.properties.highway === 'track' || valueHighway.properties.highway === 'footway' || valueHighway.properties.highway === 'path') {
         type = 'minor';
       } else {
         type = 'major';
