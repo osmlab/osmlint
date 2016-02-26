@@ -123,10 +123,10 @@ module.exports = function(tileLayers, tile, writeData, done) {
             var valueCoorF = _.flatten([coordinatesF[1], coordinatesF[2]]);
             var overlapCoorF = _.flatten(overlapHighwayF.geometry.coordinates);
             if (_.intersection(valueCoorF, overlapCoorF).length < 2) {
-              output[valueBbox[4]] = valueHighway;
-              output[valueBbox[4]].properties._osmlint = osmlint;
-              output[overlapPointFirst[4]] = overlapHighwayF;
-              output[overlapPointFirst[4]].properties._osmlint = osmlint;
+              // output[valueBbox[4]] = valueHighway;
+              // output[valueBbox[4]].properties._osmlint = osmlint;
+              // output[overlapPointFirst[4]] = overlapHighwayF;
+              // output[overlapPointFirst[4]].properties._osmlint = osmlint;
               if (valueHighway.properties._osm_way_id > overlapHighwayF.properties._osm_way_id) {
                 output[valueBbox[4].toString().concat(overlapPointFirst[4]).concat('first')] = firstPoint;
               } else {
@@ -148,10 +148,10 @@ module.exports = function(tileLayers, tile, writeData, done) {
             var valueCoorE = _.flatten([coordinatesE[coordinatesE.length - 1], coordinatesE[coordinatesE.length - 2]]);
             var overlapCoorE = _.flatten(overlapHighwayE.geometry.coordinates);
             if (_.intersection(valueCoorE, overlapCoorE).length < 2) {
-              output[valueBbox[4]] = valueHighway;
-              output[valueBbox[4]].properties._osmlint = osmlint;
-              output[overlapPointEnd[4]] = overlapHighwayE;
-              output[overlapPointEnd[4]].properties._osmlint = osmlint;
+              // output[valueBbox[4]] = valueHighway;
+              // output[valueBbox[4]].properties._osmlint = osmlint;
+              // output[overlapPointEnd[4]] = overlapHighwayE;
+              // output[overlapPointEnd[4]].properties._osmlint = osmlint;
               if (valueHighway.properties._osm_way_id > overlapHighwayE.properties._osm_way_id) {
                 output[valueBbox[4].toString().concat(overlapPointEnd[4]).concat('end')] = endPoint;
               } else {
