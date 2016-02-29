@@ -36,7 +36,11 @@ module.exports = function(tileLayers, tile, writeData, done) {
     'path': true,
     'cycleway': true
   };
-  var preserveType = _.extend(majorRoads, minorRoads, pathRoads);
+  var preserveType = {};
+  preserveType = _.extend(preserveType, majorRoads);
+  preserveType = _.extend(preserveType, minorRoads);
+  preserveType = _.extend(preserveType, pathRoads);
+
   var unit = 'meters';
   var distance = 5;
   var highways = {};
