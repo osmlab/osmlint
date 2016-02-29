@@ -10,30 +10,33 @@ module.exports = function(tileLayers, tile, writeData, done) {
   bboxLayer.geometry.type = 'LineString';
   bboxLayer.geometry.coordinates = bboxLayer.geometry.coordinates[0];
   var bufferLayer = turf.buffer(bboxLayer, 0.01, 'miles').features[0];
-  var preserveType = {
-    //major
+  var majorRoads = {
     'motorway': true,
     'trunk': true,
     'primary': true,
     'secondary': true,
     'tertiary': true,
-    'unclassified': true,
-    'residential': true,
     'motorway_link': true,
     'trunk_link': true,
     'primary_link': true,
     'secondary_link': true,
-    'tertiary_link': true,
-    'living_street': true,
-    //minor
-    'service': true,
-    'road': true,
-    'pedestrian': true,
-    //'track': true,
-    //'footway': true,
-    //'path': true
-
+    'tertiary_link': true
   };
+  var minorRoads = {
+    'unclassified': true,
+    'residential': true,
+    'living_street': true,
+    'service': true,
+    'road': true
+  };
+  var pathRoads = {
+    'pedestrian': true,
+    'track': true,
+    'footway': true,
+    'path': true,
+    'cycleway': true
+  };
+  var preserveType = _.extend(majorRoads, minorRoads, pathRoads);
   var unit = 'meters';
   var distance = 5;
   var highways = {};
@@ -99,10 +102,12 @@ module.exports = function(tileLayers, tile, writeData, done) {
         }
       }
       var type;
-      if (valueHighway.properties.highway === 'service' || valueHighway.properties.highway === 'road' || valueHighway.properties.highway === 'pedestrian') {
-        type = 'minor';
-      } else {
+      if (majorRoads[valueHighway.properties.highway]) {
         type = 'major';
+      } else if (minorRoads[valueHighway.properties.highway]) {
+        type = 'minor';
+      } else if (pathRoads[valueHighway.properties.highway]) {
+        type = 'path';
       }
       var props = {
         wayA: valueHighway.properties._osm_way_id,
