@@ -76,7 +76,7 @@ module.exports = function(tileLayers, tile, writeData, done) {
       }
     }
     //check entrance, noexit and barrier
-    if (val.geometry.type === 'Point' && (val.properties.entrance || val.properties.noexit === 'yes' || val.properties.barrier)) {
+    if (val.geometry.type === 'Point' && (val.properties.entrance || val.properties.noexit === 'yes' || val.properties.barrier || val.properties.highway === 'turning_circle')) {
       avoidPoints[val.geometry.coordinates.join('-')] = true;
     }
   }
