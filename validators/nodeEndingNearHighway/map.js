@@ -75,8 +75,8 @@ module.exports = function(tileLayers, tile, writeData, done) {
         }
       }
     }
-    //check entrance and noexit
-    if (val.geometry.type === 'Point' && (val.properties.entrance || val.properties.noexit)) {
+    //check entrance, noexit and barrier
+    if (val.geometry.type === 'Point' && (val.properties.entrance || val.properties.noexit === 'yes' || val.properties.barrier)) {
       avoidPoints[val.geometry.coordinates.join('-')] = true;
     }
   }
@@ -87,12 +87,12 @@ module.exports = function(tileLayers, tile, writeData, done) {
   for (var m = 0; m < bboxes.length; m++) {
     var valueBbox = bboxes[m];
     var fromHighway = highways[valueBbox[4]].highway;
-    if (preserveType[fromHighway.properties.highway]) {
-      //obtaining first and last coordinates
-      var firstCoord = fromHighway.geometry.coordinates[0];
-      var firstPoint = turf.point(firstCoord);
-      var endCoord = fromHighway.geometry.coordinates[fromHighway.geometry.coordinates.length - 1];
-      var endPoint = turf.point(endCoord);
+    //obtaining first and last coordinates
+    var firstCoord = fromHighway.geometry.coordinates[0];
+    var firstPoint = turf.point(firstCoord);
+    var endCoord = fromHighway.geometry.coordinates[fromHighway.geometry.coordinates.length - 1];
+    var endPoint = turf.point(endCoord);
+    if (preserveType[fromHighway.properties.highway] && !_.isEqual(firstCoord, endCoord)) {
       var overlapsFirstPoint = [];
       if (!turf.inside(firstPoint, bufferLayer)) {
         overlapsFirstPoint = highwaysTree.search(turf.extent(turf.buffer(firstPoint, distance, unit)));
@@ -102,33 +102,34 @@ module.exports = function(tileLayers, tile, writeData, done) {
         overlapsEndPoint = highwaysTree.search(turf.extent(turf.buffer(endPoint, distance, unit)));
       }
       var overlapBboxes = overlapsFirstPoint.concat(overlapsEndPoint);
-      if (!_.isEqual(firstCoord, endCoord)) {
-        var arrayCorrd = [];
-        for (var j = 0; j < overlapBboxes.length; j++) {
-          var overlapBbox = overlapBboxes[j];
-          if (valueBbox[4] !== overlapBbox[4]) {
-            arrayCorrd = arrayCorrd.concat(_.flatten(highways[overlapBbox[4]].highway.geometry.coordinates));
-          }
+      //if (!_.isEqual(firstCoord, endCoord)) {
+      var arrayCorrd = [];
+      for (var j = 0; j < overlapBboxes.length; j++) {
+        var overlapBbox = overlapBboxes[j];
+        if (valueBbox[4] !== overlapBbox[4]) {
+          arrayCorrd = arrayCorrd.concat(_.flatten(highways[overlapBbox[4]].highway.geometry.coordinates));
         }
-        var type;
-        if (majorRoads[fromHighway.properties.highway]) {
-          type = 'major';
-        } else if (minorRoads[fromHighway.properties.highway]) {
-          type = 'minor';
-        } else if (pathRoads[fromHighway.properties.highway]) {
-          type = 'path';
-        }
-        var props = {
-          fromWay: fromHighway.properties._osm_way_id,
-          _osmlint: osmlint,
-          type: type
-        };
-        fromHighway.properties.type = type;
+      }
+      var type;
+      if (majorRoads[fromHighway.properties.highway]) {
+        type = 'major';
+      } else if (minorRoads[fromHighway.properties.highway]) {
+        type = 'minor';
+      } else if (pathRoads[fromHighway.properties.highway]) {
+        type = 'path';
+      }
+      var props = {
+        fromWay: fromHighway.properties._osm_way_id,
+        _osmlint: osmlint,
+        type: type
+      };
+      fromHighway.properties.type = type;
+      if (!avoidPoints[firstCoord.join('-')]) {
         for (var k = 0; k < overlapsFirstPoint.length; k++) {
           var overlapPointFirst = overlapsFirstPoint[k];
           var toHighwayFirst = highways[overlapPointFirst[4]].highway;
 
-          if (valueBbox[4] !== overlapPointFirst[4] && (arrayCorrd.indexOf(firstCoord[0]) === -1 || arrayCorrd.indexOf(firstCoord[1]) === -1) && !avoidPoints[firstCoord.join('-')]) {
+          if (valueBbox[4] !== overlapPointFirst[4] && (arrayCorrd.indexOf(firstCoord[0]) === -1 || arrayCorrd.indexOf(firstCoord[1]) === -1)) {
             if (turf.inside(firstPoint, highways[overlapPointFirst[4]].buffer)) {
               props.toWay = toHighwayFirst.properties._osm_way_id;
               firstPoint.properties = props;
@@ -150,10 +151,12 @@ module.exports = function(tileLayers, tile, writeData, done) {
             }
           }
         }
+      }
+      if (!avoidPoints[endCoord.join('-')]) {
         for (var l = 0; l < overlapsEndPoint.length; l++) {
           var overlapPointEnd = overlapsEndPoint[l];
           var toHighwayEnd = highways[overlapPointEnd[4]].highway;
-          if (valueBbox[4] !== overlapPointEnd[4] && (arrayCorrd.indexOf(endCoord[0]) === -1 || arrayCorrd.indexOf(endCoord[1]) === -1) && !avoidPoints[endCoord.join('-')]) {
+          if (valueBbox[4] !== overlapPointEnd[4] && (arrayCorrd.indexOf(endCoord[0]) === -1 || arrayCorrd.indexOf(endCoord[1]) === -1)) {
             if (turf.inside(endPoint, highways[overlapPointEnd[4]].buffer)) {
               props.toWay = toHighwayEnd.properties._osm_way_id;
               endPoint.properties = props;
