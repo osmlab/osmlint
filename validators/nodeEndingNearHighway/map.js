@@ -34,7 +34,8 @@ module.exports = function(tileLayers, tile, writeData, done) {
     'track': true,
     'footway': true,
     'path': true,
-    'cycleway': true
+    'cycleway': true,
+    'steps': true
   };
   var preserveType = {};
   preserveType = _.extend(preserveType, majorRoads);
@@ -123,7 +124,7 @@ module.exports = function(tileLayers, tile, writeData, done) {
         _osmlint: osmlint,
         type: type
       };
-      fromHighway.properties.type = type;
+
       if (!avoidPoints[firstCoord.join('-')]) {
         for (var k = 0; k < overlapsFirstPoint.length; k++) {
           var overlapPointFirst = overlapsFirstPoint[k];
