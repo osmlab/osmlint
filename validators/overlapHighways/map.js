@@ -49,8 +49,8 @@ module.exports = function(tileLayers, tile, writeData, done) {
           var coordinates = intersect.geometry.coordinates;
           var props = {
             _osmlint: osmlint,
-            wayA: bbox[4],
-            wayB: overlap[4]
+            fromWay: bbox[4],
+            toWay: overlap[4]
           };
           if (intersect.geometry.type === 'MultiLineString') {
             for (var l = 0; l < coordinates.length; l++) {
