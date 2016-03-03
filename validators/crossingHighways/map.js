@@ -37,8 +37,7 @@ module.exports = function(tileLayers, tile, writeData, done) {
   var preserveType = {};
   preserveType = _.extend(preserveType, majorRoads);
   preserveType = _.extend(preserveType, minorRoads);
-  preserveType = _.extend(preserveType, pathRoads);
-
+  //preserveType = _.extend(preserveType, pathRoads);
   var osmlint = 'crossinghighways';
 
   for (var i = 0; i < layer.features.length; i++) {
@@ -71,8 +70,8 @@ module.exports = function(tileLayers, tile, writeData, done) {
             var toHighway = highways[overlap[4]];
             fromHighway.properties._osmlint = osmlint;
             toHighway.properties._osmlint = osmlint;
-            output[overlap[4]] = fromHighway;
-            output[bbox[4]] = toHighway;
+            output[bbox[4]] = fromHighway;
+            output[overlap[4]] = toHighway;
             var type;
             if (majorRoads[fromHighway.properties.highway] && majorRoads[toHighway.properties.highway]) {
               type = 'major-major';
@@ -88,8 +87,8 @@ module.exports = function(tileLayers, tile, writeData, done) {
               type = 'path-path';
             }
             intersectPoint.properties = {
-              fromWay: bbox[4],
-              toWay: overlap[4],
+              fromWay: fromHighway.properties._osm_way_id,
+              toWay: toHighway.properties._osm_way_id,
               _osmlint: osmlint,
               type: type
             };
@@ -112,4 +111,5 @@ module.exports = function(tileLayers, tile, writeData, done) {
   }
 
   done(null, null);
+
 };
