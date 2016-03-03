@@ -103,7 +103,6 @@ module.exports = function(tileLayers, tile, writeData, done) {
         overlapsEndPoint = highwaysTree.search(turf.extent(turf.buffer(endPoint, distance, unit)));
       }
       var overlapBboxes = overlapsFirstPoint.concat(overlapsEndPoint);
-      //if (!_.isEqual(firstCoord, endCoord)) {
       var arrayCorrd = [];
       for (var j = 0; j < overlapBboxes.length; j++) {
         var overlapBbox = overlapBboxes[j];
@@ -141,12 +140,15 @@ module.exports = function(tileLayers, tile, writeData, done) {
               if (_.intersection(valueCoorF, overlapCoorF).length < 2) {
                 fromHighway.properties._osmlint = osmlint;
                 toHighwayFirst.properties._osmlint = osmlint;
-                output[valueBbox[4]] = fromHighway;
-                output[overlapPointFirst[4]] = toHighwayFirst;
-                if (fromHighway.properties._osm_way_id > toHighwayFirst.properties._osm_way_id) {
-                  output[valueBbox[4].toString().concat(overlapPointFirst[4])] = firstPoint;
-                } else {
-                  output[overlapPointFirst[4].toString().concat(valueBbox[4])] = firstPoint;
+                //both roads must have the same layer and road to connect should not be in construction
+                if ((fromHighway.properties.layer === toHighwayFirst.properties.layer) && toHighwayFirst.properties.highway !== 'construction') {
+                  output[valueBbox[4]] = fromHighway;
+                  output[overlapPointFirst[4]] = toHighwayFirst;
+                  if (fromHighway.properties._osm_way_id > toHighwayFirst.properties._osm_way_id) {
+                    output[valueBbox[4].toString().concat(overlapPointFirst[4])] = firstPoint;
+                  } else {
+                    output[overlapPointFirst[4].toString().concat(valueBbox[4])] = firstPoint;
+                  }
                 }
               }
             }
@@ -168,12 +170,15 @@ module.exports = function(tileLayers, tile, writeData, done) {
               if (_.intersection(valueCoorE, overlapCoorE).length < 2) {
                 fromHighway.properties._osmlint = osmlint;
                 toHighwayEnd.properties._osmlint = osmlint;
-                output[valueBbox[4]] = fromHighway;
-                output[overlapPointEnd[4]] = toHighwayEnd;
-                if (fromHighway.properties._osm_way_id > toHighwayEnd.properties._osm_way_id) {
-                  output[valueBbox[4].toString().concat(overlapPointEnd[4])] = endPoint;
-                } else {
-                  output[overlapPointEnd[4].toString().concat(valueBbox[4])] = endPoint;
+                //both roads must have the same layer and road to connect should not be in construction
+                if ((fromHighway.properties.layer === toHighwayEnd.properties.layer) && toHighwayEnd.properties.highway !== 'construction') {
+                  output[valueBbox[4]] = fromHighway;
+                  output[overlapPointEnd[4]] = toHighwayEnd;
+                  if (fromHighway.properties._osm_way_id > toHighwayEnd.properties._osm_way_id) {
+                    output[valueBbox[4].toString().concat(overlapPointEnd[4])] = endPoint;
+                  } else {
+                    output[overlapPointEnd[4].toString().concat(valueBbox[4])] = endPoint;
+                  }
                 }
               }
             }
