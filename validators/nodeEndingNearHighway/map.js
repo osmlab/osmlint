@@ -120,9 +120,9 @@ module.exports = function(tileLayers, tile, writeData, done) {
         type = 'path';
       }
       var props = {
-        fromWay: fromHighway.properties._osm_way_id,
+        _fromWay: fromHighway.properties._osm_way_id,
         _osmlint: osmlint,
-        type: type
+        _type: type
       };
 
       if (!avoidPoints[firstCoord.join('-')]) {

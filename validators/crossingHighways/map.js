@@ -87,10 +87,10 @@ module.exports = function(tileLayers, tile, writeData, done) {
               type = 'path-path';
             }
             intersectPoint.properties = {
-              fromWay: fromHighway.properties._osm_way_id,
-              toWay: toHighway.properties._osm_way_id,
+              _fromWay: fromHighway.properties._osm_way_id,
+              _toWay: toHighway.properties._osm_way_id,
               _osmlint: osmlint,
-              type: type
+              _type: type
             };
             if (fromHighway.properties._osm_way_id > toHighway.properties._osm_way_id) {
               output[bbox[4].toString().concat(overlap[4])] = intersectPoint;
