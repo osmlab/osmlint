@@ -41,7 +41,9 @@ module.exports = function(tileLayers, tile, writeData, done) {
   for (var i = 0; i < layer.features.length; i++) {
     var highway = layer.features[i];
     if (preserveType[highway.properties.highway] && highway.geometry.type === 'LineString') {
-      output.push(highway);
+      if (highway.geometry.coordinates.length > 2) {
+        output.push(highway);
+      }
     }
   }
   var result = [];
@@ -62,11 +64,9 @@ module.exports = function(tileLayers, tile, writeData, done) {
       result.push(road);
     }
   }
-
   if (result.length > 0) {
     var fc = turf.featurecollection(result);
     writeData(JSON.stringify(fc) + '\n');
   }
-
   done(null, null);
 };
