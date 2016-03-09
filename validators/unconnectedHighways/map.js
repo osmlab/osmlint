@@ -13,26 +13,40 @@ module.exports = function(tileLayers, tile, writeData, done) {
   var bufferLayer = turf.buffer(bboxLayer, 0.01, 'miles').features[0];
   var highways = {};
   var bboxes = [];
-  var preserveType = {
+  var majorRoads = {
     'motorway': true,
-    'motorway_link': true,
-    'primary': true,
-    'primary_link': true,
-    'secondary': true,
-    'secondary_link': true,
-    'tertiary': true,
-    'tertiary_link': true,
     'trunk': true,
+    'primary': true,
+    'secondary': true,
+    'tertiary': true,
+    'motorway_link': true,
     'trunk_link': true,
-    'residential': true,
-    'unclassified': true,
-    'living_street': true,
-    'road': true,
-    'service': true
+    'primary_link': true,
+    'secondary_link': true,
+    'tertiary_link': true
   };
+  var minorRoads = {
+    'unclassified': true,
+    'residential': true,
+    'living_street': true,
+    'service': true,
+    'road': true
+  };
+  var pathRoads = {
+    'pedestrian': true,
+    'track': true,
+    'footway': true,
+    'path': true,
+    'cycleway': true,
+    'steps': true
+  };
+  var preserveType = {};
+  preserveType = _.extend(preserveType, majorRoads);
+  preserveType = _.extend(preserveType, minorRoads);
+  //preserveType = _.extend(preserveType, pathRoads);
   var osmlint = 'unconnectedhighways';
-
-  layer.features.forEach(function(val) {
+  for (var z = 0; z < layer.features.length; z++) {
+    var val = layer.features[z];
     if (val.geometry.type === 'LineString' && val.properties.highway) {
       var bboxA = turf.extent(val);
       bboxA.push({
@@ -55,7 +69,7 @@ module.exports = function(tileLayers, tile, writeData, done) {
         }
       }
     }
-  });
+  }
 
   var highwaysTree = rbush(bboxes.length);
   highwaysTree.load(bboxes);
@@ -101,6 +115,14 @@ module.exports = function(tileLayers, tile, writeData, done) {
           var mine = _.min(arre);
           //min distance from first and end point to shortest segment should be > 2 meters
           if (minf !== Infinity && minf > 2 && mine !== Infinity && mine > 2) {
+            //roads classification
+            if (majorRoads[valueHighway.properties.highway]) {
+              valueHighway.properties._type = 'major';
+            } else if (minorRoads[valueHighway.properties.highway]) {
+              valueHighway.properties._type = 'minor';
+            } else if (pathRoads[valueHighway.properties.highway]) {
+              valueHighway.properties._type = 'path';
+            }
             output[valueBbox[4].id] = valueHighway;
           }
         }
