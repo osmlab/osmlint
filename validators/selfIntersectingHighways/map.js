@@ -54,11 +54,11 @@ module.exports = function(tileLayers, tile, writeData, done) {
     var intersect = turf.intersect(road, output[j]);
     if (intersect.geometry.coordinates.length > roadLength) {
       if (majorRoads[road.properties.highway]) {
-        intersect.properties._type = 'major';
+        road.properties._type = 'major';
       } else if (minorRoads[road.properties.highway]) {
-        intersect.properties._type = 'minor';
+        road.properties._type = 'minor';
       } else if (pathRoads[road.properties.highway]) {
-        intersect.properties._type = 'path';
+        road.properties._type = 'path';
       }
       road.properties._osmlint = osmlint;
       result.push(road);
