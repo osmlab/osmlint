@@ -10,8 +10,8 @@ module.exports = {
   'selfIntersectingHighways': require('./validators/selfIntersectingHighways'),
   'unclosedWays': require('./validators/unclosedWays'),
   'crossingHighways': require('./validators/crossingHighways'),
-  'nodeEndingNearHighway': require('./validators/nodeEndingNearHighway'),
-  'crossingWaterwaysHighways': require('./validators/crossingWaterwaysHighways'),
   'unconnectedHighways': require('./validators/unconnectedHighways'),
+  'crossingWaterwaysHighways': require('./validators/crossingWaterwaysHighways'),
+  'islandsHighways': require('./validators/islandsHighways'),
   'overlapHighways': require('./validators/overlapHighways')
 };

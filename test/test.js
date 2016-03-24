@@ -10,9 +10,9 @@ var bbox = [7.4068451, 43.723259, 7.4422073, 43.752901];
 var zoom = 12;
 var mbtiles = path.join(__dirname, '/fixtures/monaco.mbtiles');
 var bridgeOnNodeTiles = path.join(__dirname, '/fixtures/bridgeonnode.mbtiles');
-var nodeendingnearhighwayTiles = path.join(__dirname, '/fixtures/nodeendingnearhighway.mbtiles');
-var crossingwaterwayshighwaysTiles = path.join(__dirname, '/fixtures/crossingwaterwayshighways.mbtiles');
 var unconnectedhighwaysTiles = path.join(__dirname, '/fixtures/unconnectedhighways.mbtiles');
+var crossingwaterwayshighwaysTiles = path.join(__dirname, '/fixtures/crossingwaterwayshighways.mbtiles');
+var islandsHighwaysTiles = path.join(__dirname, '/fixtures/islandshighways.mbtiles');
 
 var optsbridgeOnNode = {
   bbox: [114.445, 3.656, 126.376, 11.738],
@@ -184,16 +184,16 @@ test('crossingHighways', function(t) {
   });
 });
 
-test('nodeEndingNearHighway', function(t) {
+test('unconnectedHighways', function(t) {
   t.plan(3);
   logInterceptor();
-  processors.nodeEndingNearHighway(opts, nodeendingnearhighwayTiles, function() {
+  processors.unconnectedHighways(opts, unconnectedhighwaysTiles, function() {
     var logs = logInterceptor.end();
     for (var i = 0; i < logs.length; i++) {
       var geoJSON = JSON.parse(logs[i]);
       t.comment('Pass: ' + (i + 1));
       if (geoJSON.features.length > 0) {
-        t.equal(geoJSON.features[0].properties._osmlint, 'nodeendingnearhighway', 'Should be nodeendingnearhighway');
+        t.equal(geoJSON.features[0].properties._osmlint, 'unconnectedhighways', 'Should be unconnectedhighways');
         t.equal(geoJSON.features[0].geometry.type, 'LineString', 'Should be LineString');
         t.equal(geoJSON.features[5].geometry.type, 'Point', 'Should be Point');
       }
@@ -220,16 +220,16 @@ test('crossingWaterwaysHighways', function(t) {
   });
 });
 
-test('unconnectedHighways', function(t) {
+test('islandsHighways', function(t) {
   t.plan(2);
   logInterceptor();
-  processors.unconnectedHighways(opts, unconnectedhighwaysTiles, function() {
+  processors.islandsHighways(opts, islandsHighwaysTiles, function() {
     var logs = logInterceptor.end();
     for (var i = 0; i < logs.length; i++) {
       var geoJSON = JSON.parse(logs[i]);
       t.comment('Pass: ' + (i + 1));
       if (geoJSON.features.length > 0) {
-        t.equal(geoJSON.features[0].properties._osmlint, 'unconnectedhighways', 'Should be unconnectedhighways');
+        t.equal(geoJSON.features[0].properties._osmlint, 'islandshighways', 'Should be islandsHighways');
         t.equal(geoJSON.features[0].geometry.type, 'LineString', 'Should be LineString');
       }
     }

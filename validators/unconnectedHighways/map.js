@@ -2,7 +2,6 @@
 var turf = require('turf');
 var _ = require('underscore');
 var rbush = require('rbush');
-var geojsonCoords = require('geojson-coords');
 var flatten = require('geojson-flatten');
 
 module.exports = function(tileLayers, tile, writeData, done) {
@@ -11,8 +10,6 @@ module.exports = function(tileLayers, tile, writeData, done) {
   bboxLayer.geometry.type = 'LineString';
   bboxLayer.geometry.coordinates = bboxLayer.geometry.coordinates[0];
   var bufferLayer = turf.buffer(bboxLayer, 0.01, 'miles').features[0];
-  var highways = {};
-  var bboxes = [];
   var majorRoads = {
     'motorway': true,
     'trunk': true,
@@ -43,100 +40,156 @@ module.exports = function(tileLayers, tile, writeData, done) {
   var preserveType = {};
   preserveType = _.extend(preserveType, majorRoads);
   preserveType = _.extend(preserveType, minorRoads);
-  //preserveType = _.extend(preserveType, pathRoads);
+  preserveType = _.extend(preserveType, pathRoads);
+  var unit = 'meters';
+  var distance = 5;
+  var highways = {};
+  var bboxes = [];
+  var output = {};
   var osmlint = 'unconnectedhighways';
-  for (var z = 0; z < layer.features.length; z++) {
-    var val = layer.features[z];
+  var avoidPoints = {};
+
+  for (var i = 0; i < layer.features.length; i++) {
+    var val = layer.features[i];
+    // Linestring evaluation
     if (val.geometry.type === 'LineString' && val.properties.highway) {
-      var bboxA = turf.extent(val);
-      bboxA.push({
-        id: val.properties._osm_way_id
-      });
-      bboxes.push(bboxA);
-      highways[val.properties._osm_way_id] = val;
-    } else if (val.geometry.type === 'MultiLineString' && val.properties.highway) {
+      var bboxL = turf.extent(val);
+      bboxL.push(val.properties._osm_way_id + 'L');
+      bboxes.push(bboxL);
+      highways[val.properties._osm_way_id + 'L'] = {
+        highway: val,
+        buffer: turf.buffer(val, distance, unit).features[0]
+      };
+    } else if (val.geometry.type === 'MultiLineString' && val.properties.highway) { //MultiLineString evaluation
       var flat = flatten(val);
       var id = val.properties._osm_way_id + 'L';
       for (var f = 0; f < flat.length; f++) {
         if (flat[f].geometry.type === 'LineString') {
-          var bboxB = turf.extent(flat[f]);
+          var bboxM = turf.extent(flat[f]);
           var idFlat = id + 'M' + f;
-          bboxB.push({
-            id: idFlat
-          });
-          bboxes.push(bboxB);
-          highways[idFlat] = flat[f];
+          bboxM.push(idFlat);
+          bboxes.push(bboxM);
+          highways[idFlat] = {
+            highway: flat[f],
+            buffer: turf.buffer(flat[f], distance, unit).features[0]
+          };
         }
       }
+    }
+    //check entrance, noexit and barrier
+    if (val.geometry.type === 'Point' && (val.properties.entrance || val.properties.noexit === 'yes' || val.properties.barrier || val.properties.highway === 'turning_circle')) {
+      avoidPoints[val.geometry.coordinates.join('-')] = true;
     }
   }
 
   var highwaysTree = rbush(bboxes.length);
   highwaysTree.load(bboxes);
-  var output = {};
 
-  for (var i = 0; i < bboxes.length; i++) {
-    var valueBbox = bboxes[i];
-    var valueHighway = highways[valueBbox[4].id];
-    valueHighway.properties._osmlint = osmlint;
-    var firstCoord = valueHighway.geometry.coordinates[0];
-    var endCoord = valueHighway.geometry.coordinates[valueHighway.geometry.coordinates.length - 1];
-    if (!turf.inside(turf.point(firstCoord), bufferLayer) && !turf.inside(turf.point(endCoord), bufferLayer)) {
-      var overlapBboxes = highwaysTree.search(valueBbox);
-      if (overlapBboxes.length === 1) {
-        output[valueBbox[4].id] = valueHighway;
-      } else {
-        var nearHighways = turf.featurecollection([]);
-        for (var j = 0; j < overlapBboxes.length; j++) {
-          var overlapBbox = overlapBboxes[j];
-          if (valueBbox[4].id !== overlapBbox[4].id) {
-            nearHighways.features.push(highways[overlapBbox[4].id]);
+  for (var m = 0; m < bboxes.length; m++) {
+    var valueBbox = bboxes[m];
+    var fromHighway = highways[valueBbox[4]].highway;
+    //obtaining first and last coordinates
+    var firstCoord = fromHighway.geometry.coordinates[0];
+    var firstPoint = turf.point(firstCoord);
+    var endCoord = fromHighway.geometry.coordinates[fromHighway.geometry.coordinates.length - 1];
+    var endPoint = turf.point(endCoord);
+    if (preserveType[fromHighway.properties.highway] && !_.isEqual(firstCoord, endCoord)) {
+      var overlapsFirstPoint = [];
+      if (!turf.inside(firstPoint, bufferLayer)) {
+        overlapsFirstPoint = highwaysTree.search(turf.extent(turf.buffer(firstPoint, distance, unit)));
+      }
+      var overlapsEndPoint = [];
+      if (!turf.inside(endPoint, bufferLayer)) {
+        overlapsEndPoint = highwaysTree.search(turf.extent(turf.buffer(endPoint, distance, unit)));
+      }
+      var overlapBboxes = overlapsFirstPoint.concat(overlapsEndPoint);
+      var arrayCorrd = [];
+      for (var j = 0; j < overlapBboxes.length; j++) {
+        var overlapBbox = overlapBboxes[j];
+        if (valueBbox[4] !== overlapBbox[4]) {
+          arrayCorrd = arrayCorrd.concat(_.flatten(highways[overlapBbox[4]].highway.geometry.coordinates));
+        }
+      }
+      var type;
+      if (majorRoads[fromHighway.properties.highway]) {
+        type = 'major';
+      } else if (minorRoads[fromHighway.properties.highway]) {
+        type = 'minor';
+      } else if (pathRoads[fromHighway.properties.highway]) {
+        type = 'path';
+      }
+      var props = {
+        _fromWay: fromHighway.properties._osm_way_id,
+        _osmlint: osmlint,
+        _type: type
+      };
+
+      if (!avoidPoints[firstCoord.join('-')]) {
+        for (var k = 0; k < overlapsFirstPoint.length; k++) {
+          var overlapPointFirst = overlapsFirstPoint[k];
+          var toHighwayFirst = highways[overlapPointFirst[4]].highway;
+
+          if (valueBbox[4] !== overlapPointFirst[4] && (arrayCorrd.indexOf(firstCoord[0]) === -1 || arrayCorrd.indexOf(firstCoord[1]) === -1)) {
+            if (turf.inside(firstPoint, highways[overlapPointFirst[4]].buffer)) {
+              props.toWay = toHighwayFirst.properties._osm_way_id;
+              firstPoint.properties = props;
+              //Check out whether the streets are connected at some point
+              var coordinatesF = fromHighway.geometry.coordinates;
+              var valueCoorF = _.flatten([coordinatesF[1], coordinatesF[2]]);
+              var overlapCoorF = _.flatten(toHighwayFirst.geometry.coordinates);
+              if (_.intersection(valueCoorF, overlapCoorF).length < 2) {
+                fromHighway.properties._osmlint = osmlint;
+                toHighwayFirst.properties._osmlint = osmlint;
+                //both roads must have the same layer and road to connect should not be in construction
+                if ((fromHighway.properties.layer === toHighwayFirst.properties.layer) && toHighwayFirst.properties.highway !== 'construction') {
+                  output[valueBbox[4]] = fromHighway;
+                  output[overlapPointFirst[4]] = toHighwayFirst;
+                  if (fromHighway.properties._osm_way_id > toHighwayFirst.properties._osm_way_id) {
+                    output[valueBbox[4].toString().concat(overlapPointFirst[4])] = firstPoint;
+                  } else {
+                    output[overlapPointFirst[4].toString().concat(valueBbox[4])] = firstPoint;
+                  }
+                }
+              }
+            }
           }
         }
-        var valueCoordinates = geojsonCoords(valueHighway);
-        var nearCoordinates = geojsonCoords(nearHighways);
-        //filter all highways without any connection
-        if (_.intersection(_.flatten(valueCoordinates), _.flatten(nearCoordinates)).length < 2) {
-          var obj = {};
-          var arrf = [];
-          var arre = [];
-          for (var l = 0; l < nearHighways.features.length; l++) {
-            var coords = nearHighways.features[l].geometry.coordinates;
-            for (var m = 0; m < coords.length - 1; m++) {
-              var firstDistance = distancePoint2Line(firstCoord[0], firstCoord[1], coords[m][0], coords[m][1], coords[m + 1][0], coords[m + 1][1]);
-              var endDistance = distancePoint2Line(endCoord[0], endCoord[1], coords[m][0], coords[m][1], coords[m + 1][0], coords[m + 1][1]);
-              obj[firstDistance] = turf.linestring([coords[m][0], coords[m][1], coords[m + 1][0], coords[m + 1][1]]);
-              obj[endDistance] = turf.linestring([coords[m][0], coords[m][1], coords[m + 1][0], coords[m + 1][1]]);
-              arrf.push(firstDistance);
-              arre.push(endDistance);
+      }
+      if (!avoidPoints[endCoord.join('-')]) {
+        for (var l = 0; l < overlapsEndPoint.length; l++) {
+          var overlapPointEnd = overlapsEndPoint[l];
+          var toHighwayEnd = highways[overlapPointEnd[4]].highway;
+          if (valueBbox[4] !== overlapPointEnd[4] && (arrayCorrd.indexOf(endCoord[0]) === -1 || arrayCorrd.indexOf(endCoord[1]) === -1)) {
+            if (turf.inside(endPoint, highways[overlapPointEnd[4]].buffer)) {
+              props.toWay = toHighwayEnd.properties._osm_way_id;
+              endPoint.properties = props;
+              //Check out whether the streets are connected at some point
+              var coordinatesE = fromHighway.geometry.coordinates;
+              var valueCoorE = _.flatten([coordinatesE[coordinatesE.length - 1], coordinatesE[coordinatesE.length - 2]]);
+              var overlapCoorE = _.flatten(toHighwayEnd.geometry.coordinates);
+              if (_.intersection(valueCoorE, overlapCoorE).length < 2) {
+                fromHighway.properties._osmlint = osmlint;
+                toHighwayEnd.properties._osmlint = osmlint;
+                //both roads must have the same layer and road to connect should not be in construction
+                if ((fromHighway.properties.layer === toHighwayEnd.properties.layer) && toHighwayEnd.properties.highway !== 'construction') {
+                  output[valueBbox[4]] = fromHighway;
+                  output[overlapPointEnd[4]] = toHighwayEnd;
+                  if (fromHighway.properties._osm_way_id > toHighwayEnd.properties._osm_way_id) {
+                    output[valueBbox[4].toString().concat(overlapPointEnd[4])] = endPoint;
+                  } else {
+                    output[overlapPointEnd[4].toString().concat(valueBbox[4])] = endPoint;
+                  }
+                }
+              }
             }
-          }
-          var minf = _.min(arrf);
-          var mine = _.min(arre);
-          //min distance from first and end point to shortest segment should be > 2 meters
-          if (minf !== Infinity && minf > 2 && mine !== Infinity && mine > 2) {
-            //roads classification
-            if (majorRoads[valueHighway.properties.highway]) {
-              valueHighway.properties._type = 'major';
-            } else if (minorRoads[valueHighway.properties.highway]) {
-              valueHighway.properties._type = 'minor';
-            } else if (pathRoads[valueHighway.properties.highway]) {
-              valueHighway.properties._type = 'path';
-            }
-            output[valueBbox[4].id] = valueHighway;
           }
         }
       }
     }
   }
 
-  var result = [];
+  var result = _.values(output);
 
-  _.each(output, function(road) {
-    if (preserveType[road.properties.highway]) {
-      result.push(road);
-    }
-  });
   if (result.length > 0) {
     var fc = turf.featurecollection(result);
     writeData(JSON.stringify(fc) + '\n');
@@ -145,29 +198,3 @@ module.exports = function(tileLayers, tile, writeData, done) {
   done(null, null);
 
 };
-
-function distancePoint2Line(x, y, x1, y1, x2, y2) {
-  var A = x - x1;
-  var B = y - y1;
-  var C = x2 - x1;
-  var D = y2 - y1;
-  var dot = A * C + B * D;
-  var lenSq = C * C + D * D;
-  var param = -1;
-  if (lenSq !== 0)
-    param = dot / lenSq;
-  var xx, yy;
-  if (param < 0) {
-    xx = x1;
-    yy = y1;
-  } else if (param > 1) {
-    xx = x2;
-    yy = y2;
-  } else {
-    xx = x1 + param * C;
-    yy = y1 + param * D;
-  }
-  var dx = x - xx;
-  var dy = y - yy;
-  return Math.sqrt(dx * dx + dy * dy) * 100 * 1000;
-}
