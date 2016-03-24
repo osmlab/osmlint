@@ -46,7 +46,7 @@ module.exports = function(tileLayers, tile, writeData, done) {
   var highways = {};
   var bboxes = [];
   var output = {};
-  var osmlint = 'nodeendingnearhighway';
+  var osmlint = 'unconnectedhighways';
   var avoidPoints = {};
 
   for (var i = 0; i < layer.features.length; i++) {

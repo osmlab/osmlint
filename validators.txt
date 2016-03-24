@@ -43,11 +43,11 @@ osmlint selfintersectinghighways
 
   osmlint selfintersectinghighways --bbox="[7.4, 43.7, 7.4, 43.7]" --zoom=15 osm.mbtiles
 
-osmlint nodeendingnearhighway
+osmlint unconnectedhighways
 
   Identifies highway nodes ending near another highway, when the two highways don't intersect, and sends them to stdout.
 
-  osmlint nodeendingnearhighway --bbox="[7.4, 43.7, 7.4, 43.7]" --zoom=15 osm.mbtiles
+  osmlint unconnectedhighways --bbox="[7.4, 43.7, 7.4, 43.7]" --zoom=15 osm.mbtiles
 
 osmlint crossingwaterwayshighways
 
