@@ -44,7 +44,7 @@ module.exports = function(tileLayers, tile, writeData, done) {
   preserveType = _.extend(preserveType, majorRoads);
   preserveType = _.extend(preserveType, minorRoads);
   //preserveType = _.extend(preserveType, pathRoads);
-  var osmlint = 'unconnectedhighways';
+  var osmlint = 'islandshighways';
   for (var z = 0; z < layer.features.length; z++) {
     var val = layer.features[z];
     if (val.geometry.type === 'LineString' && val.properties.highway) {
