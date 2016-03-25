@@ -1,13 +1,10 @@
 #### Description
-This validator detects all the highways that intersect each other. Highways need to be joined by a node.  
+
+This validator detects all the highways that intersect each other. Highways must be connected by a node.  
 
 ![image](https://cloud.githubusercontent.com/assets/10425629/13934247/18cb19ca-ef7f-11e5-9429-f36dcec27611.png)
 
-#### Example
-You can obtain the intersection of highways without a node in Peru, into a .json file
+#### Usage
 
-Process:
-* Downloading [peru.mbtiles](https://s3.amazonaws.com/mapbox/osm-qa-tiles/latest.country/peru.mbtiles.gz)
-
-* Running in the terminal:  
-`osmlint crossinghighways --bbox="[-85.348663,-19.664209,-64.606476,1.3831570]" --zoom=12 peru.mbtiles >peru.json`
+1. Download [OSM QA Tiles](https://osmlab.github.io/osm-qa-tiles/) for the planet or a country that you are interested in. 
+2. For example, to run for peru.mbtiles: `osmlint crossinghighways --bbox="[-85.348663,-19.664209,-64.606476,1.3831570]" --zoom=12 peru.mbtiles`
