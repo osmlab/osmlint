@@ -9,11 +9,11 @@ module.exports = function(opts, qaTilesPath, tigerTilesPath, callback) {
       map: path.join(__dirname, '/map.js'),
       sources: [{
         name: 'osm',
-        mbtiles: path.join(__dirname, qaTilesPath),
+        mbtiles: qaTilesPath,
         raw: true
       }, {
         name: 'tiger',
-        mbtiles: path.join(__dirname, tigerTilesPath),
+        mbtiles: tigerTilesPath,
         raw: true
       }]
     })

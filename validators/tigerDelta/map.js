@@ -1,7 +1,6 @@
 'use strict';
 var linematch = require('linematch');
 var lineclip = require('lineclip');
-var turf = require('turf');
 
 module.exports = function(data, tile, writeData, done) {
 
@@ -22,7 +21,7 @@ module.exports = function(data, tile, writeData, done) {
         type: 'MultiLineString',
         coordinates: toGeoJSON(diff, tile)
       }
-    }) + ']}');
+    }) + ']}\n');
   }
   done(null, null);
 };
