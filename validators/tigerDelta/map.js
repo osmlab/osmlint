@@ -3,26 +3,32 @@ var linematch = require('linematch');
 var lineclip = require('lineclip');
 
 module.exports = function(data, tile, writeData, done) {
-
-  // filter and normalize input geometry
+  //filter and normalize input geometry
   var tiger = toLines(data.tiger.tiger2015);
   var streets = toLines(data.osm.osm);
-
-  // find tiger parts that are not covered by streets within 10 pixels;
-  // filter out chunks that are too short
-  var diff = linematch(tiger, streets, 10).filter(filterShort);
-
+  //find tiger parts that are not covered by streets within 10 pixels;
+  //filter out chunks that are too short
+  var diff = linematch(tiger, streets, 20).filter(filterShort);
   if (diff.length) {
-    
-    writeData('{"type": "FeatureCollection", "features": [' + JSON.stringify({
-      type: 'Feature',
-      properties: {},
-      geometry: {
-        type: 'MultiLineString',
-        coordinates: toGeoJSON(diff, tile)
-      }
-    }) + ']}\n');
+    var fc = {
+      'type': 'FeatureCollection',
+      'features': []
+    };
+    toGeoJSON(diff, tile).forEach(function(line) {
+      //write each feature as a linestring
+      var feature = {
+        type: 'Feature',
+        properties: {},
+        geometry: {
+          type: 'LineString',
+          coordinates: line
+        }
+      };
+      fc.features.push(feature);
+    });
+    writeData(JSON.stringify(fc) + '\n');
   }
+
   done(null, null);
 };
 
@@ -55,7 +61,7 @@ function toLines(layer) {
   for (var i = 0; i < layer.length; i++) {
     var feature = layer.feature(i);
 
-    // only consider polygon features with Tiger name or OSM highway tag
+    //only consider polygon features with Tiger name or OSM highway tag
     if (feature.type === 2 && (feature.properties.FULLNAME !== '' || feature.properties.highway)) {
       var geom = feature.loadGeometry();
 
@@ -79,10 +85,10 @@ function normalizeLine(line, extent) {
 }
 
 function filterShort(line) {
-  return dist(line) >= 30; // line length is at least 30 pixels
+  return dist(line) >= 30; //line length is at least 30 pixels
 }
 
-function dist(line) { // approximate distance
+function dist(line) { //approximate distance
   var d = 0;
   for (var i = 1; i < line.length; i++) {
     var dx = line[i][0] - line[i - 1][0];
