@@ -4,9 +4,11 @@ var lineclip = require('lineclip');
 
 module.exports = function(data, tile, writeData, done) {
   var osmlint = 'tigerdelta';
+
   //filter and normalize input geometry
   var tiger = toLines(data.tiger.tiger2015);
   var streets = toLines(data.osm.osm);
+
   //find tiger parts that are not covered by streets within 10 pixels;
   //filter out chunks that are too short
   var diff = linematch(tiger, streets, 20).filter(filterShort);
