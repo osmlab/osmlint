@@ -42,18 +42,23 @@ module.exports = function(tileLayers, tile, writeData, done) {
     if (preserveType[valueHighway.properties.highway] && valueHighway.geometry.type === 'LineString' && valueHighway.geometry.coordinates.length > 2) {
       var coords = valueHighway.geometry.coordinates;
       for (var j = 0; j < coords.length - 2; j++) {
-        var angle = find_angle(coords[j], coords[j + 1], coords[j + 2]);
+        var angle = findAngle(coords[j], coords[j + 1], coords[j + 2]);
         if (angle < 10) {
           var point = turf.point(coords[j + 1]);
-          //roads classification
+          var type;
           if (majorRoads[valueHighway.properties.highway]) {
-            point.properties._type = 'major';
+            type = 'major';
           } else if (minorRoads[valueHighway.properties.highway]) {
-            point.properties._type = 'minor';
+            type = 'minor';
           } else if (pathRoads[valueHighway.properties.highway]) {
-            point.properties._type = 'path';
+            type = 'path';
           }
-          point.properties._osm_way_id = valueHighway.properties._osm_way_id;
+          point.properties = {
+            _fromWay: valueHighway.properties._osm_way_id,
+            _type: type,
+            _osmlint: osmlint
+          };
+          valueHighway.properties._osmlint = osmlint;
           output[valueHighway.properties._osm_way_id] = valueHighway;
           output[coords[j + 1].join('-')] = point;
         }
@@ -72,10 +77,8 @@ module.exports = function(tileLayers, tile, writeData, done) {
 
 };
 
-function find_angle(A, B, C) {
-  //A first point
-  //C second point
-  //B center point
+function findAngle(A, B, C) {
+  //A first point; C second point; B center point
   var pi = 3.14159265;
   var AB = Math.sqrt(Math.pow(B[0] - A[0], 2) + Math.pow(B[1] - A[1], 2));
   var BC = Math.sqrt(Math.pow(B[0] - C[0], 2) + Math.pow(B[1] - C[1], 2));

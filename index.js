@@ -13,5 +13,6 @@ module.exports = {
   'unconnectedHighways': require('./validators/unconnectedHighways'),
   'crossingWaterwaysHighways': require('./validators/crossingWaterwaysHighways'),
   'islandsHighways': require('./validators/islandsHighways'),
-  'overlapHighways': require('./validators/overlapHighways')
+  'overlapHighways': require('./validators/overlapHighways'),
+  'impossibleAngle': require('./validators/impossibleAngle')
 };
