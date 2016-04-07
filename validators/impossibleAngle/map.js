@@ -1,6 +1,7 @@
 'use strict';
 var turf = require('turf');
 var _ = require('underscore');
+var flatten = require('geojson-flatten');
 
 module.exports = function(tileLayers, tile, writeData, done) {
   var layer = tileLayers.osm.osm;
@@ -35,33 +36,47 @@ module.exports = function(tileLayers, tile, writeData, done) {
   preserveType = _.extend(preserveType, majorRoads);
   preserveType = _.extend(preserveType, minorRoads);
   //preserveType = _.extend(preserveType, pathRoads);
+  var highways = [];
   var osmlint = 'impossibleangle';
   var output = {};
+
   for (var i = 0; i < layer.features.length; i++) {
     var valueHighway = layer.features[i];
     if (preserveType[valueHighway.properties.highway] && valueHighway.geometry.type === 'LineString' && valueHighway.geometry.coordinates.length > 2) {
-      var coords = valueHighway.geometry.coordinates;
-      for (var j = 0; j < coords.length - 2; j++) {
-        var angle = findAngle(coords[j], coords[j + 1], coords[j + 2]);
-        if (angle < 10) {
-          var point = turf.point(coords[j + 1]);
-          var type;
-          if (majorRoads[valueHighway.properties.highway]) {
-            type = 'major';
-          } else if (minorRoads[valueHighway.properties.highway]) {
-            type = 'minor';
-          } else if (pathRoads[valueHighway.properties.highway]) {
-            type = 'path';
-          }
-          point.properties = {
-            _fromWay: valueHighway.properties._osm_way_id,
-            _type: type,
-            _osmlint: osmlint
-          };
-          valueHighway.properties._osmlint = osmlint;
-          output[valueHighway.properties._osm_way_id] = valueHighway;
-          output[coords[j + 1].join('-')] = point;
+      highways.push(valueHighway);
+    } else if (preserveType[valueHighway.properties.highway] && valueHighway.geometry.type === 'MultiLineString') {
+      var flat = flatten(valueHighway);
+      for (var f = 0; f < flat.length; f++) {
+        if (flat[f].geometry.type === 'LineString' && flat[f].geometry.coordinates.length > 2) {
+          flat[f].properties = valueHighway.properties;
+          highways.push(flat[f]);
         }
+      }
+    }
+  }
+
+  for (var z = 0; z < highways.length; z++) {
+    var coords = highways[z].geometry.coordinates;
+    for (var j = 0; j < coords.length - 2; j++) {
+      var angle = findAngle(coords[j], coords[j + 1], coords[j + 2]);
+      if (angle < 10) {
+        var point = turf.point(coords[j + 1]);
+        var type;
+        if (majorRoads[highways[z].properties.highway]) {
+          type = 'major';
+        } else if (minorRoads[highways[z].properties.highway]) {
+          type = 'minor';
+        } else if (pathRoads[highways[z].properties.highway]) {
+          type = 'path';
+        }
+        point.properties = {
+          _fromWay: highways[z].properties._osm_way_id,
+          _type: type,
+          _osmlint: osmlint
+        };
+        highways[z].properties._osmlint = osmlint;
+        output[highways[z].properties._osm_way_id] = highways[z];
+        output[coords[j + 1].join('-')] = point;
       }
     }
   }
@@ -76,6 +91,7 @@ module.exports = function(tileLayers, tile, writeData, done) {
   done(null, null);
 
 };
+
 
 function findAngle(A, B, C) {
   //A first point; C second point; B center point
