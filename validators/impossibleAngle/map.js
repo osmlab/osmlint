@@ -35,7 +35,7 @@ module.exports = function(tileLayers, tile, writeData, done) {
   var preserveType = {};
   preserveType = _.extend(preserveType, majorRoads);
   preserveType = _.extend(preserveType, minorRoads);
-  //preserveType = _.extend(preserveType, pathRoads);
+  // preserveType = _.extend(preserveType, pathRoads);
   var highways = [];
   var osmlint = 'impossibleangle';
   var output = {};
@@ -91,7 +91,6 @@ module.exports = function(tileLayers, tile, writeData, done) {
   done(null, null);
 
 };
-
 
 function findAngle(A, B, C) {
   //A first point; C second point; B center point
