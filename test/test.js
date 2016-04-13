@@ -185,7 +185,7 @@ test('crossingHighways', function(t) {
 });
 
 test('unconnectedHighways', function(t) {
-  t.plan(3);
+  t.plan(2);
   logInterceptor();
   processors.unconnectedHighways(opts, unconnectedhighwaysTiles, function() {
     var logs = logInterceptor.end();
@@ -195,7 +195,6 @@ test('unconnectedHighways', function(t) {
       if (geoJSON.features.length > 0) {
         t.equal(geoJSON.features[0].properties._osmlint, 'unconnectedhighways', 'Should be unconnectedhighways');
         t.equal(geoJSON.features[0].geometry.type, 'LineString', 'Should be LineString');
-        t.equal(geoJSON.features[5].geometry.type, 'Point', 'Should be Point');
       }
     }
     t.end();
