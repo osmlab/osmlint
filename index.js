@@ -14,5 +14,6 @@ module.exports = {
   'crossingWaterwaysHighways': require('./validators/crossingWaterwaysHighways'),
   'islandsHighways': require('./validators/islandsHighways'),
   'overlapHighways': require('./validators/overlapHighways'),
-  'impossibleAngle': require('./validators/impossibleAngle')
+  'impossibleAngle': require('./validators/impossibleAngle'),
+  'tigerDelta': require('./validators/tigerDelta')
 };
