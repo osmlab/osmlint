@@ -9,5 +9,5 @@ Find missing roads on osm which exist in TIGER 2015.
 #### Usage
 
 ```
-osmlint tigerdelta --box="[-125.20432,24.200980,-66.581268,49.320899]" --zoom=12 united_states_of_america.mbtiles tiger2015.mbtiles
+osmlint tigerdelta --bbox="[-125.20432,24.200980,-66.581268,49.320899]" --zoom=12 united_states_of_america.mbtiles tiger2015.mbtiles > tiger.csv
 ```
