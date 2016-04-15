@@ -26,7 +26,7 @@ module.exports = function(tileLayers, tile, writeData, done) {
     'unclassified': true,
     'residential': true,
     'living_street': true,
-    'service': true,
+    // 'service': true,
     'road': true
   };
   var pathRoads = {
@@ -40,7 +40,7 @@ module.exports = function(tileLayers, tile, writeData, done) {
   var preserveType = {};
   preserveType = _.extend(preserveType, majorRoads);
   preserveType = _.extend(preserveType, minorRoads);
-  preserveType = _.extend(preserveType, pathRoads);
+  // preserveType = _.extend(preserveType, pathRoads);
   var unit = 'meters';
   var distance = 5;
   var highways = {};
