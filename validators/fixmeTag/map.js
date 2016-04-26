@@ -4,8 +4,12 @@ var turf = require('turf');
 // Filter all objects which has fixme tag.
 module.exports = function(tileLayers, tile, writeData, done) {
   var layer = tileLayers.osm.osm;
+  var omslint = 'fixmetag';
   var result = layer.features.filter(function(obj) {
-    return (obj.properties.fixme || obj.properties.FIXME);
+    if (obj.properties.fixme || obj.properties.FIXME) {
+      obj.properties._osmlint = omslint;
+      return true;
+    }
   });
 
   if (result.length > 0) {
