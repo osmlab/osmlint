@@ -43,7 +43,7 @@ module.exports = function(tileLayers, tile, writeData, done) {
   var preserveType = {};
   preserveType = _.extend(preserveType, majorRoads);
   preserveType = _.extend(preserveType, minorRoads);
-  // preserveType = _.extend(preserveType, pathRoads);
+  preserveType = _.extend(preserveType, pathRoads);
   var osmlint = 'impossibleoneways';
   for (var i = 0; i < layer.features.length; i++) {
     var val = layer.features[i];
@@ -111,109 +111,59 @@ module.exports = function(tileLayers, tile, writeData, done) {
 
   var highwaysTree = rbush(bboxes.length);
   highwaysTree.load(bboxes);
-
   var features = {};
-  for (var m = 0; m < bboxes.length; m++) {
-    var valueBbox = bboxes[m];
-    var valueHighway = highways[valueBbox[4].id];
-    var fCoor = valueHighway.geometry.coordinates[0];
-    var eCoor = valueHighway.geometry.coordinates[valueHighway.geometry.coordinates.length - 1];
-    if (!valueBbox[4].isClipped && valueHighway.properties.oneway && valueHighway.properties.oneway !== 'no' && _.intersection(fCoor, eCoor).length !== 2 && valueHighway.properties.highway !== 'construction') {
-      // var bufferedFCoor = turf.extent(turf.buffer(turf.point(fCoor), 2, 'meters'));
-      var bufferedFCoor = fCoor.reverse().concat(fCoor.reverse());
-      var overlapsFcoor = highwaysTree.search(bufferedFCoor);
-      if (overlapsFcoor.length === 1) {
-        features[valueBbox[4].id] = valueHighway;
-        features[valueBbox[4].id + 'P'] = turf.point(fCoor);
+  for (var key in highways) {
+    var valueHighway = highways[key];
+    var firstCoor = valueHighway.geometry.coordinates[0];
+    var endCoor = valueHighway.geometry.coordinates[valueHighway.geometry.coordinates.length - 1];
+
+    if (valueHighway.properties.oneway && valueHighway.properties.oneway !== 'no' && _.intersection(firstCoor, endCoor).length !== 2) {
+      var overlapsFirstcoor = highwaysTree.search(firstCoor.reverse().concat(firstCoor.reverse()));
+      if (overlapsFirstcoor.length === 1 && !overlapsFirstcoor[0][4].isClipped) {
+        // features[valueHighway.properties._osm_way_id] = valueHighway;
+        // features[valueHighway.properties._osm_way_id + 'P'] = turf.point(firstCoor);
       } else {
-        // var flag = [];
-        // for (var u = 0; u < overlapsFcoor.length; u++) {
-        //   var connectRoadFirst = highways[overlapsFcoor[u][4].id];
-        //   if (valueHighway.properties._osm_way_id !== connectRoadFirst.properties._osm_way_id) { //different roads
-        //     if (overlapsFcoor[u][4].position === 'midle') {
-        //       flag.push('connection');
-        //       // break;
-        //     } else {
-        //       if (typeof connectRoadFirst.properties.oneway === 'undefined' || connectRoadFirst.properties.oneway === 'no') {
-        //         flag.push('connection');
-        //         // break;
-        //       } else {
-        //         //when the road's oneway is = yes or 1
-        //         if ((valueHighway.properties.oneway === 'yes' || valueHighway.properties.oneway === 1) && overlapsFcoor[u][4].position === 'end' && (connectRoadFirst.properties.oneway === 'yes' || connectRoadFirst.properties.oneway === 1)) {
-        //           flag.push('connection');
-        //           // break;
-        //         } else if ((valueHighway.properties.oneway === 'yes' || valueHighway.properties.oneway === 1) && overlapsFcoor[u][4].position === 'first' && connectRoadFirst.properties.oneway === -1) {
-        //           flag.push('connection');
-        //           // break;
-        //         } else if (valueHighway.properties.oneway === -1 && overlapsFcoor[u][4].position === 'first' && (connectRoadFirst.properties.oneway === 'yes' || connectRoadFirst.properties.oneway === 1)) {
-        //           //When the road's oneway is = -1
-        //           flag.push('connection');
-        //           // break;
-        //         } else if (valueHighway.properties.oneway === -1 && overlapsFcoor[u][4].position === 'end' && connectRoadFirst.properties.oneway === -1) {
-        //           flag.push('connection');
-        //           // break;
-        //         } else {
-        //           flag.push('noconnection');
-        //           // continue;
-        //         }
-        //       }
-        //     }
-        //   }
-        // }
-        // if (overlapsFcoor.length === (flag.length + 1) && flag.indexOf('connection') === -1) {
-        //   features[valueBbox[4].id] = valueHighway;
-        //   features[valueBbox[4].id + 'P'] = turf.point(valueHighway.geometry.coordinates[0]);
-        // }
+        var isExitFirst = false;
+        var flagFirst = [];
+        for (var u = 0; u < overlapsFirstcoor.length; u++) {
+          var connectRoad = highways[overlapsFirstcoor[u][4].id];
+          flagFirst.push(connection(overlapsFirstcoor[u][4].position, connectRoad.properties.oneway));
+          if (valueHighway.properties._osm_way_id === connectRoad.properties._osm_way_id && overlapsFirstcoor[u][4].isClipped) {
+            isExitFirst = true;
+          }
+          if (overlapsFirstcoor[u][4].position === 'midle' || connectRoad.properties.oneway === 'no' || typeof connectRoad.properties.oneway === 'undefined') { //
+            isExitFirst = true;
+          }
+        }
+        var connectionFirst = _.uniq(flagFirst);
+        if (!isExitFirst && (connectionFirst[0] === 'salida' || connectionFirst[0] === 'entrada') && connectionFirst.length === 1) {
+          features[valueHighway.properties._osm_way_id] = valueHighway;
+          features[valueHighway.properties._osm_way_id + 'P'] = turf.point(firstCoor);
+        }
       }
-
-      // var bufferedECoor = turf.extent(turf.buffer(turf.point(eCoor), 5, 'meters'));
-      var bufferedECoor = eCoor.reverse().concat(eCoor.reverse());
-
-      var overlapsEcoor = highwaysTree.search(bufferedECoor);
-      if (overlapsEcoor.length === 1) {
-        features[valueBbox[4].id] = valueHighway;
-        features[valueBbox[4].id + 'P'] = turf.point(eCoor);
+      var overlapsEndcoor = highwaysTree.search(endCoor.reverse().concat(endCoor.reverse()));
+      if (overlapsEndcoor.length === 1 && !overlapsEndcoor[0][4].isClipped) {
+        // features[valueHighway.properties._osm_way_id] = valueHighway;
+        // features[valueHighway.properties._osm_way_id + 'P'] = turf.point(endCoor);
       } else {
-        // var flag = [];
-        // for (var u = 0; u < overlapsEcoor.length; u++) {
-        //   var connectRoadEnd = highways[overlapsEcoor[u][4].id];
-        //   if (valueHighway.properties._osm_way_id !== connectRoadEnd.properties._osm_way_id) { //different roads
-        //     if (overlapsEcoor[u][4].position === 'midle') {
-        //       flag.push('connection');
-        //       // break;
-        //     } else {
-        //       if (typeof connectRoadEnd.properties.oneway === 'undefined' || connectRoadEnd.properties.oneway === 'no') {
-        //         flag.push('connection');
-        //         // break;
-        //       } else {
-        //         //when the road's oneway is = yes or 1
-        //         if ((valueHighway.properties.oneway === 'yes' || valueHighway.properties.oneway === 1) && overlapsEcoor[u][4].position === 'end' && connectRoadEnd.properties.oneway === -1) {
-        //           flag.push('connection');
-        //           // break;
-        //         } else if ((valueHighway.properties.oneway === 'yes' || valueHighway.properties.oneway === 1) && overlapsEcoor[u][4].position === 'first' && (connectRoadEnd.properties.oneway === 'yes' || connectRoadEnd.properties.oneway === 1)) {
-        //           flag.push('connection');
-        //           // break;
-        //         } else if (valueHighway.properties.oneway === -1 && overlapsEcoor[u][4].position === 'first' && connectRoadEnd.properties.oneway === -1) {
-        //           //When the road's oneway is = -1
-        //           flag.push('connection');
-        //           // break;
-        //         } else if (valueHighway.properties.oneway === -1 && overlapsEcoor[u][4].position === 'end' && (connectRoadEnd.properties.oneway === 'yes' || connectRoadEnd.properties.oneway === 1)) {
-        //           flag.push('connection');
-        //           // break;
-        //         } else {
-        //           flag.push('noconnection');
-        //           // continue;
-        //         }
-        //       }
-        //     }
-        //   }
-        // }
-        // if (overlapsFcoor.length === (flag.length + 1) && flag.indexOf('connection') === -1) {
-        //   features[valueBbox[4].id] = valueHighway;
-        //   features[valueBbox[4].id + 'P'] = turf.point(valueHighway.geometry.coordinates[0]);
-        // }
+        var isExitEnd = false;
+        var flagEnd = [];
+        for (var m = 0; m < overlapsEndcoor.length; m++) {
+          var connectRoadEnd = highways[overlapsEndcoor[m][4].id];
+          flagEnd.push(connection(overlapsEndcoor[m][4].position, connectRoadEnd.properties.oneway));
+          if (valueHighway.properties._osm_way_id === connectRoadEnd.properties._osm_way_id && overlapsEndcoor[m][4].isClipped) {
+            isExitEnd = true;
+          }
+          if (overlapsEndcoor[m][4].position === 'midle' || connectRoadEnd.properties.oneway === 'no' || typeof connectRoadEnd.properties.oneway === 'undefined') { //
+            isExitEnd = true;
+          }
+        }
+        var connectionEnd = _.uniq(flagEnd);
+        if (!isExitEnd && (connectionEnd[0] === 'salida' || connectionEnd[0] === 'entrada') && connectionEnd.length === 1) {
+          features[valueHighway.properties._osm_way_id] = valueHighway;
+          features[valueHighway.properties._osm_way_id + 'P'] = turf.point(firstCoor);
+        }
       }
-
     }
   }
 
@@ -222,7 +172,20 @@ module.exports = function(tileLayers, tile, writeData, done) {
     var fc = turf.featurecollection(result);
     writeData(JSON.stringify(fc) + '\n');
   }
-
   done(null, null);
 
 };
+
+function connection(position, oneway) {
+  if (position === 'first' && oneway === -1) {
+    return 'entrada';
+  } else if (position === 'first' && (oneway === 'yes' || oneway === 1)) {
+    return 'salida';
+  } else if (position === 'end' && (oneway === 'yes' || oneway === 1)) {
+    return 'entrada';
+  } else if (position === 'end' && oneway === -1) {
+    return 'salida';
+  } else {
+    return 'connecion';
+  }
+}
