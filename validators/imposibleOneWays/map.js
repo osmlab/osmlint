@@ -12,6 +12,7 @@ module.exports = function(tileLayers, tile, writeData, done) {
   bboxLayer.geometry.type = 'LineString';
   bboxLayer.geometry.coordinates = bboxLayer.geometry.coordinates[0];
   var bufferLayer = turf.buffer(bboxLayer, 0.01, 'miles').features[0];
+  var type;
   var majorRoads = {
     'motorway': true,
     'trunk': true,
@@ -116,10 +117,17 @@ module.exports = function(tileLayers, tile, writeData, done) {
     var firstCoor = valueHighway.geometry.coordinates[0];
     var endCoor = valueHighway.geometry.coordinates[valueHighway.geometry.coordinates.length - 1];
     if (valueHighway.properties.oneway && valueHighway.properties.oneway !== 'no' && _.intersection(firstCoor, endCoor).length !== 2) {
+      // evaluate the first node of road
       var overlapsFirstcoor = highwaysTree.search(firstCoor.reverse().concat(firstCoor.reverse()));
       if (overlapsFirstcoor.length === 1 && !overlapsFirstcoor[0][4].isClipped) {
         features[valueHighway.properties._osm_way_id] = valueHighway;
-        features[firstCoor.join('-')] = turf.point(firstCoor);
+        var firstPointNoExit = turf.point(firstCoor);
+        firstPointNoExit.properties = {
+          _fromWay: valueHighway.properties._osm_way_id,
+          _osmlint: osmlint,
+          _type: classification(majorRoads, minorRoads, pathRoads, valueHighway.properties.highway)
+        };
+        features[firstCoor.join('-')] = firstPointNoExit;
       } else {
         var isExitFirst = false;
         var flagFirst = [];
@@ -134,15 +142,26 @@ module.exports = function(tileLayers, tile, writeData, done) {
         if (!isExitFirst && (connectionFirst[0] === 'output' || connectionFirst[0] === 'input') && connectionFirst.length === 1) {
           valueHighway.properties._osmlint = osmlint;
           features[valueHighway.properties._osm_way_id] = valueHighway;
-          var firstPoint = turf.point(firstCoor);
-          firstPoint.properties._osmlint = osmlint;
-          features[firstCoor.join('-')] = firstPoint;
+          var firstPointNoConnection = turf.point(firstCoor);
+          firstPointNoConnection.properties = {
+            _fromWay: valueHighway.properties._osm_way_id,
+            _osmlint: osmlint,
+            _type: classification(majorRoads, minorRoads, pathRoads, valueHighway.properties.highway)
+          };
+          features[firstCoor.join('-')] = firstPointNoConnection;
         }
       }
+      // evaluate the end node of road
       var overlapsEndcoor = highwaysTree.search(endCoor.reverse().concat(endCoor.reverse()));
       if (overlapsEndcoor.length === 1 && !overlapsEndcoor[0][4].isClipped) {
         features[valueHighway.properties._osm_way_id] = valueHighway;
-        features[endCoor.join('-')] = turf.point(endCoor);
+        var endPointNoExit = turf.point(endCoor);
+        endPointNoExit.properties = {
+          _fromWay: valueHighway.properties._osm_way_id,
+          _osmlint: osmlint,
+          _type: classification(majorRoads, minorRoads, pathRoads, valueHighway.properties.highway)
+        };
+        features[endCoor.join('-')] = endPointNoExit;
       } else {
         var isExitEnd = false;
         var flagEnd = [];
@@ -157,9 +176,13 @@ module.exports = function(tileLayers, tile, writeData, done) {
         if (!isExitEnd && (connectionEnd[0] === 'output' || connectionEnd[0] === 'input') && connectionEnd.length === 1) {
           valueHighway.properties._osmlint = osmlint;
           features[valueHighway.properties._osm_way_id] = valueHighway;
-          var endPoint = turf.point(endCoor);
-          endPoint.properties._osmlint = osmlint;
-          features[endCoor.join('-')] = endPoint;
+          var endPointNoConnection = turf.point(endCoor);
+          endPointNoConnection.properties = {
+            _fromWay: valueHighway.properties._osm_way_id,
+            _osmlint: osmlint,
+            _type: classification(majorRoads, minorRoads, pathRoads, valueHighway.properties.highway)
+          };
+          features[endCoor.join('-')] = endPointNoConnection;
         }
       }
     }
@@ -186,5 +209,15 @@ function connection(position, oneway) {
     return 'output';
   } else {
     return 'connection';
+  }
+}
+
+function classification(major, minor, path, highway) {
+  if (major[highway]) {
+    return 'major';
+  } else if (minor[highway]) {
+    return 'minor';
+  } else if (path[highway]) {
+    return 'path';
   }
 }
