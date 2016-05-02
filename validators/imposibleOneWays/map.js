@@ -2,7 +2,6 @@
 var turf = require('turf');
 var _ = require('underscore');
 var rbush = require('rbush');
-var knn = require('rbush-knn');
 var flatten = require('geojson-flatten');
 
 module.exports = function(tileLayers, tile, writeData, done) {
@@ -119,48 +118,48 @@ module.exports = function(tileLayers, tile, writeData, done) {
     if (valueHighway.properties.oneway && valueHighway.properties.oneway !== 'no' && _.intersection(firstCoor, endCoor).length !== 2) {
       var overlapsFirstcoor = highwaysTree.search(firstCoor.reverse().concat(firstCoor.reverse()));
       if (overlapsFirstcoor.length === 1 && !overlapsFirstcoor[0][4].isClipped) {
-        // features[valueHighway.properties._osm_way_id] = valueHighway;
-        // features[valueHighway.properties._osm_way_id + 'P'] = turf.point(firstCoor);
+        features[valueHighway.properties._osm_way_id] = valueHighway;
+        features[firstCoor.join('-')] = turf.point(firstCoor);
       } else {
         var isExitFirst = false;
         var flagFirst = [];
         for (var u = 0; u < overlapsFirstcoor.length; u++) {
           var connectRoad = highways[overlapsFirstcoor[u][4].id];
           flagFirst.push(connection(overlapsFirstcoor[u][4].position, connectRoad.properties.oneway));
-          if (valueHighway.properties._osm_way_id === connectRoad.properties._osm_way_id && overlapsFirstcoor[u][4].isClipped) {
-            isExitFirst = true;
-          }
-          if (overlapsFirstcoor[u][4].position === 'midle' || connectRoad.properties.oneway === 'no' || typeof connectRoad.properties.oneway === 'undefined') {
+          if ((valueHighway.properties._osm_way_id === connectRoad.properties._osm_way_id && overlapsFirstcoor[u][4].isClipped) || (overlapsFirstcoor[u][4].position === 'midle' || connectRoad.properties.oneway === 'no' || typeof connectRoad.properties.oneway === 'undefined')) {
             isExitFirst = true;
           }
         }
         var connectionFirst = _.uniq(flagFirst);
         if (!isExitFirst && (connectionFirst[0] === 'output' || connectionFirst[0] === 'input') && connectionFirst.length === 1) {
+          valueHighway.properties._osmlint = osmlint;
           features[valueHighway.properties._osm_way_id] = valueHighway;
-          features[valueHighway.properties._osm_way_id + 'P'] = turf.point(firstCoor);
+          var firstPoint = turf.point(firstCoor);
+          firstPoint.properties._osmlint = osmlint;
+          features[firstCoor.join('-')] = firstPoint;
         }
       }
       var overlapsEndcoor = highwaysTree.search(endCoor.reverse().concat(endCoor.reverse()));
       if (overlapsEndcoor.length === 1 && !overlapsEndcoor[0][4].isClipped) {
-        // features[valueHighway.properties._osm_way_id] = valueHighway;
-        // features[valueHighway.properties._osm_way_id + 'P'] = turf.point(endCoor);
+        features[valueHighway.properties._osm_way_id] = valueHighway;
+        features[endCoor.join('-')] = turf.point(endCoor);
       } else {
         var isExitEnd = false;
         var flagEnd = [];
         for (var m = 0; m < overlapsEndcoor.length; m++) {
           var connectRoadEnd = highways[overlapsEndcoor[m][4].id];
           flagEnd.push(connection(overlapsEndcoor[m][4].position, connectRoadEnd.properties.oneway));
-          if (valueHighway.properties._osm_way_id === connectRoadEnd.properties._osm_way_id && overlapsEndcoor[m][4].isClipped) {
-            isExitEnd = true;
-          }
-          if (overlapsEndcoor[m][4].position === 'midle' || connectRoadEnd.properties.oneway === 'no' || typeof connectRoadEnd.properties.oneway === 'undefined') {
+          if ((valueHighway.properties._osm_way_id === connectRoadEnd.properties._osm_way_id && overlapsEndcoor[m][4].isClipped) || (overlapsEndcoor[m][4].position === 'midle' || connectRoadEnd.properties.oneway === 'no' || typeof connectRoadEnd.properties.oneway === 'undefined')) {
             isExitEnd = true;
           }
         }
         var connectionEnd = _.uniq(flagEnd);
         if (!isExitEnd && (connectionEnd[0] === 'output' || connectionEnd[0] === 'input') && connectionEnd.length === 1) {
+          valueHighway.properties._osmlint = osmlint;
           features[valueHighway.properties._osm_way_id] = valueHighway;
-          features[valueHighway.properties._osm_way_id + 'P'] = turf.point(firstCoor);
+          var endPoint = turf.point(endCoor);
+          endPoint.properties._osmlint = osmlint;
+          features[endCoor.join('-')] = endPoint;
         }
       }
     }
