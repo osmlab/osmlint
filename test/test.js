@@ -285,3 +285,15 @@ test('tigerDelta', function(t) {
     t.end();
   });
 });
+
+test('impossibleOneWays', function(t) {
+  t.plan(2);
+  logInterceptor();
+  processors.impossibleOneWays(opts, mbtiles, function() {
+    var logs = logInterceptor.end();
+    var geoJSON = JSON.parse(logs[0]);
+    t.equal(geoJSON.features[0].properties._osmlint, 'impossibleoneways', 'Should be impossibleoneways');
+    t.equal(geoJSON.features[0].geometry.type, 'LineString', 'Should be  LineString');
+    t.end();
+  });
+});

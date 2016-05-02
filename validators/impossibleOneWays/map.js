@@ -12,7 +12,6 @@ module.exports = function(tileLayers, tile, writeData, done) {
   bboxLayer.geometry.type = 'LineString';
   bboxLayer.geometry.coordinates = bboxLayer.geometry.coordinates[0];
   var bufferLayer = turf.buffer(bboxLayer, 0.01, 'miles').features[0];
-  var type;
   var majorRoads = {
     'motorway': true,
     'trunk': true,
@@ -120,6 +119,7 @@ module.exports = function(tileLayers, tile, writeData, done) {
       // evaluate the first node of road
       var overlapsFirstcoor = highwaysTree.search(firstCoor.reverse().concat(firstCoor.reverse()));
       if (overlapsFirstcoor.length === 1 && !overlapsFirstcoor[0][4].isClipped) {
+        valueHighway.properties._osmlint = osmlint;
         features[valueHighway.properties._osm_way_id] = valueHighway;
         var firstPointNoExit = turf.point(firstCoor);
         firstPointNoExit.properties = {
@@ -154,6 +154,7 @@ module.exports = function(tileLayers, tile, writeData, done) {
       // evaluate the end node of road
       var overlapsEndcoor = highwaysTree.search(endCoor.reverse().concat(endCoor.reverse()));
       if (overlapsEndcoor.length === 1 && !overlapsEndcoor[0][4].isClipped) {
+        valueHighway.properties._osmlint = osmlint;
         features[valueHighway.properties._osm_way_id] = valueHighway;
         var endPointNoExit = turf.point(endCoor);
         endPointNoExit.properties = {
