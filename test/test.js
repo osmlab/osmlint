@@ -286,6 +286,22 @@ test('tigerDelta', function(t) {
   });
 });
 
+test('fixmeTag', function(t) {
+  t.plan(7);
+  logInterceptor();
+  processors.fixmeTag(opts, mbtiles, function() {
+    var logs = logInterceptor.end();
+    for (var i = 0; i < logs.length; i++) {
+      var geoJSON = JSON.parse(logs[i]);
+      for (var j = 0; j < geoJSON.features.length; j++) {
+        t.comment('Pass: ' + (i + 1));
+        t.equal(geoJSON.features[j].properties._osmlint, 'fixmetag', 'Should be fixmetag');
+      }
+    }
+    t.end();
+  });
+});
+
 test('impossibleOneWays', function(t) {
   t.plan(2);
   logInterceptor();
