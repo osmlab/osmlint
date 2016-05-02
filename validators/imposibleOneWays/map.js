@@ -116,7 +116,6 @@ module.exports = function(tileLayers, tile, writeData, done) {
     var valueHighway = highways[key];
     var firstCoor = valueHighway.geometry.coordinates[0];
     var endCoor = valueHighway.geometry.coordinates[valueHighway.geometry.coordinates.length - 1];
-
     if (valueHighway.properties.oneway && valueHighway.properties.oneway !== 'no' && _.intersection(firstCoor, endCoor).length !== 2) {
       var overlapsFirstcoor = highwaysTree.search(firstCoor.reverse().concat(firstCoor.reverse()));
       if (overlapsFirstcoor.length === 1 && !overlapsFirstcoor[0][4].isClipped) {
@@ -131,12 +130,12 @@ module.exports = function(tileLayers, tile, writeData, done) {
           if (valueHighway.properties._osm_way_id === connectRoad.properties._osm_way_id && overlapsFirstcoor[u][4].isClipped) {
             isExitFirst = true;
           }
-          if (overlapsFirstcoor[u][4].position === 'midle' || connectRoad.properties.oneway === 'no' || typeof connectRoad.properties.oneway === 'undefined') { //
+          if (overlapsFirstcoor[u][4].position === 'midle' || connectRoad.properties.oneway === 'no' || typeof connectRoad.properties.oneway === 'undefined') {
             isExitFirst = true;
           }
         }
         var connectionFirst = _.uniq(flagFirst);
-        if (!isExitFirst && (connectionFirst[0] === 'salida' || connectionFirst[0] === 'entrada') && connectionFirst.length === 1) {
+        if (!isExitFirst && (connectionFirst[0] === 'output' || connectionFirst[0] === 'input') && connectionFirst.length === 1) {
           features[valueHighway.properties._osm_way_id] = valueHighway;
           features[valueHighway.properties._osm_way_id + 'P'] = turf.point(firstCoor);
         }
@@ -154,12 +153,12 @@ module.exports = function(tileLayers, tile, writeData, done) {
           if (valueHighway.properties._osm_way_id === connectRoadEnd.properties._osm_way_id && overlapsEndcoor[m][4].isClipped) {
             isExitEnd = true;
           }
-          if (overlapsEndcoor[m][4].position === 'midle' || connectRoadEnd.properties.oneway === 'no' || typeof connectRoadEnd.properties.oneway === 'undefined') { //
+          if (overlapsEndcoor[m][4].position === 'midle' || connectRoadEnd.properties.oneway === 'no' || typeof connectRoadEnd.properties.oneway === 'undefined') {
             isExitEnd = true;
           }
         }
         var connectionEnd = _.uniq(flagEnd);
-        if (!isExitEnd && (connectionEnd[0] === 'salida' || connectionEnd[0] === 'entrada') && connectionEnd.length === 1) {
+        if (!isExitEnd && (connectionEnd[0] === 'output' || connectionEnd[0] === 'input') && connectionEnd.length === 1) {
           features[valueHighway.properties._osm_way_id] = valueHighway;
           features[valueHighway.properties._osm_way_id + 'P'] = turf.point(firstCoor);
         }
@@ -172,20 +171,21 @@ module.exports = function(tileLayers, tile, writeData, done) {
     var fc = turf.featurecollection(result);
     writeData(JSON.stringify(fc) + '\n');
   }
+
   done(null, null);
 
 };
 
 function connection(position, oneway) {
   if (position === 'first' && oneway === -1) {
-    return 'entrada';
+    return 'input';
   } else if (position === 'first' && (oneway === 'yes' || oneway === 1)) {
-    return 'salida';
+    return 'output';
   } else if (position === 'end' && (oneway === 'yes' || oneway === 1)) {
-    return 'entrada';
+    return 'input';
   } else if (position === 'end' && oneway === -1) {
-    return 'salida';
+    return 'output';
   } else {
-    return 'connecion';
+    return 'connection';
   }
 }
