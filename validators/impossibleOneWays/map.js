@@ -48,6 +48,10 @@ module.exports = function(tileLayers, tile, writeData, done) {
     var val = layer.features[i];
     var id = val.properties._osm_way_id;
     //Value LineString highways
+    if (val.geometry.type === 'Polygon' && val.properties.highway) {
+      val.geometry.coordinates = val.geometry.coordinates[0];
+      val.geometry.type = 'LineString';
+    }
     if (val.geometry.type === 'LineString' && val.properties.highway) {
       var coordsWayL = val.geometry.coordinates;
       var isClippedL = false;
@@ -119,15 +123,15 @@ module.exports = function(tileLayers, tile, writeData, done) {
       // evaluate the first node of road
       var overlapsFirstcoor = highwaysTree.search(firstCoor.reverse().concat(firstCoor.reverse()));
       if (overlapsFirstcoor.length === 1 && !overlapsFirstcoor[0][4].isClipped) {
-        valueHighway.properties._osmlint = osmlint;
-        features[valueHighway.properties._osm_way_id] = valueHighway;
-        var firstPointNoExit = turf.point(firstCoor);
-        firstPointNoExit.properties = {
-          _fromWay: valueHighway.properties._osm_way_id,
-          _osmlint: osmlint,
-          _type: classification(majorRoads, minorRoads, pathRoads, valueHighway.properties.highway)
-        };
-        features[firstCoor.join('-')] = firstPointNoExit;
+        // valueHighway.properties._osmlint = osmlint;
+        // features[valueHighway.properties._osm_way_id] = valueHighway;
+        // var firstPointNoExit = turf.point(firstCoor);
+        // firstPointNoExit.properties = {
+        //   _fromWay: valueHighway.properties._osm_way_id,
+        //   _osmlint: osmlint,
+        //   _type: classification(majorRoads, minorRoads, pathRoads, valueHighway.properties.highway)
+        // };
+        // features[firstCoor.join('-')] = firstPointNoExit;
       } else {
         var isExitFirst = false;
         var flagFirst = [];
