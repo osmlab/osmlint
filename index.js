@@ -16,5 +16,6 @@ module.exports = {
   'overlapHighways': require('./validators/overlapHighways'),
   'impossibleAngle': require('./validators/impossibleAngle'),
   'tigerDelta': require('./validators/tigerDelta'),
-  'fixmeTag': require('./validators/fixmeTag')
+  'fixmeTag': require('./validators/fixmeTag'),
+  'strangeLayer': require('./validators/strangeLayer')
 };

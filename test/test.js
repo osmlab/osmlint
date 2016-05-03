@@ -13,9 +13,16 @@ var bridgeOnNodeTiles = path.join(__dirname, '/fixtures/bridgeonnode.mbtiles');
 var unconnectedhighwaysTiles = path.join(__dirname, '/fixtures/unconnectedhighways.mbtiles');
 var crossingwaterwayshighwaysTiles = path.join(__dirname, '/fixtures/crossingwaterwayshighways.mbtiles');
 var islandsHighwaysTiles = path.join(__dirname, '/fixtures/islandshighways.mbtiles');
+var strangelayerTiles = path.join(__dirname, '/fixtures/strangelayer.mbtiles');
+
 
 var optsbridgeOnNode = {
   bbox: [114.445, 3.656, 126.376, 11.738],
+  zoom: zoom
+};
+
+var optsStrangeLayer = {
+  bbox: [127.03491, 37.303279, 127.16228, 37.418163],
   zoom: zoom
 };
 
@@ -298,6 +305,18 @@ test('fixmeTag', function(t) {
         t.equal(geoJSON.features[j].properties._osmlint, 'fixmetag', 'Should be fixmetag');
       }
     }
+    t.end();
+  });
+});
+
+test('strangeLayer', function(t) {
+  t.plan(2);
+  logInterceptor();
+  processors.strangeLayer(optsStrangeLayer, strangelayerTiles, function() {
+    var logs = logInterceptor.end();
+    var geoJSON = JSON.parse(logs);
+    t.equal(geoJSON.features[0].properties._osmlint, 'strangelayer', 'Should be strangelayer');
+    t.equal(geoJSON.features[0].geometry.type, 'LineString', 'Should be  LineString');
     t.end();
   });
 });

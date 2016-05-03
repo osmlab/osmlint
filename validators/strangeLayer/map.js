@@ -1,7 +1,6 @@
 'use strict';
 var turf = require('turf');
 var _ = require('underscore');
-var flatten = require('geojson-flatten');
 
 module.exports = function(tileLayers, tile, writeData, done) {
   var layer = tileLayers.osm.osm;
@@ -41,8 +40,10 @@ module.exports = function(tileLayers, tile, writeData, done) {
   for (var i = 0; i < layer.features.length; i++) {
     var valueHighway = layer.features[i];
     if (valueHighway.properties.bridge && valueHighway.properties.bridge !== 'no' && valueHighway.properties.layer && (isNaN(valueHighway.properties.layer) || parseInt(valueHighway.properties.layer) < 0)) {
+      valueHighway.properties._osmlint = osmlint;
       result.push(valueHighway);
     } else if (valueHighway.properties.tunnel && valueHighway.properties.tunnel !== 'no' && valueHighway.properties.layer && (isNaN(valueHighway.properties.layer) || parseInt(valueHighway.properties.layer) > 0)) {
+      valueHighway.properties._osmlint = osmlint;
       result.push(valueHighway);
     }
   }
