@@ -42,13 +42,13 @@ module.exports = function(tileLayers, tile, writeData, done) {
   var preserveType = {};
   preserveType = _.extend(preserveType, majorRoads);
   preserveType = _.extend(preserveType, minorRoads);
-  preserveType = _.extend(preserveType, pathRoads);
+  // preserveType = _.extend(preserveType, pathRoads);
   var osmlint = 'impossibleoneways';
   for (var i = 0; i < layer.features.length; i++) {
     var val = layer.features[i];
     var id = val.properties._osm_way_id;
     //Value LineString highways
-    if (val.geometry.type === 'LineString' && preserveType[val.properties.highway]) {
+    if (val.geometry.type === 'LineString' && val.properties.highway) {
       var coordsWayL = val.geometry.coordinates;
       var isClippedL = false;
       if (turf.inside(turf.point(coordsWayL[0]), bufferLayer) || turf.inside(turf.point(coordsWayL[coordsWayL.length - 1]), bufferLayer)) {
@@ -74,7 +74,7 @@ module.exports = function(tileLayers, tile, writeData, done) {
         bboxes.push(itemL);
       }
       highways[idWayL] = val;
-    } else if (val.geometry.type === 'MultiLineString' && preserveType[val.properties.highway]) { //MultiLineString evaluation
+    } else if (val.geometry.type === 'MultiLineString' && val.properties.highway) { //MultiLineString evaluation
       var arrayWays = flatten(val);
       for (var f = 0; f < arrayWays.length; f++) {
         if (arrayWays[f].geometry.type === 'LineString') {
@@ -115,7 +115,7 @@ module.exports = function(tileLayers, tile, writeData, done) {
     var valueHighway = highways[key];
     var firstCoor = valueHighway.geometry.coordinates[0];
     var endCoor = valueHighway.geometry.coordinates[valueHighway.geometry.coordinates.length - 1];
-    if (valueHighway.properties.oneway && valueHighway.properties.oneway !== 'no' && _.intersection(firstCoor, endCoor).length !== 2) {
+    if (valueHighway.properties.oneway && valueHighway.properties.oneway !== 'no' && preserveType[valueHighway.properties.highway] && _.intersection(firstCoor, endCoor).length !== 2) {
       // evaluate the first node of road
       var overlapsFirstcoor = highwaysTree.search(firstCoor.reverse().concat(firstCoor.reverse()));
       if (overlapsFirstcoor.length === 1 && !overlapsFirstcoor[0][4].isClipped) {
