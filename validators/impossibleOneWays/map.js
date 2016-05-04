@@ -119,7 +119,9 @@ module.exports = function(tileLayers, tile, writeData, done) {
     var valueHighway = highways[key];
     var firstCoor = valueHighway.geometry.coordinates[0];
     var endCoor = valueHighway.geometry.coordinates[valueHighway.geometry.coordinates.length - 1];
-    if (valueHighway.properties.oneway && valueHighway.properties.oneway !== 'no' && preserveType[valueHighway.properties.highway] && _.intersection(firstCoor, endCoor).length !== 2) {
+    var access;
+    (valueHighway.properties.access && valueHighway.properties.access !== 'no') ? access = false: access = true;
+    if (valueHighway.properties.oneway && valueHighway.properties.oneway !== 'no' && preserveType[valueHighway.properties.highway] && _.intersection(firstCoor, endCoor).length !== 2 && access) {
       // evaluate the first node of road
       var overlapsFirstcoor = highwaysTree.search(firstCoor.reverse().concat(firstCoor.reverse()));
       if (overlapsFirstcoor.length === 1 && !overlapsFirstcoor[0][4].isClipped) {
