@@ -39,6 +39,13 @@ module.exports = function(tileLayers, tile, writeData, done) {
     'cycleway': true,
     'steps': true
   };
+  var noaccess = {
+    'motorway_link': true,
+    'trunk_link': true,
+    'primary_link': true,
+    'secondary_link': true,
+    'tertiary_link': true
+  };
   var preserveType = {};
   preserveType = _.extend(preserveType, majorRoads);
   preserveType = _.extend(preserveType, minorRoads);
@@ -119,9 +126,7 @@ module.exports = function(tileLayers, tile, writeData, done) {
     var valueHighway = highways[key];
     var firstCoor = valueHighway.geometry.coordinates[0];
     var endCoor = valueHighway.geometry.coordinates[valueHighway.geometry.coordinates.length - 1];
-    var access;
-    (valueHighway.properties.access && valueHighway.properties.access !== 'no') ? access = false: access = true;
-    if (valueHighway.properties.oneway && valueHighway.properties.oneway !== 'no' && preserveType[valueHighway.properties.highway] && _.intersection(firstCoor, endCoor).length !== 2 && access) {
+    if (valueHighway.properties.oneway && valueHighway.properties.oneway !== 'no' && preserveType[valueHighway.properties.highway] && _.intersection(firstCoor, endCoor).length !== 2 && !(valueHighway.properties.access && valueHighway.properties.access === 'no' && noaccess[valueHighway.properties.highway])) {
       // evaluate the first node of road
       var overlapsFirstcoor = highwaysTree.search(firstCoor.reverse().concat(firstCoor.reverse()));
       if (overlapsFirstcoor.length === 1 && !overlapsFirstcoor[0][4].isClipped) {
