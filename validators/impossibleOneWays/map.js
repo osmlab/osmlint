@@ -129,17 +129,7 @@ module.exports = function(tileLayers, tile, writeData, done) {
     if (valueHighway.properties.oneway && valueHighway.properties.oneway !== 'no' && preserveType[valueHighway.properties.highway] && _.intersection(firstCoor, endCoor).length !== 2 && !(valueHighway.properties.access && valueHighway.properties.access === 'no' && noaccess[valueHighway.properties.highway])) {
       // evaluate the first node of road
       var overlapsFirstcoor = highwaysTree.search(firstCoor.reverse().concat(firstCoor.reverse()));
-      if (overlapsFirstcoor.length === 1 && !overlapsFirstcoor[0][4].isClipped) {
-        // valueHighway.properties._osmlint = osmlint;
-        // features[valueHighway.properties._osm_way_id] = valueHighway;
-        // var firstPointNoExit = turf.point(firstCoor);
-        // firstPointNoExit.properties = {
-        //   _fromWay: valueHighway.properties._osm_way_id,
-        //   _osmlint: osmlint,
-        //   _type: classification(majorRoads, minorRoads, pathRoads, valueHighway.properties.highway)
-        // };
-        // features[firstCoor.join('-')] = firstPointNoExit;
-      } else {
+      if (overlapsFirstcoor.length > 1) {
         var isExitFirst = false;
         var flagFirst = [];
         for (var u = 0; u < overlapsFirstcoor.length; u++) {
