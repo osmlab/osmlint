@@ -73,7 +73,7 @@ module.exports = function(tileLayers, tile, writeData, done) {
         } else if (j === (coordsWayL.length - 1)) {
           positionL = 'end';
         } else {
-          positionL = 'midle';
+          positionL = 'middle';
         }
         var propsL = {
           id: idWayL,
@@ -102,7 +102,7 @@ module.exports = function(tileLayers, tile, writeData, done) {
             } else if (t === (coordsWayM.length - 1)) {
               positionM = 'end';
             } else {
-              positionM = 'midle';
+              positionM = 'middle';
             }
             var propsM = {
               id: idWayM,
@@ -135,7 +135,7 @@ module.exports = function(tileLayers, tile, writeData, done) {
         for (var u = 0; u < overlapsFirstcoor.length; u++) {
           var connectRoad = highways[overlapsFirstcoor[u][4].id];
           flagFirst.push(connection(overlapsFirstcoor[u][4].position, connectRoad.properties.oneway));
-          if ((valueHighway.properties._osm_way_id === connectRoad.properties._osm_way_id && overlapsFirstcoor[u][4].isClipped) || (overlapsFirstcoor[u][4].position === 'midle' || connectRoad.properties.oneway === 'no' || typeof connectRoad.properties.oneway === 'undefined')) {
+          if ((valueHighway.properties._osm_way_id === connectRoad.properties._osm_way_id && overlapsFirstcoor[u][4].isClipped) || (overlapsFirstcoor[u][4].position === 'middle' || connectRoad.properties.oneway === 'no' || typeof connectRoad.properties.oneway === 'undefined')) {
             isExitFirst = true;
           }
         }
@@ -170,7 +170,7 @@ module.exports = function(tileLayers, tile, writeData, done) {
         for (var m = 0; m < overlapsEndcoor.length; m++) {
           var connectRoadEnd = highways[overlapsEndcoor[m][4].id];
           flagEnd.push(connection(overlapsEndcoor[m][4].position, connectRoadEnd.properties.oneway));
-          if ((valueHighway.properties._osm_way_id === connectRoadEnd.properties._osm_way_id && overlapsEndcoor[m][4].isClipped) || (overlapsEndcoor[m][4].position === 'midle' || connectRoadEnd.properties.oneway === 'no' || typeof connectRoadEnd.properties.oneway === 'undefined')) {
+          if ((valueHighway.properties._osm_way_id === connectRoadEnd.properties._osm_way_id && overlapsEndcoor[m][4].isClipped) || (overlapsEndcoor[m][4].position === 'middle' || connectRoadEnd.properties.oneway === 'no' || typeof connectRoadEnd.properties.oneway === 'undefined')) {
             isExitEnd = true;
           }
         }
