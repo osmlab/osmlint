@@ -44,7 +44,9 @@ module.exports = function(tileLayers, tile, writeData, done) {
   var dontPreserveWaterways = {
     'dam': true,
     'weir': true,
-    'waterfall': true
+    'waterfall': true,
+    'stream': true,
+    'ditch': true
   };
   var fords = {};
   var osmlint = 'crossingwaterwayshighways';
@@ -52,7 +54,7 @@ module.exports = function(tileLayers, tile, writeData, done) {
     var val = layer.features[i];
     var id = val.properties._osm_way_id;
     var bbox;
-    if (preserveType[val.properties.highway] && !val.properties.bridge && !val.properties.tunnel && !val.properties.ford) {
+    if (preserveType[val.properties.highway] && val.properties.bridge === undefined && val.properties.tunnel === undefined && val.properties.ford === undefined) {
       if (val.geometry.type === 'LineString') {
         var idWayL = id + 'L';
         bbox = turf.extent(val);
@@ -72,7 +74,7 @@ module.exports = function(tileLayers, tile, writeData, done) {
           }
         }
       }
-    } else if (((val.properties.waterway && !dontPreserveWaterways[val.properties.waterway]) || val.properties.natural === 'water') && (val.geometry.type === 'LineString' || val.geometry.type === 'Polygon')) {
+    } else if (((val.properties.waterway && !dontPreserveWaterways[val.properties.waterway]) || val.properties.natural === 'water') && (val.geometry.type === 'LineString' || val.geometry.type === 'Polygon') && val.properties.tunnel === undefined) {
       if (val.geometry.type === 'Polygon') {
         val.geometry.type = 'LineString';
         val.geometry.coordinates = val.geometry.coordinates[0];
@@ -99,8 +101,8 @@ module.exports = function(tileLayers, tile, writeData, done) {
       var intersect = turf.intersect(highways[overlapHigBbox[4]], waterways[waterBbox[4]]);
       if (intersect) {
         var props = {
-          _idHighway: highways[overlapHigBbox[4]].properties._osm_way_id,
-          _idWaterway: waterways[waterBbox[4]].properties._osm_way_id,
+          _fromWay: highways[overlapHigBbox[4]].properties._osm_way_id,
+          _toWay: waterways[waterBbox[4]].properties._osm_way_id,
           _osmlint: osmlint,
           _type: classification(majorRoads, minorRoads, pathRoads, highways[overlapHigBbox[4]].properties.highway)
         };
