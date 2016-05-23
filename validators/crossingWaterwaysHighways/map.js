@@ -52,7 +52,7 @@ module.exports = function(tileLayers, tile, writeData, done) {
   var osmlint = 'crossingwaterwayshighways';
   for (var i = 0; i < layer.features.length; i++) {
     var val = layer.features[i];
-    var id = val.properties._osm_way_id;
+    var id = val.properties['@id'];
     var bbox;
     if (preserveType[val.properties.highway] && val.properties.bridge === undefined && val.properties.tunnel === undefined && val.properties.ford === undefined) {
       if (val.geometry.type === 'LineString') {
@@ -101,8 +101,8 @@ module.exports = function(tileLayers, tile, writeData, done) {
       var intersect = turf.intersect(highways[overlapHigBbox[4]], waterways[waterBbox[4]]);
       if (intersect) {
         var props = {
-          _fromWay: highways[overlapHigBbox[4]].properties._osm_way_id,
-          _toWay: waterways[waterBbox[4]].properties._osm_way_id,
+          _fromWay: highways[overlapHigBbox[4]].properties['@id'],
+          _toWay: waterways[waterBbox[4]].properties['@id'],
           _osmlint: osmlint,
           _type: classification(majorRoads, minorRoads, pathRoads, highways[overlapHigBbox[4]].properties.highway)
         };
