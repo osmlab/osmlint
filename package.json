@@ -16,6 +16,7 @@
     "geojson-flatten": "^0.1.0",
     "lineclip": "^1.1.5",
     "linematch": "^1.0.3",
+    "mapbox-data-team": "^1.1.0",
     "minimist": "^1.1.1",
     "rbush": "^1.4.2",
     "tile-reduce": "^3.0.0",
