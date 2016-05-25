@@ -114,7 +114,7 @@ module.exports = function(tileLayers, tile, writeData, done) {
       var props = {
         _fromWay: fromHighway.properties['@id'],
         _osmlint: osmlint,
-        _type: classification(majorRoads,minorRoads,pathRoads,fromHighway.properties.highway)
+        _type: classification(majorRoads, minorRoads, pathRoads, fromHighway.properties.highway)
       };
 
       if (!avoidPoints[firstCoord.join('-')]) {
