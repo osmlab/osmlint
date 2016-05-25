@@ -40,25 +40,35 @@ module.exports = function(tileLayers, tile, writeData, done) {
   preserveType = _.extend(preserveType, minorRoads);
   //preserveType = _.extend(preserveType, pathRoads);
   var osmlint = 'turnlanes';
+  var result = [];
   for (var i = 0; i < layer.features.length; i++) {
     var val = layer.features[i];
     if (preserveType[val.properties.highway] && (val.geometry.type === 'LineString' || val.geometry.type === 'MultiLineString')) {
       if (val.properties['turn:lanes'] && !isInvalid(val.properties['turn:lanes'])) {
-        writeData(val.properties['turn:lanes'] + '\n');
+        val.properties._osmlint = osmlint;
+        result.push(val);
       } else if (val.properties['turn:lanes:forward'] && !isInvalid(val.properties['turn:lanes:forward'])) {
-        writeData(val.properties['turn:lanes:forward'] + '\n');
+        val.properties._osmlint = osmlint;
+        result.push(val);
       } else if (val.properties['turn:lanes:backward'] || !isInvalid(val.properties['turn:lanes:backward'])) {
-        writeData(val.properties['turn:lanes:backward'] + '\n');
+        val.properties._osmlint = osmlint;
+        result.push(val);
       }
     }
   }
 
+  if (result.length > 0) {
+    var fc = turf.featurecollection(result);
+    writeData(JSON.stringify(fc) + '\n');
+  }
+
+  done(null, null);
 };
 
 function isInvalid(turnLanes) {
   var listLines = turnLanes.split("|");
   for (var i = 0; i < listLines.length; i++) {
-    if (listLines[i].indexOf(';')>0) {
+    if (listLines[i].indexOf(';') > 0) {
       if (!validate(listLines[i])) {
         return false;
       }
