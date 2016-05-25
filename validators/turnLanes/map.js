@@ -1,9 +1,7 @@
 'use strict';
 var turf = require('turf');
 var _ = require('underscore');
-var rbush = require('rbush');
 
-// Filter all objects which has fixme tag.
 module.exports = function(tileLayers, tile, writeData, done) {
   var layer = tileLayers.osm.osm;
   var highways = {};
@@ -43,6 +41,7 @@ module.exports = function(tileLayers, tile, writeData, done) {
   var result = [];
   for (var i = 0; i < layer.features.length; i++) {
     var val = layer.features[i];
+
     if (preserveType[val.properties.highway] && (val.geometry.type === 'LineString' || val.geometry.type === 'MultiLineString')) {
       if (val.properties['turn:lanes'] && !isInvalid(val.properties['turn:lanes'])) {
         val.properties._osmlint = osmlint;
@@ -50,7 +49,7 @@ module.exports = function(tileLayers, tile, writeData, done) {
       } else if (val.properties['turn:lanes:forward'] && !isInvalid(val.properties['turn:lanes:forward'])) {
         val.properties._osmlint = osmlint;
         result.push(val);
-      } else if (val.properties['turn:lanes:backward'] || !isInvalid(val.properties['turn:lanes:backward'])) {
+      } else if (val.properties['turn:lanes:backward'] && !isInvalid(val.properties['turn:lanes:backward'])) {
         val.properties._osmlint = osmlint;
         result.push(val);
       }
@@ -86,6 +85,12 @@ function validate(turns) {
     case "through;right":
       return true;
     case "left;right":
+      return true;
+    case "slight_left;through":
+      return true;
+    case "through;slight_right":
+      return true;
+    case "slight_left;through;slight_right":
       return true;
     default:
       return false;
