@@ -58,7 +58,7 @@ test('filterUsers', function(t) {
       var geoJSON = JSON.parse(logs[i]);
       t.comment('Pass: ' + (i + 1));
       t.equal(GJV.isFeatureCollection(geoJSON), true, 'Should be a FeatureCollection');
-      t.equal(geoJSON.features[0].properties._user, 'karitotp', 'Should be karitotp');
+      t.equal(geoJSON.features[0].properties['@user'], 'Rub21', 'Should be Rub21');
     }
     t.end();
   });
