@@ -1,14 +1,20 @@
 'use strict';
+
 var turf = require('turf');
-var users = require('./users.json');
+var users = require('mapbox-data-team').getUsernames();
+
+users = users.reduce(function(memo, currentValue) {
+  memo[currentValue.toString()] = true;
+  return memo;
+}, {});
 
 // Filter features touched by list of users defined by users.json
 module.exports = function(tileLayers, tile, writeData, done) {
   var layer = tileLayers.osm.osm;
   var result = layer.features.filter(function(val) {
-    return users.hasOwnProperty(val.properties['@user']);
-  });
+    return (users.hasOwnProperty(val.properties['@user']));
 
+  });
   if (result.length > 0) {
     var fc = turf.featurecollection(result);
     writeData(JSON.stringify(fc) + '\n');

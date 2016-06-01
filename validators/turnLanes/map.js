@@ -4,8 +4,6 @@ var _ = require('underscore');
 
 module.exports = function(tileLayers, tile, writeData, done) {
   var layer = tileLayers.osm.osm;
-  var highways = {};
-  var bboxes = [];
   var majorRoads = {
     'motorway': true,
     'trunk': true,
@@ -63,7 +61,7 @@ module.exports = function(tileLayers, tile, writeData, done) {
 };
 
 function isValid(turnLanes) {
-  var listLines = turnLanes.split("|");
+  var listLines = turnLanes.split('|');
   for (var i = 0; i < listLines.length; i++) {
     if (listLines[i].indexOf(';') > 0) {
       if (!validate(listLines[i])) {
@@ -83,7 +81,7 @@ function validate(turns) {
       sortTurns.push(listTurns[t]);
     }
   }
-  if (turns == sortTurns.join(';')) {
+  if (turns === sortTurns.join(';')) {
     return true;
   } else {
     return false;

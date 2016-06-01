@@ -1,0 +1,264 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<osm version='0.6' upload='false' generator='JOSM'>
+  <node id='-4250' visible='true' lat='-0.00703811644' lon='-0.08231163025' />
+  <node id='-4251' action='modify' visible='true' lat='-0.00720977781' lon='-0.06737709045'>
+    <tag k='bridge' v='yes' />
+    <tag k='highway' v='primary' />
+    <tag k='layer' v='1' />
+    <tag k='name' v='bridgeOnNode' />
+  </node>
+  <node id='-4252' visible='true' lat='-0.00738143919' lon='-0.04866600037' />
+  <node id='-4260' action='modify' visible='true' lat='-0.01101166816' lon='-0.08208040829' />
+  <node id='-4261' action='modify' visible='true' lat='-0.01114687778' lon='-0.06643412349' />
+  <node id='-4263' action='modify' visible='true' lat='-0.01119434861' lon='-0.06094085854' />
+  <node id='-4265' action='modify' visible='true' lat='-0.01130593099' lon='-0.04802868808' />
+  <node id='-4302' action='modify' visible='true' lat='-0.01475684328' lon='-0.08238270879' />
+  <node id='-4303' action='modify' visible='true' lat='-0.01482845317' lon='-0.0707091214' />
+  <node id='-4305' action='modify' visible='true' lat='-0.01484597184' lon='-0.05955175524' />
+  <node id='-4308' action='modify' visible='true' lat='-0.01486413164' lon='-0.04798606038' />
+  <node id='-4357' action='modify' visible='true' lat='-0.00391535461' lon='-0.03354772925' />
+  <node id='-4358' action='modify' visible='true' lat='-0.02108149183' lon='-0.01998648047' />
+  <node id='-4360' action='modify' visible='true' lat='-0.006833598' lon='-0.00350698829' />
+  <node id='-4362' action='modify' visible='true' lat='-0.01936487817' lon='-0.03595098853' />
+  <node id='-4412' action='modify' visible='true' lat='-0.02144359002' lon='-0.03390714526' />
+  <node id='-4413' action='modify' visible='true' lat='-0.0386097253' lon='-0.02034589648' />
+  <node id='-4414' action='modify' visible='true' lat='-0.0243618332' lon='-0.00386640429' />
+  <node id='-4415' action='modify' visible='true' lat='-0.0368931119' lon='-0.03631040454' />
+  <node id='-4477' action='modify' visible='true' lat='-0.04443548174' lon='-0.00384494662' />
+  <node id='-4478' action='modify' visible='true' lat='-0.05696675733' lon='-0.03628894687' />
+  <node id='-4479' action='modify' visible='true' lat='-0.04151723916' lon='-0.03388568759' />
+  <node id='-4480' action='modify' visible='true' lat='-0.05868337022' lon='-0.02032443881' />
+  <node id='-4553' action='modify' visible='true' lat='-0.01799963385' lon='-0.08246585727' />
+  <node id='-4554' action='modify' visible='true' lat='-0.01817129522' lon='-0.06753131747'>
+    <tag k='FIXME' v='FIXME' />
+    <tag k='bridge' v='yes' />
+    <tag k='fixme' v='fixme' />
+    <tag k='highway' v='primary' />
+    <tag k='layer' v='1' />
+    <tag k='name' v='fixmeTag' />
+  </node>
+  <node id='-4555' action='modify' visible='true' lat='-0.01834295659' lon='-0.04882022738' />
+  <node id='-4592' action='modify' visible='true' lat='-0.03439329358' lon='-0.04890605807' />
+  <node id='-4593' action='modify' visible='true' lat='-0.03482244694' lon='-0.08135005832' />
+  <node id='-4595' action='modify' visible='true' lat='-0.02066038504' lon='-0.08186504245' />
+  <node id='-4597' action='modify' visible='true' lat='-0.03121755863' lon='-0.08040592074' />
+  <node id='-4599' action='modify' visible='true' lat='-0.0313033893' lon='-0.04924938083' />
+  <node id='-4601' action='modify' visible='true' lat='-0.02993009848' lon='-0.07868930697' />
+  <node id='-4603' action='modify' visible='true' lat='-0.02057455436' lon='-0.07911846042' />
+  <node id='-4634' action='modify' visible='true' lat='-0.03923536017' lon='-0.06110019924' />
+  <node id='-4635' action='modify' visible='true' lat='-0.03934694253' lon='-0.04818802878' />
+  <node id='-4636' action='modify' visible='true' lat='-0.03918788935' lon='-0.06659346419' />
+  <node id='-4637' action='modify' visible='true' lat='-0.03905267976' lon='-0.08223974899' />
+  <node id='-4693' action='modify' visible='true' lat='-0.04319093712' lon='-0.08111402392' />
+  <node id='-4694' action='modify' visible='true' lat='-0.0528898015' lon='-0.07613584399' />
+  <node id='-4696' action='modify' visible='true' lat='-0.05683801136' lon='-0.06197378039' />
+  <node id='-4698' action='modify' visible='true' lat='-0.05632302748' lon='-0.04944249988' />
+  <node id='-4700' action='modify' visible='true' lat='-0.05515382222' lon='-0.06801489651' />
+  <node id='-4702' action='modify' visible='true' lat='-0.0598420839' lon='-0.07210180163' />
+  <node id='-4704' action='modify' visible='true' lat='-0.04447839707' lon='-0.05381986499' />
+  <node id='-4705' action='modify' visible='true' lat='-0.04653833295' lon='-0.06240293384' />
+  <node id='-4707' action='modify' visible='true' lat='-0.05177400302' lon='-0.06669446826' />
+  <node id='-4766' action='modify' visible='true' lat='-0.06181618862' lon='-0.02961561084' />
+  <node id='-4767' action='modify' visible='true' lat='-0.06550690595' lon='-0.03493711352' />
+  <node id='-4769' action='modify' visible='true' lat='-0.0702275905' lon='-0.03476545215' />
+  <node id='-4771' action='modify' visible='true' lat='-0.07306000101' lon='-0.02789899707' />
+  <node id='-4773' action='modify' visible='true' lat='-0.07220169481' lon='-0.02266332507' />
+  <node id='-4775' action='modify' visible='true' lat='-0.06730934919' lon='-0.0231783092' />
+  <node id='-4777' action='modify' visible='true' lat='-0.06250283373' lon='-0.02849981189' />
+  <node id='-4780' action='modify' visible='true' lat='-0.063618632' lon='-0.0075571239' />
+  <node id='-4781' action='modify' visible='true' lat='-0.06576439784' lon='-0.01296445727' />
+  <node id='-4783' action='modify' visible='true' lat='-0.07245918667' lon='-0.01099035144' />
+  <node id='-4785' action='modify' visible='true' lat='-0.06962677613' lon='-0.00489637256' />
+  <node id='-4787' action='modify' visible='true' lat='-0.06456276898' lon='-0.00695630908' />
+  <node id='-4839' action='modify' visible='true' lat='-0.06456276898' lon='-0.08042737842' />
+  <node id='-4840' action='modify' visible='true' lat='-0.07065674362' lon='-0.07356092334' />
+  <node id='-4842' action='modify' visible='true' lat='-0.07271667853' lon='-0.06575033069' />
+  <node id='-4844' action='modify' visible='true' lat='-0.07297417039' lon='-0.04995748401' />
+  <node id='-4846' action='modify' visible='true' lat='-0.06327530946' lon='-0.05905553699' />
+  <node id='-4847' action='modify' visible='true' lat='-0.07065322322' lon='-0.07355773821' />
+  <node id='-4864' action='modify' visible='true' lat='-0.0774517792' lon='-0.02204708755' />
+  <node id='-4865' action='modify' visible='true' lat='-0.07925422197' lon='-0.02711109817' />
+  <node id='-4867' action='modify' visible='true' lat='-0.08320242968' lon='-0.02445034683' />
+  <node id='-4869' action='modify' visible='true' lat='-0.08466154981' lon='-0.0179272145' />
+  <node id='-4871' action='modify' visible='true' lat='-0.08200080129' lon='-0.01578144729' />
+  <node id='-4873' action='modify' visible='true' lat='-0.07779510164' lon='-0.01775555313' />
+  <way id='-4249' action='modify' visible='true'>
+    <nd ref='-4250' />
+    <nd ref='-4251' />
+    <nd ref='-4252' />
+    <tag k='highway' v='primary' />
+    <tag k='name' v='bridgeOnNode' />
+  </way>
+  <way id='-4262' action='modify' visible='true'>
+    <nd ref='-4260' />
+    <nd ref='-4261' />
+    <tag k='highway' v='primary' />
+    <tag k='name' v='missingLayerBridges' />
+  </way>
+  <way id='-4287' action='modify' visible='true'>
+    <nd ref='-4261' />
+    <nd ref='-4263' />
+    <tag k='bridge' v='yes' />
+    <tag k='highway' v='primary' />
+    <tag k='name' v='missingLayerBridges' />
+  </way>
+  <way id='-4288' action='modify' visible='true'>
+    <nd ref='-4263' />
+    <nd ref='-4265' />
+    <tag k='highway' v='primary' />
+    <tag k='name' v='missingLayerBridges' />
+  </way>
+  <way id='-4304' action='modify' visible='true'>
+    <nd ref='-4302' />
+    <nd ref='-4303' />
+    <nd ref='-4305' />
+    <tag k='highway' v='primary' />
+    <tag k='name' v='overlapHighways' />
+  </way>
+  <way id='-4309' action='modify' visible='true'>
+    <nd ref='-4308' />
+    <nd ref='-4305' />
+    <nd ref='-4303' />
+    <tag k='highway' v='primary' />
+    <tag k='name' v='overlapHighways' />
+  </way>
+  <way id='-4359' action='modify' visible='true'>
+    <nd ref='-4357' />
+    <nd ref='-4358' />
+    <nd ref='-4360' />
+    <nd ref='-4362' />
+    <tag k='highway' v='primary' />
+    <tag k='name' v='selfIntersectingHighways' />
+  </way>
+  <way id='-4411' action='modify' visible='true'>
+    <nd ref='-4412' />
+    <nd ref='-4413' />
+    <tag k='highway' v='primary' />
+    <tag k='name' v='crossingHighways' />
+  </way>
+  <way id='-4435' action='modify' visible='true'>
+    <nd ref='-4414' />
+    <nd ref='-4415' />
+    <tag k='highway' v='primary' />
+    <tag k='name' v='crossingHighways' />
+  </way>
+  <way id='-4475' action='modify' visible='true'>
+    <nd ref='-4477' />
+    <nd ref='-4478' />
+    <tag k='name' v='crossingWaterwaysHighways' />
+    <tag k='waterway' v='river' />
+  </way>
+  <way id='-4476' action='modify' visible='true'>
+    <nd ref='-4479' />
+    <nd ref='-4480' />
+    <tag k='highway' v='primary' />
+    <tag k='name' v='crossingWaterwaysHighways' />
+  </way>
+  <way id='-4552' action='modify' visible='true'>
+    <nd ref='-4553' />
+    <nd ref='-4554' />
+    <nd ref='-4555' />
+    <tag k='FIXME' v='FIXME' />
+    <tag k='fixme' v='fixme' />
+    <tag k='highway' v='primary' />
+    <tag k='name' v='fixmeTag' />
+  </way>
+  <way id='-4594' action='modify' visible='true'>
+    <nd ref='-4592' />
+    <nd ref='-4593' />
+    <nd ref='-4595' />
+    <nd ref='-4597' />
+    <nd ref='-4599' />
+    <nd ref='-4601' />
+    <nd ref='-4603' />
+    <tag k='highway' v='primary' />
+    <tag k='name' v='impossibleAngle' />
+  </way>
+  <way id='-4631' action='modify' visible='true'>
+    <nd ref='-4634' />
+    <nd ref='-4635' />
+    <tag k='highway' v='primary' />
+    <tag k='name' v='impossibleOneWays' />
+    <tag k='oneway' v='yes' />
+  </way>
+  <way id='-4632' action='modify' visible='true'>
+    <nd ref='-4636' />
+    <nd ref='-4634' />
+    <tag k='bridge' v='yes' />
+    <tag k='highway' v='primary' />
+    <tag k='name' v='impossibleOneWays' />
+    <tag k='oneway' v='yes' />
+  </way>
+  <way id='-4633' action='modify' visible='true'>
+    <nd ref='-4636' />
+    <nd ref='-4637' />
+    <tag k='highway' v='primary' />
+    <tag k='name' v='impossibleOneWays' />
+    <tag k='oneway' v='yes' />
+  </way>
+  <way id='-4695' action='modify' visible='true'>
+    <nd ref='-4693' />
+    <nd ref='-4694' />
+    <nd ref='-4700' />
+    <nd ref='-4696' />
+    <nd ref='-4698' />
+    <tag k='highway' v='primary' />
+    <tag k='name' v='islandsHighways' />
+  </way>
+  <way id='-4703' action='modify' visible='true'>
+    <nd ref='-4700' />
+    <nd ref='-4702' />
+    <tag k='highway' v='primary' />
+    <tag k='name' v='islandsHighways' />
+  </way>
+  <way id='-4706' action='modify' visible='true'>
+    <nd ref='-4704' />
+    <nd ref='-4705' />
+    <nd ref='-4707' />
+    <tag k='highway' v='primary' />
+    <tag k='name' v='islandsHighways' />
+  </way>
+  <way id='-4768' action='modify' visible='true'>
+    <nd ref='-4766' />
+    <nd ref='-4767' />
+    <nd ref='-4769' />
+    <nd ref='-4771' />
+    <nd ref='-4773' />
+    <nd ref='-4775' />
+    <nd ref='-4777' />
+    <tag k='landuse' v='residential' />
+    <tag k='name' v='unclosedWays' />
+  </way>
+  <way id='-4782' action='modify' visible='true'>
+    <nd ref='-4780' />
+    <nd ref='-4781' />
+    <nd ref='-4783' />
+    <nd ref='-4785' />
+    <nd ref='-4787' />
+    <tag k='building' v='yes' />
+    <tag k='name' v='unclosedWays' />
+  </way>
+  <way id='-4841' action='modify' visible='true'>
+    <nd ref='-4839' />
+    <nd ref='-4840' />
+    <nd ref='-4842' />
+    <nd ref='-4844' />
+    <tag k='highway' v='primary' />
+    <tag k='name' v='unconnectedHighways' />
+  </way>
+  <way id='-4848' action='modify' visible='true'>
+    <nd ref='-4846' />
+    <nd ref='-4847' />
+    <tag k='highway' v='primary' />
+    <tag k='name' v='unconnectedHighways' />
+  </way>
+  <way id='-4866' action='modify' visible='true'>
+    <nd ref='-4864' />
+    <nd ref='-4865' />
+    <nd ref='-4867' />
+    <nd ref='-4869' />
+    <nd ref='-4871' />
+    <nd ref='-4873' />
+    <nd ref='-4864' />
+  </way>
+</osm>

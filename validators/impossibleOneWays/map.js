@@ -6,12 +6,12 @@ var flatten = require('geojson-flatten');
 
 module.exports = function(tileLayers, tile, writeData, done) {
   var layer = tileLayers.osm.osm;
-  var highways = {};
   var bboxes = [];
   var bboxLayer = turf.bboxPolygon(turf.extent(layer));
   bboxLayer.geometry.type = 'LineString';
   bboxLayer.geometry.coordinates = bboxLayer.geometry.coordinates[0];
   var bufferLayer = turf.buffer(bboxLayer, 0.01, 'miles').features[0];
+  var highways = {};
   var majorRoads = {
     'motorway': true,
     'trunk': true,
