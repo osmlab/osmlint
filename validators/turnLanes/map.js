@@ -22,7 +22,7 @@ module.exports = function(tileLayers, tile, writeData, done) {
     'unclassified': true,
     'residential': true,
     'living_street': true,
-    // 'service': true,
+    'service': true,
     'road': true
   };
   var pathRoads = {
@@ -41,16 +41,14 @@ module.exports = function(tileLayers, tile, writeData, done) {
   var result = [];
   for (var i = 0; i < layer.features.length; i++) {
     var val = layer.features[i];
-
+    val.properties._osmlint = osmlint;
+    val.properties._type = classification(majorRoads, minorRoads, pathRoads, val.properties.highway);
     if (preserveType[val.properties.highway] && (val.geometry.type === 'LineString' || val.geometry.type === 'MultiLineString')) {
-      if (val.properties['turn:lanes'] && !isInvalid(val.properties['turn:lanes'])) {
-        val.properties._osmlint = osmlint;
+      if (val.properties['turn:lanes'] && !isValid(val.properties['turn:lanes'])) {
         result.push(val);
-      } else if (val.properties['turn:lanes:forward'] && !isInvalid(val.properties['turn:lanes:forward'])) {
-        val.properties._osmlint = osmlint;
+      } else if (val.properties['turn:lanes:forward'] && !isValid(val.properties['turn:lanes:forward'])) {
         result.push(val);
-      } else if (val.properties['turn:lanes:backward'] && !isInvalid(val.properties['turn:lanes:backward'])) {
-        val.properties._osmlint = osmlint;
+      } else if (val.properties['turn:lanes:backward'] && !isValid(val.properties['turn:lanes:backward'])) {
         result.push(val);
       }
     }
@@ -64,7 +62,7 @@ module.exports = function(tileLayers, tile, writeData, done) {
   done(null, null);
 };
 
-function isInvalid(turnLanes) {
+function isValid(turnLanes) {
   var listLines = turnLanes.split("|");
   for (var i = 0; i < listLines.length; i++) {
     if (listLines[i].indexOf(';') > 0) {
@@ -89,5 +87,15 @@ function validate(turns) {
     return true;
   } else {
     return false;
+  }
+}
+
+function classification(major, minor, path, highway) {
+  if (major[highway]) {
+    return 'major';
+  } else if (minor[highway]) {
+    return 'minor';
+  } else if (path[highway]) {
+    return 'path';
   }
 }
