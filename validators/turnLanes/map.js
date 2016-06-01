@@ -77,22 +77,17 @@ function isInvalid(turnLanes) {
 }
 
 function validate(turns) {
-  switch (turns) {
-    case "left;through":
-      return true;
-    case "left;through;right":
-      return true;
-    case "through;right":
-      return true;
-    case "left;right":
-      return true;
-    case "slight_left;through":
-      return true;
-    case "through;slight_right":
-      return true;
-    case "slight_left;through;slight_right":
-      return true;
-    default:
-      return false;
+  var listTurns = ['reverse', 'sharp_left', 'left', 'slight_left', 'merge_to_right', 'through', 'merge_to_left', 'slight_right', 'right', 'sharp_right'];
+  var sortTurns = [];
+  var arrayTurns = turns.split(';');
+  for (var t in listTurns) {
+    if (arrayTurns.indexOf(listTurns[t]) > -1) {
+      sortTurns.push(listTurns[t]);
+    }
+  }
+  if (turns == sortTurns.join(';')) {
+    return true;
+  } else {
+    return false;
   }
 }
