@@ -167,7 +167,7 @@ test('missingHighwaysUS', function(t) {
 });
 
 test('crossingHighways', function(t) {
-  t.plan(6);
+  t.plan(2);
   logInterceptor();
   processors.crossingHighways(commonOpts, crossingHighwaysTiles, function() {
     var logs = logInterceptor.end();
@@ -246,7 +246,7 @@ test('overlapHighways', function(t) {
       t.comment('Pass: ' + (i + 1));
       if (geoJSON.features.length > 0) {
         t.equal(geoJSON.features[0].properties._osmlint, 'overlaphighways', 'Should be overlaphighways');
-        t.equal(geoJSON.features[0].geometry.type, 'LineString', 'Should be LineString');
+        t.equal(geoJSON.features[0].geometry.type, 'Point', 'Should be Point');
       }
     }
     t.end();
