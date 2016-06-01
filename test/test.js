@@ -16,7 +16,7 @@ var missingLayerBridgesTiles = path.join(__dirname, '/fixtures/missingLayerBridg
 var selfIntersectingHighwaysTiles = path.join(__dirname, '/fixtures/selfIntersectingHighways.mbtiles');
 var unclosedWaysTiles = path.join(__dirname, '/fixtures/unclosedWays.mbtiles');
 var crossingHighwaysTiles = path.join(__dirname, '/fixtures/crossingHighways.mbtiles');
-var impossibleOneWaysTiles = path.join(__dirname, '/fixtures/impossibleOneways.mbtiles');
+var impossibleOneWaysTiles = path.join(__dirname, '/fixtures/impossibleOneWays.mbtiles');
 var impossibleAngleTiles = path.join(__dirname, '/fixtures/impossibleAngle.mbtiles');
 var overlapHighwaysTiles = path.join(__dirname, '/fixtures/overlapHighways.mbtiles');
 var fixMeTagTiles = path.join(__dirname, '/fixtures/fixMeTag.mbtiles');
@@ -309,6 +309,7 @@ test('untaggedWays', function(t) {
       if (geoJSON.features.length > 0) {
         t.equal(geoJSON.features[0].properties._osmlint, 'untaggedway', 'Should be untaggedway');
         t.equal(geoJSON.features[0].geometry.type, 'LineString', 'Should be  LineString');
+        break;
       }
     }
     t.end();
