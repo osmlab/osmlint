@@ -54,15 +54,15 @@ module.exports = function(tileLayers, tile, writeData, done) {
     // Linestring evaluation
     if (val.geometry.type === 'LineString' && val.properties.highway) {
       var bboxL = turf.extent(val);
-      bboxL.push(val.properties._osm_way_id + 'L');
+      bboxL.push(val.properties['@id'] + 'L');
       bboxes.push(bboxL);
-      highways[val.properties._osm_way_id + 'L'] = {
+      highways[val.properties['@id'] + 'L'] = {
         highway: val,
         buffer: turf.buffer(val, distance, unit).features[0]
       };
     } else if (val.geometry.type === 'MultiLineString' && val.properties.highway) { //MultiLineString evaluation
       var flat = flatten(val);
-      var id = val.properties._osm_way_id + 'L';
+      var id = val.properties['@id'] + 'L';
       for (var f = 0; f < flat.length; f++) {
         if (flat[f].geometry.type === 'LineString') {
           var bboxM = turf.extent(flat[f]);
@@ -110,18 +110,11 @@ module.exports = function(tileLayers, tile, writeData, done) {
           arrayCorrd = arrayCorrd.concat(_.flatten(highways[overlapBbox[4]].highway.geometry.coordinates));
         }
       }
-      var type;
-      if (majorRoads[fromHighway.properties.highway]) {
-        type = 'major';
-      } else if (minorRoads[fromHighway.properties.highway]) {
-        type = 'minor';
-      } else if (pathRoads[fromHighway.properties.highway]) {
-        type = 'path';
-      }
+
       var props = {
-        _fromWay: fromHighway.properties._osm_way_id,
+        _fromWay: fromHighway.properties['@id'],
         _osmlint: osmlint,
-        _type: type
+        _type: classification(majorRoads, minorRoads, pathRoads, fromHighway.properties.highway)
       };
 
       if (!avoidPoints[firstCoord.join('-')]) {
@@ -131,7 +124,7 @@ module.exports = function(tileLayers, tile, writeData, done) {
 
           if (valueBbox[4] !== overlapPointFirst[4] && (arrayCorrd.indexOf(firstCoord[0]) === -1 || arrayCorrd.indexOf(firstCoord[1]) === -1)) {
             if (turf.inside(firstPoint, highways[overlapPointFirst[4]].buffer)) {
-              props.toWay = toHighwayFirst.properties._osm_way_id;
+              props.toWay = toHighwayFirst.properties['@id'];
               firstPoint.properties = props;
               //Check out whether the streets are connected at some point
               var coordinatesF = fromHighway.geometry.coordinates;
@@ -144,7 +137,7 @@ module.exports = function(tileLayers, tile, writeData, done) {
                 if ((fromHighway.properties.layer === toHighwayFirst.properties.layer) && toHighwayFirst.properties.highway !== 'construction') {
                   output[valueBbox[4]] = fromHighway;
                   output[overlapPointFirst[4]] = toHighwayFirst;
-                  if (fromHighway.properties._osm_way_id > toHighwayFirst.properties._osm_way_id) {
+                  if (fromHighway.properties['@id'] > toHighwayFirst.properties['@id']) {
                     output[valueBbox[4].toString().concat(overlapPointFirst[4])] = firstPoint;
                   } else {
                     output[overlapPointFirst[4].toString().concat(valueBbox[4])] = firstPoint;
@@ -161,7 +154,7 @@ module.exports = function(tileLayers, tile, writeData, done) {
           var toHighwayEnd = highways[overlapPointEnd[4]].highway;
           if (valueBbox[4] !== overlapPointEnd[4] && (arrayCorrd.indexOf(endCoord[0]) === -1 || arrayCorrd.indexOf(endCoord[1]) === -1)) {
             if (turf.inside(endPoint, highways[overlapPointEnd[4]].buffer)) {
-              props.toWay = toHighwayEnd.properties._osm_way_id;
+              props.toWay = toHighwayEnd.properties['@id'];
               endPoint.properties = props;
               //Check out whether the streets are connected at some point
               var coordinatesE = fromHighway.geometry.coordinates;
@@ -174,7 +167,7 @@ module.exports = function(tileLayers, tile, writeData, done) {
                 if ((fromHighway.properties.layer === toHighwayEnd.properties.layer) && toHighwayEnd.properties.highway !== 'construction') {
                   output[valueBbox[4]] = fromHighway;
                   output[overlapPointEnd[4]] = toHighwayEnd;
-                  if (fromHighway.properties._osm_way_id > toHighwayEnd.properties._osm_way_id) {
+                  if (fromHighway.properties['@id'] > toHighwayEnd.properties['@id']) {
                     output[valueBbox[4].toString().concat(overlapPointEnd[4])] = endPoint;
                   } else {
                     output[overlapPointEnd[4].toString().concat(valueBbox[4])] = endPoint;
@@ -198,3 +191,13 @@ module.exports = function(tileLayers, tile, writeData, done) {
   done(null, null);
 
 };
+
+function classification(major, minor, path, highway) {
+  if (major[highway]) {
+    return 'major';
+  } else if (minor[highway]) {
+    return 'minor';
+  } else if (path[highway]) {
+    return 'path';
+  }
+}

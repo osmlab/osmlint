@@ -70,12 +70,12 @@ module.exports = function(tileLayers, tile, writeData, done) {
           type = 'path';
         }
         point.properties = {
-          _fromWay: highways[z].properties._osm_way_id,
+          _fromWay: highways[z].properties['@id'],
           _type: type,
           _osmlint: osmlint
         };
         highways[z].properties._osmlint = osmlint;
-        output[highways[z].properties._osm_way_id] = highways[z];
+        output[highways[z].properties['@id']] = highways[z];
         output[coords[j + 1].join('-')] = point;
       }
     }

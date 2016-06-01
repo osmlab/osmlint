@@ -44,9 +44,9 @@ module.exports = function(tileLayers, tile, writeData, done) {
     var val = layer.features[i];
     if (preserveType[val.properties.highway] && (val.geometry.type === 'LineString' || val.geometry.type === 'MultiLineString') && val.properties.layer === undefined) {
       var bboxHighway = turf.extent(val);
-      bboxHighway.push(val.properties._osm_way_id);
+      bboxHighway.push(val.properties['@id']);
       bboxes.push(bboxHighway);
-      highways[val.properties._osm_way_id] = val;
+      highways[val.properties['@id']] = val;
     }
   }
   var traceTree = rbush(bboxes.length);

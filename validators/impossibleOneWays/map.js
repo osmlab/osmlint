@@ -53,7 +53,7 @@ module.exports = function(tileLayers, tile, writeData, done) {
   var osmlint = 'impossibleoneways';
   for (var i = 0; i < layer.features.length; i++) {
     var val = layer.features[i];
-    var id = val.properties._osm_way_id;
+    var id = val.properties['@id'];
     //Value LineString highways
     if (val.geometry.type === 'Polygon' && val.properties.highway) {
       val.geometry.coordinates = val.geometry.coordinates[0];
@@ -135,17 +135,17 @@ module.exports = function(tileLayers, tile, writeData, done) {
         for (var u = 0; u < overlapsFirstcoor.length; u++) {
           var connectRoad = highways[overlapsFirstcoor[u][4].id];
           flagFirst.push(connection(overlapsFirstcoor[u][4].position, connectRoad.properties.oneway));
-          if ((valueHighway.properties._osm_way_id === connectRoad.properties._osm_way_id && overlapsFirstcoor[u][4].isClipped) || (overlapsFirstcoor[u][4].position === 'middle' || connectRoad.properties.oneway === 'no' || typeof connectRoad.properties.oneway === 'undefined')) {
+          if ((valueHighway.properties['@id'] === connectRoad.properties['@id'] && overlapsFirstcoor[u][4].isClipped) || (overlapsFirstcoor[u][4].position === 'middle' || connectRoad.properties.oneway === 'no' || typeof connectRoad.properties.oneway === 'undefined')) {
             isExitFirst = true;
           }
         }
         var connectionFirst = _.uniq(flagFirst);
         if (!isExitFirst && (connectionFirst[0] === 'output' || connectionFirst[0] === 'input') && connectionFirst.length === 1) {
           valueHighway.properties._osmlint = osmlint;
-          features[valueHighway.properties._osm_way_id] = valueHighway;
+          features[valueHighway.properties['@id']] = valueHighway;
           var firstPointNoConnection = turf.point(firstCoor);
           firstPointNoConnection.properties = {
-            _fromWay: valueHighway.properties._osm_way_id,
+            _fromWay: valueHighway.properties['@id'],
             _osmlint: osmlint,
             _type: classification(majorRoads, minorRoads, pathRoads, valueHighway.properties.highway)
           };
@@ -156,10 +156,10 @@ module.exports = function(tileLayers, tile, writeData, done) {
       var overlapsEndcoor = highwaysTree.search(endCoor.reverse().concat(endCoor.reverse()));
       if (overlapsEndcoor.length === 1 && !overlapsEndcoor[0][4].isClipped) {
         valueHighway.properties._osmlint = osmlint;
-        features[valueHighway.properties._osm_way_id] = valueHighway;
+        features[valueHighway.properties['@id']] = valueHighway;
         var endPointNoExit = turf.point(endCoor);
         endPointNoExit.properties = {
-          _fromWay: valueHighway.properties._osm_way_id,
+          _fromWay: valueHighway.properties['@id'],
           _osmlint: osmlint,
           _type: classification(majorRoads, minorRoads, pathRoads, valueHighway.properties.highway)
         };
@@ -170,17 +170,17 @@ module.exports = function(tileLayers, tile, writeData, done) {
         for (var m = 0; m < overlapsEndcoor.length; m++) {
           var connectRoadEnd = highways[overlapsEndcoor[m][4].id];
           flagEnd.push(connection(overlapsEndcoor[m][4].position, connectRoadEnd.properties.oneway));
-          if ((valueHighway.properties._osm_way_id === connectRoadEnd.properties._osm_way_id && overlapsEndcoor[m][4].isClipped) || (overlapsEndcoor[m][4].position === 'middle' || connectRoadEnd.properties.oneway === 'no' || typeof connectRoadEnd.properties.oneway === 'undefined')) {
+          if ((valueHighway.properties['@id'] === connectRoadEnd.properties['@id'] && overlapsEndcoor[m][4].isClipped) || (overlapsEndcoor[m][4].position === 'middle' || connectRoadEnd.properties.oneway === 'no' || typeof connectRoadEnd.properties.oneway === 'undefined')) {
             isExitEnd = true;
           }
         }
         var connectionEnd = _.uniq(flagEnd);
         if (!isExitEnd && (connectionEnd[0] === 'output' || connectionEnd[0] === 'input') && connectionEnd.length === 1) {
           valueHighway.properties._osmlint = osmlint;
-          features[valueHighway.properties._osm_way_id] = valueHighway;
+          features[valueHighway.properties['@id']] = valueHighway;
           var endPointNoConnection = turf.point(endCoor);
           endPointNoConnection.properties = {
-            _fromWay: valueHighway.properties._osm_way_id,
+            _fromWay: valueHighway.properties['@id'],
             _osmlint: osmlint,
             _type: classification(majorRoads, minorRoads, pathRoads, valueHighway.properties.highway)
           };
