@@ -1,0 +1,696 @@
+{
+"type": "FeatureCollection",
+"features": [
+{
+  "type": "Feature",
+  "@id": "way/-4249",
+  "properties": {
+    "highway": "primary",
+    "name": "br@idgeOnNode",
+    "@id": "way/-4249"
+  },
+  "geometry": {
+    "type": "LineString",
+    "coordinates": [
+      [
+        -0.08231163025,
+        -0.00703811644
+      ],
+      [
+        -0.06737709045,
+        -0.00720977781
+      ],
+      [
+        -0.04866600037,
+        -0.00738143919
+      ]
+    ]
+  }
+},
+{
+  "type": "Feature",
+  "@id": "way/-4262",
+  "properties": {
+    "highway": "primary",
+    "name": "missingLayerBr@idges",
+    "@id": "way/-4262"
+  },
+  "geometry": {
+    "type": "LineString",
+    "coordinates": [
+      [
+        -0.08208040829,
+        -0.01101166816
+      ],
+      [
+        -0.06643412349,
+        -0.01114687778
+      ]
+    ]
+  }
+},
+{
+  "type": "Feature",
+  "@id": "way/-4287",
+  "properties": {
+    "br@idge": "yes",
+    "highway": "primary",
+    "name": "missingLayerBr@idges",
+    "@id": "way/-4287"
+  },
+  "geometry": {
+    "type": "LineString",
+    "coordinates": [
+      [
+        -0.06643412349,
+        -0.01114687778
+      ],
+      [
+        -0.06094085854,
+        -0.01119434861
+      ]
+    ]
+  }
+},
+{
+  "type": "Feature",
+  "@id": "way/-4288",
+  "properties": {
+    "highway": "primary",
+    "name": "missingLayerBr@idges",
+    "@id": "way/-4288"
+  },
+  "geometry": {
+    "type": "LineString",
+    "coordinates": [
+      [
+        -0.06094085854,
+        -0.01119434861
+      ],
+      [
+        -0.04802868808,
+        -0.01130593099
+      ]
+    ]
+  }
+},
+{
+  "type": "Feature",
+  "@id": "way/-4304",
+  "properties": {
+    "highway": "primary",
+    "name": "overlapHighways",
+    "@id": "way/-4304"
+  },
+  "geometry": {
+    "type": "LineString",
+    "coordinates": [
+      [
+        -0.08238270879,
+        -0.01475684328
+      ],
+      [
+        -0.0707091214,
+        -0.01482845317
+      ],
+      [
+        -0.05955175524,
+        -0.01484597184
+      ]
+    ]
+  }
+},
+{
+  "type": "Feature",
+  "@id": "way/-4309",
+  "properties": {
+    "highway": "primary",
+    "name": "overlapHighways",
+    "@id": "way/-4309"
+  },
+  "geometry": {
+    "type": "LineString",
+    "coordinates": [
+      [
+        -0.04798606038,
+        -0.01486413164
+      ],
+      [
+        -0.05955175524,
+        -0.01484597184
+      ],
+      [
+        -0.0707091214,
+        -0.01482845317
+      ]
+    ]
+  }
+},
+{
+  "type": "Feature",
+  "@id": "way/-4359",
+  "properties": {
+    "highway": "primary",
+    "name": "selfIntersectingHighways",
+    "@id": "way/-4359"
+  },
+  "geometry": {
+    "type": "LineString",
+    "coordinates": [
+      [
+        -0.03354772925,
+        -0.00391535461
+      ],
+      [
+        -0.01998648047,
+        -0.02108149183
+      ],
+      [
+        -0.00350698829,
+        -0.006833598
+      ],
+      [
+        -0.03595098853,
+        -0.01936487817
+      ]
+    ]
+  }
+},
+{
+  "type": "Feature",
+  "@id": "way/-4411",
+  "properties": {
+    "highway": "primary",
+    "name": "crossingHighways",
+    "@id": "way/-4411"
+  },
+  "geometry": {
+    "type": "LineString",
+    "coordinates": [
+      [
+        -0.03390714526,
+        -0.02144359002
+      ],
+      [
+        -0.02034589648,
+        -0.0386097253
+      ]
+    ]
+  }
+},
+{
+  "type": "Feature",
+  "@id": "way/-4435",
+  "properties": {
+    "highway": "primary",
+    "name": "crossingHighways",
+    "@id": "way/-4435"
+  },
+  "geometry": {
+    "type": "LineString",
+    "coordinates": [
+      [
+        -0.00386640429,
+        -0.0243618332
+      ],
+      [
+        -0.03631040454,
+        -0.0368931119
+      ]
+    ]
+  }
+},
+{
+  "type": "Feature",
+  "@id": "way/-4475",
+  "properties": {
+    "name": "crossingWaterwaysHighways",
+    "waterway": "river",
+    "@id": "way/-4475"
+  },
+  "geometry": {
+    "type": "LineString",
+    "coordinates": [
+      [
+        -0.00384494662,
+        -0.04443548174
+      ],
+      [
+        -0.03628894687,
+        -0.05696675733
+      ]
+    ]
+  }
+},
+{
+  "type": "Feature",
+  "@id": "way/-4476",
+  "properties": {
+    "highway": "primary",
+    "name": "crossingWaterwaysHighways",
+    "@id": "way/-4476"
+  },
+  "geometry": {
+    "type": "LineString",
+    "coordinates": [
+      [
+        -0.03388568759,
+        -0.04151723916
+      ],
+      [
+        -0.02032443881,
+        -0.05868337022
+      ]
+    ]
+  }
+},
+{
+  "type": "Feature",
+  "@id": "way/-4552",
+  "properties": {
+    "FIXME": "FIXME",
+    "fixme": "fixme",
+    "highway": "primary",
+    "name": "fixmeTag",
+    "@id": "way/-4552"
+  },
+  "geometry": {
+    "type": "LineString",
+    "coordinates": [
+      [
+        -0.08246585727,
+        -0.01799963385
+      ],
+      [
+        -0.06753131747,
+        -0.01817129522
+      ],
+      [
+        -0.04882022738,
+        -0.01834295659
+      ]
+    ]
+  }
+},
+{
+  "type": "Feature",
+  "@id": "way/-4594",
+  "properties": {
+    "highway": "primary",
+    "name": "impossibleAngle",
+    "@id": "way/-4594"
+  },
+  "geometry": {
+    "type": "LineString",
+    "coordinates": [
+      [
+        -0.04890605807,
+        -0.03439329358
+      ],
+      [
+        -0.08135005832,
+        -0.03482244694
+      ],
+      [
+        -0.08186504245,
+        -0.02066038504
+      ],
+      [
+        -0.08040592074,
+        -0.03121755863
+      ],
+      [
+        -0.04924938083,
+        -0.0313033893
+      ],
+      [
+        -0.07868930697,
+        -0.02993009848
+      ],
+      [
+        -0.07911846042,
+        -0.02057455436
+      ]
+    ]
+  }
+},
+{
+  "type": "Feature",
+  "@id": "way/-4631",
+  "properties": {
+    "highway": "primary",
+    "name": "impossibleOneWays",
+    "oneway": "yes",
+    "@id": "way/-4631"
+  },
+  "geometry": {
+    "type": "LineString",
+    "coordinates": [
+      [
+        -0.06110019924,
+        -0.03923536017
+      ],
+      [
+        -0.04818802878,
+        -0.03934694253
+      ]
+    ]
+  }
+},
+{
+  "type": "Feature",
+  "@id": "way/-4632",
+  "properties": {
+    "br@idge": "yes",
+    "highway": "primary",
+    "name": "impossibleOneWays",
+    "oneway": "yes",
+    "@id": "way/-4632"
+  },
+  "geometry": {
+    "type": "LineString",
+    "coordinates": [
+      [
+        -0.06659346419,
+        -0.03918788935
+      ],
+      [
+        -0.06110019924,
+        -0.03923536017
+      ]
+    ]
+  }
+},
+{
+  "type": "Feature",
+  "@id": "way/-4633",
+  "properties": {
+    "highway": "primary",
+    "name": "impossibleOneWays",
+    "oneway": "yes",
+    "@id": "way/-4633"
+  },
+  "geometry": {
+    "type": "LineString",
+    "coordinates": [
+      [
+        -0.06659346419,
+        -0.03918788935
+      ],
+      [
+        -0.08223974899,
+        -0.03905267976
+      ]
+    ]
+  }
+},
+{
+  "type": "Feature",
+  "@id": "way/-4695",
+  "properties": {
+    "highway": "primary",
+    "name": "islandsHighways",
+    "@id": "way/-4695"
+  },
+  "geometry": {
+    "type": "LineString",
+    "coordinates": [
+      [
+        -0.08111402392,
+        -0.04319093712
+      ],
+      [
+        -0.07613584399,
+        -0.0528898015
+      ],
+      [
+        -0.06801489651,
+        -0.05515382222
+      ],
+      [
+        -0.06197378039,
+        -0.05683801136
+      ],
+      [
+        -0.04944249988,
+        -0.05632302748
+      ]
+    ]
+  }
+},
+{
+  "type": "Feature",
+  "@id": "way/-4703",
+  "properties": {
+    "highway": "primary",
+    "name": "islandsHighways",
+    "@id": "way/-4703"
+  },
+  "geometry": {
+    "type": "LineString",
+    "coordinates": [
+      [
+        -0.06801489651,
+        -0.05515382222
+      ],
+      [
+        -0.07210180163,
+        -0.0598420839
+      ]
+    ]
+  }
+},
+{
+  "type": "Feature",
+  "@id": "way/-4706",
+  "properties": {
+    "highway": "primary",
+    "name": "islandsHighways",
+    "@id": "way/-4706"
+  },
+  "geometry": {
+    "type": "LineString",
+    "coordinates": [
+      [
+        -0.05381986499,
+        -0.04447839707
+      ],
+      [
+        -0.06240293384,
+        -0.04653833295
+      ],
+      [
+        -0.06669446826,
+        -0.05177400302
+      ]
+    ]
+  }
+},
+{
+  "type": "Feature",
+  "@id": "way/-4768",
+  "properties": {
+    "landuse": "res@idential",
+    "name": "unclosedWays",
+    "@id": "way/-4768"
+  },
+  "geometry": {
+    "type": "LineString",
+    "coordinates": [
+      [
+        -0.02961561084,
+        -0.06181618862
+      ],
+      [
+        -0.03493711352,
+        -0.06550690595
+      ],
+      [
+        -0.03476545215,
+        -0.0702275905
+      ],
+      [
+        -0.02789899707,
+        -0.07306000101
+      ],
+      [
+        -0.02266332507,
+        -0.07220169481
+      ],
+      [
+        -0.0231783092,
+        -0.06730934919
+      ],
+      [
+        -0.02849981189,
+        -0.06250283373
+      ]
+    ]
+  }
+},
+{
+  "type": "Feature",
+  "@id": "way/-4782",
+  "properties": {
+    "building": "yes",
+    "name": "unclosedWays",
+    "@id": "way/-4782"
+  },
+  "geometry": {
+    "type": "LineString",
+    "coordinates": [
+      [
+        -0.0075571239,
+        -0.063618632
+      ],
+      [
+        -0.01296445727,
+        -0.06576439784
+      ],
+      [
+        -0.01099035144,
+        -0.07245918667
+      ],
+      [
+        -0.00489637256,
+        -0.06962677613
+      ],
+      [
+        -0.00695630908,
+        -0.06456276898
+      ]
+    ]
+  }
+},
+{
+  "type": "Feature",
+  "@id": "way/-4841",
+  "properties": {
+    "highway": "primary",
+    "name": "unconnectedHighways",
+    "@id": "way/-4841"
+  },
+  "geometry": {
+    "type": "LineString",
+    "coordinates": [
+      [
+        -0.08042737842,
+        -0.06456276898
+      ],
+      [
+        -0.07356092334,
+        -0.07065674362
+      ],
+      [
+        -0.06575033069,
+        -0.07271667853
+      ],
+      [
+        -0.04995748401,
+        -0.07297417039
+      ]
+    ]
+  }
+},
+{
+  "type": "Feature",
+  "@id": "way/-4848",
+  "properties": {
+    "highway": "primary",
+    "name": "unconnectedHighways",
+    "@id": "way/-4848"
+  },
+  "geometry": {
+    "type": "LineString",
+    "coordinates": [
+      [
+        -0.05905553699,
+        -0.06327530946
+      ],
+      [
+        -0.07355773821,
+        -0.07065322322
+      ]
+    ]
+  }
+},
+{
+  "type": "Feature",
+  "@id": "way/-4866",
+  "properties": {
+    "@id": "way/-4866"
+  },
+  "geometry": {
+    "type": "LineString",
+    "coordinates": [
+      [
+        -0.02204708755,
+        -0.0774517792
+      ],
+      [
+        -0.02711109817,
+        -0.07925422197
+      ],
+      [
+        -0.02445034683,
+        -0.08320242968
+      ],
+      [
+        -0.0179272145,
+        -0.08466154981
+      ],
+      [
+        -0.01578144729,
+        -0.08200080129
+      ],
+      [
+        -0.01775555313,
+        -0.07779510164
+      ],
+      [
+        -0.02204708755,
+        -0.0774517792
+      ]
+    ]
+  }
+},
+{
+  "type": "Feature",
+  "@id": "node/-4251",
+  "properties": {
+    "br@idge": "yes",
+    "highway": "primary",
+    "layer": "1",
+    "name": "br@idgeOnNode",
+    "@id": "node/-4251"
+  },
+  "geometry": {
+    "type": "Point",
+    "coordinates": [
+      -0.06737709045,
+      -0.00720977781
+    ]
+  }
+},
+{
+  "type": "Feature",
+  "@id": "node/-4554",
+  "properties": {
+    "FIXME": "FIXME",
+    "br@idge": "yes",
+    "fixme": "fixme",
+    "highway": "primary",
+    "layer": "1",
+    "name": "fixmeTag",
+    "@id": "node/-4554"
+  },
+  "geometry": {
+    "type": "Point",
+    "coordinates": [
+      -0.06753131747,
+      -0.01817129522
+    ]
+  }
+}
+]
+}
