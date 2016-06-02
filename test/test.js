@@ -266,10 +266,7 @@ test('impossibleOneWays', function(t) {
   // t.plan(3);
   logInterceptor();
   processors.impossibleOneWays(impossibleOneWaysOpts, impossibleOneWaysTiles, function() {
-    var logs = logInterceptor.end();
-    console.log('============');
-
-    console.log(logs.length);
+    //var logs = logInterceptor.end();
     // var geoJSON = JSON.parse(logs[1]);
     // console.log(JSON.stringify(geoJSON));
     // t.equal(geoJSON.features[0].properties._osmlint, 'impossibleoneways', 'Should be impossibleoneways');
