@@ -27,6 +27,11 @@ var monacoOpts = {
   zoom: zoom
 };
 
+var impossibleOneWaysOpts = {
+  bbox: [-81.75279225222766, 26.52308811583282, -81.75209236331284, 26.52601005448122],
+  zoom: zoom
+};
+
 var commonOpts = {
   bbox: [-0.0878906, -0.0878906, 0, 0],
   zoom: zoom
@@ -34,11 +39,6 @@ var commonOpts = {
 
 var turnLaneOpts = {
   bbox: [-97.418518, 34.672182, -97.128754, 34.869595],
-  zoom: zoom
-};
-
-var impossibleOneWaysOpts = {
-  bbox: [147.17972, -42.896592, 147.48116, -42.695053],
   zoom: zoom
 };
 
@@ -263,14 +263,13 @@ test('fixmeTag', function(t) {
 });
 
 test('impossibleOneWays', function(t) {
-  // t.plan(3);
+  t.plan(2);
   logInterceptor();
   processors.impossibleOneWays(impossibleOneWaysOpts, impossibleOneWaysTiles, function() {
-    //var logs = logInterceptor.end();
-    // var geoJSON = JSON.parse(logs[1]);
-    // console.log(JSON.stringify(geoJSON));
-    // t.equal(geoJSON.features[0].properties._osmlint, 'impossibleoneways', 'Should be impossibleoneways');
-    // t.equal(geoJSON.features[0].geometry.type, 'LineString', 'Should be  LineString');
+    var logs = logInterceptor.end();
+    var geoJSON = JSON.parse(logs[0]);
+    t.equal(geoJSON.features[0].properties._osmlint, 'impossibleoneways', 'Should be impossibleoneways');
+    t.equal(geoJSON.features[0].geometry.type, 'LineString', 'Should be  LineString');
     t.end();
   });
 });
