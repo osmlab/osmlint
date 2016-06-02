@@ -26,6 +26,11 @@ var monacoOpts = {
   zoom: zoom
 };
 
+var impossibleOneWaysOpts = {
+  bbox: [-81.75279225222766, 26.52308811583282, -81.75209236331284, 26.52601005448122],
+  zoom: zoom
+};
+
 var commonOpts = {
   bbox: [-0.0878906, -0.0878906, 0, 0],
   zoom: zoom
@@ -253,9 +258,9 @@ test('fixmeTag', function(t) {
 });
 
 test('impossibleOneWays', function(t) {
-  t.plan(3);
+  t.plan(2);
   logInterceptor();
-  processors.impossibleOneWays(commonOpts, impossibleOneWaysTiles, function() {
+  processors.impossibleOneWays(impossibleOneWaysOpts, impossibleOneWaysTiles, function() {
     var logs = logInterceptor.end();
     var geoJSON = JSON.parse(logs[0]);
     t.equal(geoJSON.features[0].properties._osmlint, 'impossibleoneways', 'Should be impossibleoneways');
