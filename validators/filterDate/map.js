@@ -7,7 +7,7 @@ var turf = require('turf');
 module.exports = function(tileLayers, tile, writeData, done) {
   var layer = tileLayers.osm.osm;
   var result = layer.features.filter(function(obj) {
-    return (obj.properties._timestamp >= today);
+    return (obj.properties['@timestamp'] >= today);
   });
 
   if (result.length > 0) {
