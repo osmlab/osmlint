@@ -72,15 +72,15 @@ module.exports = function(tileLayers, tile, writeData, done) {
     var valueHighway = highways[key];
     var firstCoor = valueHighway.geometry.coordinates[0];
     var endCoor = valueHighway.geometry.coordinates[valueHighway.geometry.coordinates.length - 1];
-    if (!valueHighway.properties.oneway) {
+    if (!valueHighway.properties.oneway && valueHighway.properties.highway === 'motorway_link') {
       valueHighway.properties._osmlint = osmlint;
       valueHighway.properties._type = classification(majorRoads, {}, {}, valueHighway.properties.highway);
       // evaluate the first node of road
       var overlapsFirstcoor = highwaysTree.search(firstCoor.reverse().concat(firstCoor.reverse()));
       if (overlapsFirstcoor.length > 1) {
         for (var u = 0; u < overlapsFirstcoor.length; u++) {
-          var connectRoad = highways[overlapsFirstcoor[u][4].id];
-          if (valueHighway.properties['@id'] !== connectRoad.properties['@id'] && connectRoad.properties.oneway) {
+          var connectRoadFrist = highways[overlapsFirstcoor[u][4].id];
+          if (valueHighway.properties['@id'] !== connectRoadFrist.properties['@id'] && connectRoadFrist.properties.oneway) {
             features[valueHighway.properties['@id']] = valueHighway;
           }
         }
@@ -89,8 +89,8 @@ module.exports = function(tileLayers, tile, writeData, done) {
       var overlapsEndcoor = highwaysTree.search(endCoor.reverse().concat(endCoor.reverse()));
       if (overlapsEndcoor.length > 1) {
         for (var t = 0; t < overlapsEndcoor.length; t++) {
-          var connectRoad = highways[overlapsEndcoor[t][4].id];
-          if (valueHighway.properties['@id'] !== connectRoad.properties['@id'] && connectRoad.properties.oneway) {
+          var connectRoadEnd = highways[overlapsEndcoor[t][4].id];
+          if (valueHighway.properties['@id'] !== connectRoadEnd.properties['@id'] && connectRoadEnd.properties.oneway) {
             features[valueHighway.properties['@id']] = valueHighway;
           }
         }
