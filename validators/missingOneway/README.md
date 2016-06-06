@@ -1,6 +1,8 @@
 #### Description
+ 
+From https://github.com/osmlab/osmlint/issues/116
 
-This validator detects missing oneways
+Detecting motorway links without oneway tag , which is connected to a highway=motorway with a oneway
 
 #### Usage
 
