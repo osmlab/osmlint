@@ -7,7 +7,6 @@ var flatten = require('geojson-flatten');
 module.exports = function(tileLayers, tile, writeData, done) {
   var layer = tileLayers.osm.osm;
   var bboxes = [];
-  // var bufferLayer 
   var highways = {};
   var majorRoads = {
     'motorway': true,
@@ -80,8 +79,8 @@ module.exports = function(tileLayers, tile, writeData, done) {
       // evaluate the end node of road
       var overlapsEndcoor = highwaysTree.search(endCoor.reverse().concat(endCoor.reverse()));
       if (overlapsEndcoor.length > 1) {
-        for (var t = 0; t < overlapsEndcoor.length; t++) {
-          var connectRoadEnd = highways[overlapsEndcoor[t][4].id];
+        for (var p = 0; p < overlapsEndcoor.length; p++) {
+          var connectRoadEnd = highways[overlapsEndcoor[p][4].id];
           if (valueHighway.properties['@id'] !== connectRoadEnd.properties['@id'] && connectRoadEnd.properties.oneway && connectRoadEnd.properties.highway === 'motorway') {
             if (features[valueHighway.properties['@id']]) {
               delete features[valueHighway.properties['@id']];

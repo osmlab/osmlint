@@ -18,5 +18,6 @@ module.exports = {
   'tigerDelta': require('./validators/tigerDelta'),
   'fixmeTag': require('./validators/fixmeTag'),
   'impossibleOneWays': require('./validators/impossibleOneWays'),
-  'missingOneWays': require('./validators/missingOneWays')
+  'turnLanes': require('./validators/turnLanes'),
+  'missingOneways': require('./validators/missingOneways')
 };
