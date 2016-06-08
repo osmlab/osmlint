@@ -7,4 +7,4 @@ Detecting motorway links without oneway tag , which is connected to a highway=mo
 #### Usage
 
 1. Download [OSM QA Tiles](https://osmlab.github.io/osm-qa-tiles/) for the planet or a country that you are interested in. 
-2. For example, to run for peru.mbtiles: ` osmlint impossibleoneways --bbox="[-85.348663,-19.664209,-64.606476,1.3831570]" peru.mbtiles`
+2. For example, to run for peru.mbtiles: ` osmlint missingoneways --bbox="[-85.348663,-19.664209,-64.606476,1.3831570]" peru.mbtiles`
