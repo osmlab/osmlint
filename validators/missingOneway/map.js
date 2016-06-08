@@ -11,15 +11,7 @@ module.exports = function(tileLayers, tile, writeData, done) {
   var highways = {};
   var majorRoads = {
     'motorway': true,
-    // 'trunk': true,
-    // 'primary': true,
-    // 'secondary': true,
-    // 'tertiary': true,
-    'motorway_link': true,
-    // 'trunk_link': true,
-    // 'primary_link': true,
-    // 'secondary_link': true,
-    // 'tertiary_link': true
+    'motorway_link': true
   };
 
   var preserveType = majorRoads;
@@ -45,7 +37,7 @@ module.exports = function(tileLayers, tile, writeData, done) {
         bboxes.push(itemL);
       }
       highways[idWayL] = val;
-    } else if (val.geometry.type === 'MultiLineString' && preserveType[val.properties.highway]) { //MultiLineString evaluation
+    } else if (val.geometry.type === 'MultiLineString' && preserveType[val.properties.highway]) {
       var arrayWays = flatten(val);
       for (var f = 0; f < arrayWays.length; f++) {
         if (arrayWays[f].geometry.type === 'LineString') {
@@ -80,7 +72,7 @@ module.exports = function(tileLayers, tile, writeData, done) {
       if (overlapsFirstcoor.length > 1) {
         for (var u = 0; u < overlapsFirstcoor.length; u++) {
           var connectRoadFrist = highways[overlapsFirstcoor[u][4].id];
-          if (valueHighway.properties['@id'] !== connectRoadFrist.properties['@id'] && connectRoadFrist.properties.oneway) {
+          if (valueHighway.properties['@id'] !== connectRoadFrist.properties['@id'] && connectRoadFrist.properties.oneway && connectRoadFrist.properties.highway === 'motorway') {
             features[valueHighway.properties['@id']] = valueHighway;
           }
         }
@@ -90,8 +82,12 @@ module.exports = function(tileLayers, tile, writeData, done) {
       if (overlapsEndcoor.length > 1) {
         for (var t = 0; t < overlapsEndcoor.length; t++) {
           var connectRoadEnd = highways[overlapsEndcoor[t][4].id];
-          if (valueHighway.properties['@id'] !== connectRoadEnd.properties['@id'] && connectRoadEnd.properties.oneway) {
-            features[valueHighway.properties['@id']] = valueHighway;
+          if (valueHighway.properties['@id'] !== connectRoadEnd.properties['@id'] && connectRoadEnd.properties.oneway && connectRoadEnd.properties.highway === 'motorway') {
+            if (features[valueHighway.properties['@id']]) {
+              delete features[valueHighway.properties['@id']];
+            } else {
+              features[valueHighway.properties['@id']] = valueHighway;
+            }
           }
         }
       }
