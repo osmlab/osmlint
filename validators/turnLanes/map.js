@@ -61,6 +61,10 @@ module.exports = function(tileLayers, tile, writeData, done) {
 };
 
 function isValid(turnLanes, lanes) {
+  //acording https://www.openstreetmap.org/user/rickmastfan67/diary/38833, we will avoid the detection of all turnlanes which has none
+  if (turnLanes.indexOf('none') > 0) {
+    return true;
+  }
   var listLines = turnLanes.split('|');
   //Check num lanes
   if (lanes && parseInt(lanes) !== listLines.length) {
@@ -69,10 +73,6 @@ function isValid(turnLanes, lanes) {
   // check sort of turns
   for (var i = 0; i < listLines.length; i++) {
     if (listLines[i].indexOf(';') > 0) {
-      //acording https://www.openstreetmap.org/user/rickmastfan67/diary/38833, we will avoid the detection of all turnlanes which has none
-      if (listLines[i].indexOf('none') > 0) {
-        return true;
-      }
       if (!validate(listLines[i])) {
         return false;
       }
