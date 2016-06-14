@@ -42,12 +42,18 @@ module.exports = function(tileLayers, tile, writeData, done) {
     val.properties._osmlint = osmlint;
     val.properties._type = classification(majorRoads, minorRoads, pathRoads, val.properties.highway);
     if (preserveType[val.properties.highway] && (val.geometry.type === 'LineString' || val.geometry.type === 'MultiLineString')) {
-      if (val.properties['turn:lanes'] && !isValid(val.properties['turn:lanes'], val.properties['lanes'])) {
-        result.push(val);
-      } else if (val.properties['turn:lanes:forward'] && !isValid(val.properties['turn:lanes:forward'], val.properties['lanes:forward'])) {
-        result.push(val);
-      } else if (val.properties['turn:lanes:backward'] && !isValid(val.properties['turn:lanes:backward'], val.properties['lanes:backward'])) {
-        result.push(val);
+      //acording https://www.openstreetmap.org/user/rickmastfan67/diary/38833, we will avoid the detection of all turnlanes which has none
+      if (!((val.properties['turn:lanes'] && val.properties['turn:lanes'].indexOf('none') > -1) ||
+          (val.properties['turn:lanes:forward'] && val.properties['turn:lanes:forward'].indexOf('none') > -1) ||
+          (val.properties['turn:lanes:backward'] && val.properties['turn:lanes:backward'].indexOf('none') > -1))) {
+        //detect
+        if (val.properties['turn:lanes'] && !isValid(val.properties['turn:lanes'], val.properties['lanes'])) {
+          result.push(val);
+        } else if (val.properties['turn:lanes:forward'] && !isValid(val.properties['turn:lanes:forward'], val.properties['lanes:forward'])) {
+          result.push(val);
+        } else if (val.properties['turn:lanes:backward'] && !isValid(val.properties['turn:lanes:backward'], val.properties['lanes:backward'])) {
+          result.push(val);
+        }
       }
     }
   }
