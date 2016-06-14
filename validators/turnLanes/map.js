@@ -42,11 +42,12 @@ module.exports = function(tileLayers, tile, writeData, done) {
     val.properties._osmlint = osmlint;
     val.properties._type = classification(majorRoads, minorRoads, pathRoads, val.properties.highway);
     if (preserveType[val.properties.highway] && (val.geometry.type === 'LineString' || val.geometry.type === 'MultiLineString')) {
-      if (val.properties['turn:lanes'] && !isValid(val.properties['turn:lanes'], val.properties['lanes'])) {
+      //acording https://www.openstreetmap.org/user/rickmastfan67/diary/38833, we will avoid the detection of all turnlanes which has none
+      if (val.properties['turn:lanes'] && val.properties['turn:lanes'].indexOf('none') < 0 && !isValid(val.properties['turn:lanes'], val.properties['lanes'])) {
         result.push(val);
-      } else if (val.properties['turn:lanes:forward'] && !isValid(val.properties['turn:lanes:forward'], val.properties['lanes:forward'])) {
+      } else if (val.properties['turn:lanes:forward'] && val.properties['turn:lanes:forward'].indexOf('none') < 0 && !isValid(val.properties['turn:lanes:forward'], val.properties['lanes:forward'])) {
         result.push(val);
-      } else if (val.properties['turn:lanes:backward'] && !isValid(val.properties['turn:lanes:backward'], val.properties['lanes:backward'])) {
+      } else if (val.properties['turn:lanes:backward'] && val.properties['turn:lanes:backward'].indexOf('none') < 0 && !isValid(val.properties['turn:lanes:backward'], val.properties['lanes:backward'])) {
         result.push(val);
       }
     }
@@ -61,10 +62,6 @@ module.exports = function(tileLayers, tile, writeData, done) {
 };
 
 function isValid(turnLanes, lanes) {
-  //acording https://www.openstreetmap.org/user/rickmastfan67/diary/38833, we will avoid the detection of all turnlanes which has none
-  if (turnLanes.indexOf('none') > 0) {
-    return true;
-  }
   var listLines = turnLanes.split('|');
   //Check num lanes
   if (lanes && parseInt(lanes) !== listLines.length) {
