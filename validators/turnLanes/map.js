@@ -69,7 +69,7 @@ function isValid(turnLanes, lanes) {
   }
   // check sort of turns
   for (var i = 0; i < listLines.length; i++) {
-    if (listLines[i].indexOf(';') && (listLines[i].indexOf('none') > 0 || !validate(listLines[i]))) {
+    if (listLines[i].indexOf(';') > 0 && (listLines[i].indexOf('none') > 0 || !validate(listLines[i]))) {
       return false;
     }
   }
