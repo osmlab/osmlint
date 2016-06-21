@@ -337,3 +337,14 @@ test('turnLanes', function(t) {
     t.end();
   });
 });
+
+
+test('filterDataTeam', function(t) {
+  t.plan(1);
+  logInterceptor();
+  processors.filterDataTeam(monacoOpts, monacoTiles, function() {
+    var logs = logInterceptor.end();
+    t.equal(logs.length, 0, 'No features returned');
+    t.end();
+  });
+});
