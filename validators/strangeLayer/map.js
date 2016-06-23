@@ -39,13 +39,9 @@ module.exports = function(tileLayers, tile, writeData, done) {
   var result = [];
   for (var i = 0; i < layer.features.length; i++) {
     var valueHighway = layer.features[i];
-    var flag = false;
-    if (valueHighway.properties.bridge && valueHighway.properties.bridge !== 'no' && valueHighway.properties.layer && (isNaN(valueHighway.properties.layer) || parseInt(valueHighway.properties.layer) < 0)) {
-      flag = true;
-    } else if (valueHighway.properties.tunnel && valueHighway.properties.tunnel !== 'no' && valueHighway.properties.layer && (isNaN(valueHighway.properties.layer) || parseInt(valueHighway.properties.layer) > 0)) {
-      flag = true;
-    }
-    if (flag) {
+    //check if tunel has `layer>=1` or bridge `layer<=-1`
+    if ((valueHighway.properties.bridge && valueHighway.properties.bridge !== 'no' && valueHighway.properties.layer && (isNaN(valueHighway.properties.layer) || parseInt(valueHighway.properties.layer) < 0)) ||
+      (valueHighway.properties.tunnel && valueHighway.properties.tunnel !== 'no' && valueHighway.properties.layer && (isNaN(valueHighway.properties.layer) || parseInt(valueHighway.properties.layer) > 0))) {
       valueHighway.properties._osmlint = osmlint;
       valueHighway.properties._type = classification(majorRoads, minorRoads, pathRoads, valueHighway.properties.highway);
       result.push(valueHighway);
