@@ -50,13 +50,13 @@ module.exports = function(tileLayers, tile, writeData, done) {
     if (val.geometry.type === 'LineString' && val.properties.highway) {
       var bboxA = turf.extent(val);
       bboxA.push({
-        id: val.properties._osm_way_id
+        id: val.properties['@id']
       });
       bboxes.push(bboxA);
-      highways[val.properties._osm_way_id] = val;
+      highways[val.properties['@id']] = val;
     } else if (val.geometry.type === 'MultiLineString' && val.properties.highway) {
       var flat = flatten(val);
-      var id = val.properties._osm_way_id + 'L';
+      var id = val.properties['@id'] + 'L';
       for (var f = 0; f < flat.length; f++) {
         if (flat[f].geometry.type === 'LineString') {
           var bboxB = turf.extent(flat[f]);

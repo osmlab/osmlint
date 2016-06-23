@@ -44,9 +44,9 @@ module.exports = function(tileLayers, tile, writeData, done) {
     var val = layer.features[i];
     if (preserveType[val.properties.highway] && (val.geometry.type === 'LineString' || val.geometry.type === 'MultiLineString') && val.properties.layer === undefined) {
       var bboxHighway = turf.extent(val);
-      bboxHighway.push(val.properties._osm_way_id);
+      bboxHighway.push(val.properties['@id']);
       bboxes.push(bboxHighway);
-      highways[val.properties._osm_way_id] = val;
+      highways[val.properties['@id']] = val;
     }
   }
 
@@ -87,12 +87,12 @@ module.exports = function(tileLayers, tile, writeData, done) {
               type = 'path-path';
             }
             intersectPoint.properties = {
-              _fromWay: fromHighway.properties._osm_way_id,
-              _toWay: toHighway.properties._osm_way_id,
+              _fromWay: fromHighway.properties['@id'],
+              _toWay: toHighway.properties['@id'],
               _osmlint: osmlint,
               _type: type
             };
-            if (fromHighway.properties._osm_way_id > toHighway.properties._osm_way_id) {
+            if (fromHighway.properties['@id'] > toHighway.properties['@id']) {
               output[bbox[4].toString().concat(overlap[4])] = intersectPoint;
             } else {
               output[overlap[4].toString().concat(bbox[4])] = intersectPoint;
