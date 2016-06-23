@@ -16,6 +16,7 @@ module.exports = function(tileLayers, tile, writeData, done) {
   var preserveType = majorRoads;
 
   var osmlint = 'missingoneways';
+  //get al highways which are linestring and multilinestring  to add add in the tree to use rbush
   for (var i = 0; i < layer.features.length; i++) {
     var val = layer.features[i];
     var id = val.properties['@id'];
@@ -55,7 +56,7 @@ module.exports = function(tileLayers, tile, writeData, done) {
       }
     }
   }
-
+  //add the array bboxes to rbush
   var highwaysTree = rbush(bboxes.length);
   highwaysTree.load(bboxes);
   var features = {};
@@ -63,6 +64,7 @@ module.exports = function(tileLayers, tile, writeData, done) {
     var valueHighway = highways[key];
     var firstCoor = valueHighway.geometry.coordinates[0];
     var endCoor = valueHighway.geometry.coordinates[valueHighway.geometry.coordinates.length - 1];
+    //check if they evaluate road is motorway_link and has oneway, the goal is obtaining this roads
     if (!valueHighway.properties.oneway && valueHighway.properties.highway === 'motorway_link') {
       valueHighway.properties._osmlint = osmlint;
       valueHighway.properties._type = classification(majorRoads, {}, {}, valueHighway.properties.highway);
