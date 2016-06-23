@@ -42,6 +42,7 @@ module.exports = function(tileLayers, tile, writeData, done) {
     val.properties._osmlint = osmlint;
     val.properties._type = classification(majorRoads, minorRoads, pathRoads, val.properties.highway);
     if (preserveType[val.properties.highway] && (val.geometry.type === 'LineString' || val.geometry.type === 'MultiLineString')) {
+      //detect
       if (val.properties['turn:lanes'] && !isValid(val.properties['turn:lanes'], val.properties['lanes'])) {
         result.push(val);
       } else if (val.properties['turn:lanes:forward'] && !isValid(val.properties['turn:lanes:forward'], val.properties['lanes:forward'])) {
@@ -68,10 +69,8 @@ function isValid(turnLanes, lanes) {
   }
   // check sort of turns
   for (var i = 0; i < listLines.length; i++) {
-    if (listLines[i].indexOf(';') > 0) {
-      if (!validate(listLines[i])) {
-        return false;
-      }
+    if (listLines[i].indexOf(';') > 0 && (listLines[i].indexOf('none') > 0 || !validate(listLines[i]))) {
+      return false;
     }
   }
   return true;

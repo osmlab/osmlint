@@ -27,9 +27,9 @@ module.exports = function(tileLayers, tile, writeData, done) {
   var minorRoads = {
     'unclassified': true,
     'residential': true,
-    'living_street': true,
-    'service': true,
-    'road': true
+    'living_street': true
+    // 'service': true,
+    // 'road': true
   };
   var pathRoads = {
     'pedestrian': true,
