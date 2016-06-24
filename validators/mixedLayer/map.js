@@ -81,8 +81,8 @@ module.exports = function(tileLayers, tile, writeData, done) {
         if (valueHighway.properties['@id'] !== overlaphighway.properties['@id'] && valueHighway.properties.layer !== overlaphighway.properties.layer && overlaphighway.geometry.coordinates.length > 2) {
           var coorVH = valueHighway.geometry.coordinates;
           var coorOH = overlaphighway.geometry.coordinates;
-          var middleCoorVH = _.without(_.flatten(coorVH), coorVH[0][0], coorVH[0][1], coorVH[coorVH.length - 1][0], coorVH[coorVH.length - 1][0]); // valueHighway.geometry.coordinates.splice(0, 1).splice(-1, 1);
-          var middleCoorOH = _.without(_.flatten(coorOH), coorOH[0][0], coorOH[0][1], coorOH[coorOH.length - 1][0], coorOH[coorOH.length - 1][0]); // overlaphighway.geometry.coordinates.splice(0, 1).splice(-1, 1);
+          var middleCoorVH = _.without(_.flatten(coorVH), coorVH[0][0], coorVH[0][1], coorVH[coorVH.length - 1][0], coorVH[coorVH.length - 1][1]);
+          var middleCoorOH = _.without(_.flatten(coorOH), coorOH[0][0], coorOH[0][1], coorOH[coorOH.length - 1][0], coorOH[coorOH.length - 1][1]);
           var inter = _.intersection(middleCoorVH, middleCoorOH);
           if (inter.length == 2) {
             var intersect = turf.point(inter);
@@ -90,7 +90,7 @@ module.exports = function(tileLayers, tile, writeData, done) {
               _fromWay: valueHighway.properties['@id'],
               _toWay: overlaphighway.properties['@id'],
               _osmlint: osmlint,
-              _type: classification(majorRoads, minorRoads, pathRoads, valueHighway.properties.highway)
+              _type: classification(majorRoads, minorRoads, pathRoads, valueHighway.properties.highway, overlaphighway.properties.highway)
             };
             intersect.properties = props;
             valueHighway.properties._osmlint = osmlint;
@@ -123,12 +123,18 @@ module.exports = function(tileLayers, tile, writeData, done) {
   done(null, null);
 };
 
-function classification(major, minor, path, highway) {
-  if (major[highway]) {
-    return 'major';
-  } else if (minor[highway]) {
-    return 'minor';
-  } else if (path[highway]) {
-    return 'path';
+function classification(major, minor, path, fromHighway, toHighway) {
+  if (major[fromHighway] && major[toHighway]) {
+    return 'major-major';
+  } else if ((major[fromHighway] && minor[toHighway]) || (minor[fromHighway] && major[toHighway])) {
+    return 'major-minor';
+  } else if ((major[fromHighway] && path[toHighway]) || (path[fromHighway] && major[toHighway])) {
+    return 'major-path';
+  } else if (minor[fromHighway] && minor[toHighway]) {
+    return 'minor-minor';
+  } else if ((minor[fromHighway] && path[toHighway]) || (path[fromHighway] && minor[toHighway])) {
+    return 'minor-path';
+  } else if (path[fromHighway] && path[toHighway]) {
+    return 'path-path';
   }
 }
