@@ -49,19 +49,13 @@ module.exports = function(tileLayers, tile, writeData, done) {
   var result = [];
 
   for (var j = 0; j < output.length; j++) {
-    var road = output[j];
-    var roadLength = output[j].geometry.coordinates.length;
-    var intersect = turf.intersect(road, output[j]);
-    if (intersect.geometry.coordinates.length > roadLength) {
-      if (majorRoads[road.properties.highway]) {
-        road.properties._type = 'major';
-      } else if (minorRoads[road.properties.highway]) {
-        road.properties._type = 'minor';
-      } else if (pathRoads[road.properties.highway]) {
-        road.properties._type = 'path';
-      }
-      road.properties._osmlint = osmlint;
-      result.push(road);
+    var valueHighway = output[j];
+    var coordLength = output[j].geometry.coordinates.length;
+    var intersect = turf.intersect(valueHighway, output[j]);
+    if (intersect.geometry.coordinates.length > coordLength) {
+      valueHighway.properties._type = classification(majorRoads, minorRoads, pathRoads, valueHighway.properties.highway);
+      valueHighway.properties._osmlint = osmlint;
+      result.push(valueHighway);
     }
   }
   if (result.length > 0) {
@@ -70,3 +64,14 @@ module.exports = function(tileLayers, tile, writeData, done) {
   }
   done(null, null);
 };
+
+
+function classification(major, minor, path, highway) {
+  if (major[highway]) {
+    return 'major';
+  } else if (minor[highway]) {
+    return 'minor';
+  } else if (path[highway]) {
+    return 'path';
+  }
+}
