@@ -84,7 +84,7 @@ module.exports = function(tileLayers, tile, writeData, done) {
           var middleCoorVH = _.without(_.flatten(coorVH), coorVH[0][0], coorVH[0][1], coorVH[coorVH.length - 1][0], coorVH[coorVH.length - 1][1]);
           var middleCoorOH = _.without(_.flatten(coorOH), coorOH[0][0], coorOH[0][1], coorOH[coorOH.length - 1][0], coorOH[coorOH.length - 1][1]);
           var inter = _.intersection(middleCoorVH, middleCoorOH);
-          if (inter.length == 2) {
+          if (inter.length === 2) {
             var intersect = turf.point(inter);
             var props = {
               _fromWay: valueHighway.properties['@id'],

@@ -21,6 +21,7 @@ var impossibleAngleTiles = path.join(__dirname, '/fixtures/impossibleAngle.mbtil
 var overlapHighwaysTiles = path.join(__dirname, '/fixtures/overlapHighways.mbtiles');
 var fixMeTagTiles = path.join(__dirname, '/fixtures/fixMeTag.mbtiles');
 var turnLanesTiles = path.join(__dirname, '/fixtures/turnLanes.mbtiles');
+var mixedLayerTiles = path.join(__dirname, '/fixtures/mixedlayer.mbtiles');
 
 var monacoOpts = {
   bbox: [7.4068451, 43.723259, 7.4422073, 43.752901],
@@ -39,6 +40,11 @@ var commonOpts = {
 
 var turnLaneOpts = {
   bbox: [-97.418518, 34.672182, -97.128754, 34.869595],
+  zoom: zoom
+};
+
+var mixedLayerOpts = {
+  bbox: [-76.485443, -11.335481, -72.667694, -8.5329818],
   zoom: zoom
 };
 
@@ -333,6 +339,18 @@ test('turnLanes', function(t) {
     var logs = logInterceptor.end();
     var geoJSON = JSON.parse(logs[0]);
     t.equal(geoJSON.features[0].properties._osmlint, 'turnlanes', 'Should be untaggedway');
+    t.equal(geoJSON.features[0].geometry.type, 'LineString', 'Should be  LineString');
+    t.end();
+  });
+});
+
+test('mixedLayer', function(t) {
+  t.plan(2);
+  logInterceptor();
+  processors.mixedLayer(mixedLayerOpts, mixedLayerTiles, function() {
+    var logs = logInterceptor.end();
+    var geoJSON = JSON.parse(logs);
+    t.equal(geoJSON.features[0].properties._osmlint, 'mixedlayer', 'Should be untaggedway');
     t.equal(geoJSON.features[0].geometry.type, 'LineString', 'Should be  LineString');
     t.end();
   });

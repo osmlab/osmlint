@@ -18,5 +18,6 @@ module.exports = {
   'tigerDelta': require('./validators/tigerDelta'),
   'fixmeTag': require('./validators/fixmeTag'),
   'impossibleOneWays': require('./validators/impossibleOneWays'),
-  'turnLanes': require('./validators/turnLanes')
+  'turnLanes': require('./validators/turnLanes'),
+  'mixedLayer': require('./validators/mixedLayer')
 };
