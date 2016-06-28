@@ -17,6 +17,7 @@ module.exports = {
   'impossibleAngle': require('./validators/impossibleAngle'),
   'tigerDelta': require('./validators/tigerDelta'),
   'fixmeTag': require('./validators/fixmeTag'),
+  'strangeLayer': require('./validators/strangeLayer'),
   'impossibleOneWays': require('./validators/impossibleOneWays'),
   'turnLanes': require('./validators/turnLanes'),
   'missingOneways': require('./validators/missingOneways')
