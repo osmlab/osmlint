@@ -55,9 +55,7 @@ module.exports = function(tileLayers, tile, writeData, done) {
       }
     }
   }
-
   var result = [];
-
   for (var j = 0; j < highways.length; j++) {
     var valueHighway = highways[j];
     var valueHighwaysCoords = valueHighway.geometry.coordinates;
@@ -75,7 +73,7 @@ module.exports = function(tileLayers, tile, writeData, done) {
     }
     var type = classification(majorRoads, minorRoads, pathRoads, valueHighway.properties.highway);
     if (repeatedCoords.length > 0) {
-      //save the multipoints
+      //Save multipoints
       for (var p = 0; p < repeatedCoords.length; p++) {
         var pointSurface = turf.point(repeatedCoords[p]);
         pointSurface.properties._osmlint = osmlint;
@@ -88,13 +86,11 @@ module.exports = function(tileLayers, tile, writeData, done) {
       result.push(valueHighway);
     } else {
       var intersect = turf.intersect(valueHighway, valueHighway);
-
       if (intersect.geometry.coordinates.length > valueHighwaysCoords.length) {
         //MultiLinestring to Linestring
         var intersectCoords = intersect.geometry.coordinates.map(function(v) {
           return v[0];
         });
-
         for (var h = 0; h < intersectCoords.length; h++) {
           if (vhObjs[intersectCoords[h].join('-')]) {
             intersectCoords.splice(h, 1);
