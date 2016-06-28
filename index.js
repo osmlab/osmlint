@@ -20,5 +20,5 @@ module.exports = {
   'strangeLayer': require('./validators/strangeLayer'),
   'impossibleOneWays': require('./validators/impossibleOneWays'),
   'turnLanes': require('./validators/turnLanes'),
-  'filterDataTeam': require('./validators/filterDataTeam')
+  'missingOneways': require('./validators/missingOneways')
 };

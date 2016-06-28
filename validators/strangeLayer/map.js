@@ -39,7 +39,7 @@ module.exports = function(tileLayers, tile, writeData, done) {
   var result = [];
   for (var i = 0; i < layer.features.length; i++) {
     var valueHighway = layer.features[i];
-    //check if tunel has `layer>=1` or bridge `layer<=-1`
+    //Check if tunel has `layer>=1` or bridge `layer<=-1`
     if ((valueHighway.properties.bridge && valueHighway.properties.bridge !== 'no' && valueHighway.properties.layer && (isNaN(valueHighway.properties.layer) || parseInt(valueHighway.properties.layer) < 0)) ||
       (valueHighway.properties.tunnel && valueHighway.properties.tunnel !== 'no' && valueHighway.properties.layer && (isNaN(valueHighway.properties.layer) || parseInt(valueHighway.properties.layer) > 0))) {
       valueHighway.properties._osmlint = osmlint;
