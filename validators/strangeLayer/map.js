@@ -1,7 +1,7 @@
 'use strict';
 var turf = require('turf');
+var _ = require('underscore');
 
-// Find bridges that does not have a layer tag
 module.exports = function(tileLayers, tile, writeData, done) {
   var layer = tileLayers.osm.osm;
   var majorRoads = {
@@ -31,14 +31,22 @@ module.exports = function(tileLayers, tile, writeData, done) {
     'cycleway': true,
     'steps': true
   };
-
-  var result = layer.features.filter(function(val) {
-    if (val.properties.highway && val.properties.bridge && !val.properties.layer) {
-      val.properties._osmlint = 'missinglayerbridges';
-      val.properties._type = classification(majorRoads, minorRoads, pathRoads, val.properties.highway);
-      return true;
+  var preserveType = {};
+  preserveType = _.extend(preserveType, majorRoads);
+  preserveType = _.extend(preserveType, minorRoads);
+  preserveType = _.extend(preserveType, pathRoads);
+  var osmlint = 'strangelayer';
+  var result = [];
+  for (var i = 0; i < layer.features.length; i++) {
+    var valueHighway = layer.features[i];
+    //Check if tunel has `layer>=1` or bridge `layer<=-1`
+    if ((valueHighway.properties.bridge && valueHighway.properties.bridge !== 'no' && valueHighway.properties.layer && (isNaN(valueHighway.properties.layer) || parseInt(valueHighway.properties.layer) < 0)) ||
+      (valueHighway.properties.tunnel && valueHighway.properties.tunnel !== 'no' && valueHighway.properties.layer && (isNaN(valueHighway.properties.layer) || parseInt(valueHighway.properties.layer) > 0))) {
+      valueHighway.properties._osmlint = osmlint;
+      valueHighway.properties._type = classification(majorRoads, minorRoads, pathRoads, valueHighway.properties.highway);
+      result.push(valueHighway);
     }
-  });
+  }
 
   if (result.length > 0) {
     var fc = turf.featurecollection(result);
@@ -46,6 +54,7 @@ module.exports = function(tileLayers, tile, writeData, done) {
   }
 
   done(null, null);
+
 };
 
 function classification(major, minor, path, highway) {

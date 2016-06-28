@@ -22,6 +22,8 @@ var overlapHighwaysTiles = path.join(__dirname, '/fixtures/overlapHighways.mbtil
 var fixMeTagTiles = path.join(__dirname, '/fixtures/fixMeTag.mbtiles');
 var turnLanesTiles = path.join(__dirname, '/fixtures/turnLanes.mbtiles');
 var mixedLayerTiles = path.join(__dirname, '/fixtures/mixedlayer.mbtiles');
+var strangelayerTiles = path.join(__dirname, '/fixtures/strangelayer.mbtiles');
+var missingOnewaysTiles = path.join(__dirname, '/fixtures/missingOneways.mbtiles');
 
 var monacoOpts = {
   bbox: [7.4068451, 43.723259, 7.4422073, 43.752901],
@@ -45,6 +47,16 @@ var turnLaneOpts = {
 
 var mixedLayerOpts = {
   bbox: [-76.485443, -11.335481, -72.667694, -8.5329818],
+  zoom: zoom
+};
+
+var optsStrangeLayer = {
+  bbox: [127.03491, 37.303279, 127.16228, 37.418163],
+  zoom: zoom
+};
+
+var missingOnewaysOpts = {
+  bbox: [-83.136978, 39.954228, -82.862320, 40.074656],
   zoom: zoom
 };
 
@@ -125,7 +137,7 @@ test('selfIntersectingHighways', function(t) {
       t.comment('Pass: ' + (i + 1));
       if (geoJSON.features.length > 0) {
         t.equal(geoJSON.features[0].properties._osmlint, 'selfintersectinghighways', 'Should be selfintersecting');
-        t.equal(geoJSON.features[0].geometry.type, 'LineString', 'Should be  LineString');
+        t.equal(geoJSON.features[0].geometry.type, 'Point', 'Should be  LineString');
       }
     }
     t.end();
@@ -338,8 +350,33 @@ test('turnLanes', function(t) {
   processors.turnLanes(turnLaneOpts, turnLanesTiles, function() {
     var logs = logInterceptor.end();
     var geoJSON = JSON.parse(logs[0]);
-    t.equal(geoJSON.features[0].properties._osmlint, 'turnlanes', 'Should be untaggedway');
+    t.equal(geoJSON.features[0].properties._osmlint, 'turnlanes', 'Should be turnlanes');
     t.equal(geoJSON.features[0].geometry.type, 'LineString', 'Should be  LineString');
+    t.end();
+  });
+});
+
+test('strangeLayer', function(t) {
+  t.plan(2);
+  logInterceptor();
+  processors.strangeLayer(optsStrangeLayer, strangelayerTiles, function() {
+    var logs = logInterceptor.end();
+    var geoJSON = JSON.parse(logs);
+    t.equal(geoJSON.features[0].properties._osmlint, 'strangelayer', 'Should be strangelayer');
+    t.equal(geoJSON.features[0].geometry.type, 'LineString', 'Should be  LineString');
+  });
+});
+
+test('missingOneways', function(t) {
+  t.plan(4);
+  logInterceptor();
+  processors.missingOneways(missingOnewaysOpts, missingOnewaysTiles, function() {
+    var logs = logInterceptor.end();
+    var geoJSON = JSON.parse(logs);
+    t.equal(geoJSON.features[0].properties._osmlint, 'missingoneways', 'Should be missingoneways');
+    t.equal(geoJSON.features[0].geometry.type, 'LineString', 'Should be  LineString');
+    t.equal(geoJSON.features[1].properties._osmlint, 'missingoneways', 'Should be missingoneways');
+    t.equal(geoJSON.features[1].geometry.type, 'LineString', 'Should be  LineString');
     t.end();
   });
 });

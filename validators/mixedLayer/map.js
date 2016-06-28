@@ -73,7 +73,7 @@ module.exports = function(tileLayers, tile, writeData, done) {
 
   for (var j = 0; j < highwaybboxes.length; j++) {
     var valueHighway = highways[highwaybboxes[j][4]];
-    //check only highways which has layer
+    //Check only highways which has layer
     if (valueHighway.properties.layer && valueHighway.properties.layer !== '0' && valueHighway.geometry.coordinates.length > 2) {
       var overlaphighwaysBbox = highwaysTree.search(highwaybboxes[j]);
       for (var k = 0; k < overlaphighwaysBbox.length; k++) {
