@@ -125,7 +125,7 @@ test('selfIntersectingHighways', function(t) {
       t.comment('Pass: ' + (i + 1));
       if (geoJSON.features.length > 0) {
         t.equal(geoJSON.features[0].properties._osmlint, 'selfintersectinghighways', 'Should be selfintersecting');
-        t.equal(geoJSON.features[0].geometry.type, 'LineString', 'Should be  LineString');
+        t.equal(geoJSON.features[0].geometry.type, 'Point', 'Should be  LineString');
       }
     }
     t.end();
