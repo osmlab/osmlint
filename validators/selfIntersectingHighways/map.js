@@ -50,9 +50,31 @@ module.exports = function(tileLayers, tile, writeData, done) {
 
   for (var j = 0; j < output.length; j++) {
     var valueHighway = output[j];
-    var coordLength = output[j].geometry.coordinates.length;
-    var intersect = turf.intersect(valueHighway, output[j]);
+    var coordLength = valueHighway.geometry.coordinates.length;
+    var intersect = turf.intersect(valueHighway, valueHighway);
     if (intersect.geometry.coordinates.length > coordLength) {
+      //objects  to compare
+      var objcoords = {};
+      var valueCoords = valueHighway.geometry.coordinates;
+      var coords = intersect.geometry.coordinates.map(function(v) {
+        return v[0];
+      });
+
+      for (var h = 0; h < coords.length; h++) {
+        objcoords[coords[h].join('-')] = coords[h];
+      }
+      for (var w = 0; w < valueCoords.length; w++) {
+        if (objcoords[valueCoords[w].join('-')]) {
+          delete objcoords[valueCoords[w].join('-')];
+        }
+      }
+      var arrcoords = _.values(objcoords);
+      for (var g = 0; g < arrcoords.length; g++) {
+        var point = turf.point(arrcoords[g]);
+        point.properties._osmlint = osmlint;
+        point.properties._way = valueHighway.properties['@id'];
+        result.push(point);
+      }
       valueHighway.properties._type = classification(majorRoads, minorRoads, pathRoads, valueHighway.properties.highway);
       valueHighway.properties._osmlint = osmlint;
       result.push(valueHighway);
