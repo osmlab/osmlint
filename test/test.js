@@ -21,6 +21,7 @@ var impossibleAngleTiles = path.join(__dirname, '/fixtures/impossibleAngle.mbtil
 var overlapHighwaysTiles = path.join(__dirname, '/fixtures/overlapHighways.mbtiles');
 var fixMeTagTiles = path.join(__dirname, '/fixtures/fixMeTag.mbtiles');
 var turnLanesTiles = path.join(__dirname, '/fixtures/turnLanes.mbtiles');
+var missingOnewaysTiles = path.join(__dirname, '/fixtures/missingOneways.mbtiles');
 
 var monacoOpts = {
   bbox: [7.4068451, 43.723259, 7.4422073, 43.752901],
@@ -39,6 +40,11 @@ var commonOpts = {
 
 var turnLaneOpts = {
   bbox: [-97.418518, 34.672182, -97.128754, 34.869595],
+  zoom: zoom
+};
+
+var missingOnewaysOpts = {
+  bbox: [-83.136978, 39.954228, -82.862320, 40.074656],
   zoom: zoom
 };
 
@@ -332,8 +338,22 @@ test('turnLanes', function(t) {
   processors.turnLanes(turnLaneOpts, turnLanesTiles, function() {
     var logs = logInterceptor.end();
     var geoJSON = JSON.parse(logs[0]);
-    t.equal(geoJSON.features[0].properties._osmlint, 'turnlanes', 'Should be untaggedway');
+    t.equal(geoJSON.features[0].properties._osmlint, 'turnlanes', 'Should be turnlanes');
     t.equal(geoJSON.features[0].geometry.type, 'LineString', 'Should be  LineString');
+    t.end();
+  });
+});
+
+test('missingOneways', function(t) {
+  t.plan(4);
+  logInterceptor();
+  processors.missingOneways(missingOnewaysOpts, missingOnewaysTiles, function() {
+    var logs = logInterceptor.end();
+    var geoJSON = JSON.parse(logs);
+    t.equal(geoJSON.features[0].properties._osmlint, 'missingoneways', 'Should be missingoneways');
+    t.equal(geoJSON.features[0].geometry.type, 'LineString', 'Should be  LineString');
+    t.equal(geoJSON.features[1].properties._osmlint, 'missingoneways', 'Should be missingoneways');
+    t.equal(geoJSON.features[1].geometry.type, 'LineString', 'Should be  LineString');
     t.end();
   });
 });
