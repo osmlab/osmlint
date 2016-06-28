@@ -60,35 +60,57 @@ module.exports = function(tileLayers, tile, writeData, done) {
 
   for (var j = 0; j < highways.length; j++) {
     var valueHighway = highways[j];
-    var coordLength = valueHighway.geometry.coordinates.length;
-    var intersect = turf.intersect(valueHighway, valueHighway);
-    if (intersect.geometry.coordinates.length > coordLength) {
-      //objects to compare
-      var objcoords = {};
-      var valueCoords = valueHighway.geometry.coordinates;
-      var coords = intersect.geometry.coordinates.map(function(v) {
-        return v[0];
-      });
-      for (var h = 0; h < coords.length; h++) {
-        objcoords[coords[h].join('-')] = coords[h];
-      }
-      for (var w = 0; w < valueCoords.length; w++) {
-        if (objcoords[valueCoords[w].join('-')]) {
-          delete objcoords[valueCoords[w].join('-')];
+    var valueHighwaysCoords = valueHighway.geometry.coordinates;
+    var repeatedCoords = [];
+    var vhObjs = {};
+    for (var z = 0; z < valueHighwaysCoords.length; z++) {
+      var key = valueHighwaysCoords[z].join('-');
+      if (vhObjs[key]) {
+        if (z !== 0 && z !== valueHighwaysCoords.length - 1) {
+          repeatedCoords.push(valueHighwaysCoords[z]);
         }
+      } else {
+        vhObjs[key] = valueHighwaysCoords[z];
       }
-      var type = classification(majorRoads, minorRoads, pathRoads, valueHighway.properties.highway);
-      var arrcoords = _.values(objcoords);
-      for (var g = 0; g < arrcoords.length; g++) {
-        var point = turf.point(arrcoords[g]);
-        point.properties._osmlint = osmlint;
-        point.properties._fromWay = valueHighway.properties['@id'];
-        point.properties._type = type;
-        result.push(point);
+    }
+    var type = classification(majorRoads, minorRoads, pathRoads, valueHighway.properties.highway);
+    if (repeatedCoords.length > 0) {
+      //save the multipoints
+      for (var p = 0; p < repeatedCoords.length; p++) {
+        var pointSurface = turf.point(repeatedCoords[p]);
+        pointSurface.properties._osmlint = osmlint;
+        pointSurface.properties._fromWay = valueHighway.properties['@id'];
+        pointSurface.properties._type = type;
+        result.push(pointSurface);
       }
       valueHighway.properties._type = type;
       valueHighway.properties._osmlint = osmlint;
       result.push(valueHighway);
+    } else {
+      var intersect = turf.intersect(valueHighway, valueHighway);
+
+      if (intersect.geometry.coordinates.length > valueHighwaysCoords.length) {
+        //MultiLinestring to Linestring
+        var intersectCoords = intersect.geometry.coordinates.map(function(v) {
+          return v[0];
+        });
+
+        for (var h = 0; h < intersectCoords.length; h++) {
+          if (vhObjs[intersectCoords[h].join('-')]) {
+            intersectCoords.splice(h, 1);
+          }
+        }
+        for (var t = 0; t < intersectCoords.length; t++) {
+          var pointIntersect = turf.point(intersectCoords[t]);
+          pointIntersect.properties._osmlint = osmlint;
+          pointIntersect.properties._fromWay = valueHighway.properties['@id'];
+          pointIntersect.properties._type = type;
+          result.push(pointIntersect);
+        }
+        valueHighway.properties._type = type;
+        valueHighway.properties._osmlint = osmlint;
+        result.push(valueHighway);
+      }
     }
   }
 
