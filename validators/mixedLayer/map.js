@@ -78,6 +78,7 @@ module.exports = function(tileLayers, tile, writeData, done) {
       var overlaphighwaysBbox = highwaysTree.search(highwaybboxes[j]);
       for (var k = 0; k < overlaphighwaysBbox.length; k++) {
         var overlaphighway = highways[overlaphighwaysBbox[k][4]];
+        //Compare layers between value and overlap highway
         if (valueHighway.properties['@id'] !== overlaphighway.properties['@id'] && valueHighway.properties.layer !== overlaphighway.properties.layer && overlaphighway.geometry.coordinates.length > 2) {
           var coorVH = valueHighway.geometry.coordinates;
           var coorOH = overlaphighway.geometry.coordinates;
@@ -92,6 +93,7 @@ module.exports = function(tileLayers, tile, writeData, done) {
               _osmlint: osmlint,
               _type: classification(majorRoads, minorRoads, pathRoads, valueHighway.properties.highway, overlaphighway.properties.highway)
             };
+            //Add osmlint properties
             intersect.properties = props;
             valueHighway.properties._osmlint = osmlint;
             overlaphighway.properties._osmlint = osmlint;
