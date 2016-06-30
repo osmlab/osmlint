@@ -6,8 +6,8 @@ var flatten = require('geojson-flatten');
 
 module.exports = function(tileLayers, tile, writeData, done) {
   var layer = tileLayers.osm.osm;
-  var highways = {};
-  var highwaybboxes = [];
+  var listOfHighways = {};
+  var highwaysBboxes = [];
   var majorRoads = {
     'motorway': true,
     'trunk': true,
@@ -49,8 +49,8 @@ module.exports = function(tileLayers, tile, writeData, done) {
         var idWayL = id + 'L';
         bbox = turf.extent(val);
         bbox.push(idWayL);
-        highwaybboxes.push(bbox);
-        highways[idWayL] = val;
+        highwaysBboxes.push(bbox);
+        listOfHighways[idWayL] = val;
       } else if (val.geometry.type === 'MultiLineString') {
         var arrayWays = flatten(val);
         for (var f = 0; f < arrayWays.length; f++) {
@@ -58,56 +58,55 @@ module.exports = function(tileLayers, tile, writeData, done) {
             var idWayM = id + 'M' + f;
             bbox = turf.extent(arrayWays[f]);
             bbox.push(idWayM);
-            highwaybboxes.push(bbox);
+            highwaysBboxes.push(bbox);
             arrayWays[f].properties = val.properties;
-            highways[idWayM] = arrayWays[f];
+            listOfHighways[idWayM] = arrayWays[f];
           }
         }
       }
     }
   }
 
-  var highwaysTree = rbush(highwaybboxes.length);
-  highwaysTree.load(highwaybboxes);
+  var highwaysTree = rbush(highwaysBboxes.length);
+  highwaysTree.load(highwaysBboxes);
   var output = {};
-
-  for (var j = 0; j < highwaybboxes.length; j++) {
-    var valueHighway = highways[highwaybboxes[j][4]];
+  for (var j = 0; j < highwaysBboxes.length; j++) {
+    var highwayToEvaluate = listOfHighways[highwaysBboxes[j][4]];
     //Check only highways which has layer
-    if (valueHighway.properties.layer && valueHighway.properties.layer !== '0' && valueHighway.geometry.coordinates.length > 2) {
-      var overlaphighwaysBbox = highwaysTree.search(highwaybboxes[j]);
-      for (var k = 0; k < overlaphighwaysBbox.length; k++) {
-        var overlaphighway = highways[overlaphighwaysBbox[k][4]];
+    if (highwayToEvaluate.properties.layer && highwayToEvaluate.properties.layer !== '0' && highwayToEvaluate.geometry.coordinates.length > 2) {
+      var overlapHighwaysBboxes = highwaysTree.search(highwaysBboxes[j]);
+      for (var k = 0; k < overlapHighwaysBboxes.length; k++) {
+        var overlapHighway = listOfHighways[overlapHighwaysBboxes[k][4]];
         //Compare layers between value and overlap highway
-        if (valueHighway.properties['@id'] !== overlaphighway.properties['@id'] && valueHighway.properties.layer !== overlaphighway.properties.layer && overlaphighway.geometry.coordinates.length > 2) {
-          var coorVH = valueHighway.geometry.coordinates;
-          var coorOH = overlaphighway.geometry.coordinates;
-          var middleCoorVH = _.without(_.flatten(coorVH), coorVH[0][0], coorVH[0][1], coorVH[coorVH.length - 1][0], coorVH[coorVH.length - 1][1]);
-          var middleCoorOH = _.without(_.flatten(coorOH), coorOH[0][0], coorOH[0][1], coorOH[coorOH.length - 1][0], coorOH[coorOH.length - 1][1]);
-          var inter = _.intersection(middleCoorVH, middleCoorOH);
-          if (inter.length === 2) {
-            var intersect = turf.point(inter);
+        if (highwayToEvaluate.properties['@id'] !== overlapHighway.properties['@id'] && highwayToEvaluate.properties.layer !== overlapHighway.properties.layer && overlapHighway.geometry.coordinates.length > 2) {
+          var coordHighwayToEvaluate = highwayToEvaluate.geometry.coordinates;
+          var coordOverlaphighway = overlapHighway.geometry.coordinates;
+          var middleCoordHighwayToEvaluate = _.without(_.flatten(coordHighwayToEvaluate), coordHighwayToEvaluate[0][0], coordHighwayToEvaluate[0][1], coordHighwayToEvaluate[coordHighwayToEvaluate.length - 1][0], coordHighwayToEvaluate[coordHighwayToEvaluate.length - 1][1]);
+          var middleCoorOverlapHighway = _.without(_.flatten(coordOverlaphighway), coordOverlaphighway[0][0], coordOverlaphighway[0][1], coordOverlaphighway[coordOverlaphighway.length - 1][0], coordOverlaphighway[coordOverlaphighway.length - 1][1]);
+          var coordIntersection = _.intersection(middleCoordHighwayToEvaluate, middleCoorOverlapHighway);
+          if (coordIntersection.length === 2) {
+            var intersectionPoint = turf.point(coordIntersection);
             var props = {
-              _fromWay: valueHighway.properties['@id'],
-              _toWay: overlaphighway.properties['@id'],
+              _fromWay: highwayToEvaluate.properties['@id'],
+              _toWay: overlapHighway.properties['@id'],
               _osmlint: osmlint,
-              _type: classification(majorRoads, minorRoads, pathRoads, valueHighway.properties.highway, overlaphighway.properties.highway)
+              _type: classification(majorRoads, minorRoads, pathRoads, highwayToEvaluate.properties.highway, overlapHighway.properties.highway)
             };
             //Add osmlint properties
-            intersect.properties = props;
-            valueHighway.properties._osmlint = osmlint;
-            overlaphighway.properties._osmlint = osmlint;
-            output[valueHighway.properties['@id']] = valueHighway;
-            output[overlaphighway.properties['@id']] = overlaphighway;
-            if (intersect.geometry.type === 'MultiPoint') {
-              var coord = intersect.geometry.coordinates;
+            intersectionPoint.properties = props;
+            highwayToEvaluate.properties._osmlint = osmlint;
+            overlapHighway.properties._osmlint = osmlint;
+            output[highwayToEvaluate.properties['@id']] = highwayToEvaluate;
+            output[overlapHighway.properties['@id']] = overlapHighway;
+            if (intersectionPoint.geometry.type === 'MultiPoint') {
+              var coord = intersectionPoint.geometry.coordinates;
               for (var l = 0; l < coord.length; l++) {
                 var point = turf.point(coord[l]);
                 point.properties = props;
-                output[valueHighway.properties['@id'] + overlaphighway.properties['@id'] + l] = point;
+                output[highwayToEvaluate.properties['@id'] + overlapHighway.properties['@id'] + l] = point;
               }
-            } else if (intersect.geometry.type === 'Point') {
-              output[valueHighway.properties['@id'] + overlaphighway.properties['@id']] = intersect;
+            } else if (intersectionPoint.geometry.type === 'Point') {
+              output[highwayToEvaluate.properties['@id'] + overlapHighway.properties['@id']] = intersectionPoint;
             }
           }
         }
