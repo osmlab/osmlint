@@ -64,10 +64,10 @@ module.exports = function(tileLayers, tile, writeData, done) {
       if (bbox[4] !== overlapBbox[4] && isIntersecting(highwayToEvaluate, overlapHighway) && !checkCoordinates(highwayToEvaluate, overlapHighway)) {
         var intersectPoint = turf.intersect(overlapHighway, highwayToEvaluate);
         if (intersectPoint && (intersectPoint.geometry.type === 'Point' || intersectPoint.geometry.type === 'MultiPoint')) {
-          var highwayCoord = _.flatten(overlapHighway.geometry.coordinates);
-          highwayCoord.concat(_.flatten(highwayToEvaluate.geometry.coordinates));
+          var mergeHighwaysCoords = _.flatten(overlapHighway.geometry.coordinates);
+          mergeHighwaysCoords.concat(_.flatten(highwayToEvaluate.geometry.coordinates));
           var intersectPointCoord = _.flatten(intersectPoint.geometry.coordinates);
-          if (_.difference(highwayCoord, intersectPointCoord).length === highwayCoord.length) {
+          if (_.difference(mergeHighwaysCoords, intersectPointCoord).length === mergeHighwaysCoords.length) {
             highwayToEvaluate.properties._osmlint = osmlint;
             overlapHighway.properties._osmlint = osmlint;
             output[bbox[4]] = highwayToEvaluate;
@@ -99,7 +99,6 @@ module.exports = function(tileLayers, tile, writeData, done) {
   done(null, null);
 
 };
-
 
 function checkCoordinates(high1, high2) {
   var coord1 = high1.geometry.coordinates;
