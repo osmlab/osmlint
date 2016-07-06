@@ -23,7 +23,7 @@ module.exports = function(tileLayers, tile, writeData, done) {
     'unclassified': true,
     'residential': true,
     'living_street': true,
-    // 'service': true,
+    'service': true,
     'road': true
   };
   var pathRoads = {
@@ -68,19 +68,17 @@ module.exports = function(tileLayers, tile, writeData, done) {
           highwayCoord.concat(_.flatten(highwayToEvaluate.geometry.coordinates));
           var intersectPointCoord = _.flatten(intersectPoint.geometry.coordinates);
           if (_.difference(highwayCoord, intersectPointCoord).length === highwayCoord.length) {
-            var fromHighway = highwayToEvaluate;
-            var toHighway = overlapHighway;
-            fromHighway.properties._osmlint = osmlint;
-            toHighway.properties._osmlint = osmlint;
-            output[bbox[4]] = fromHighway;
-            output[overlapBbox[4]] = toHighway;
+            highwayToEvaluate.properties._osmlint = osmlint;
+            overlapHighway.properties._osmlint = osmlint;
+            output[bbox[4]] = highwayToEvaluate;
+            output[overlapBbox[4]] = overlapHighway;
             intersectPoint.properties = {
-              _fromWay: fromHighway.properties['@id'],
-              _toWay: toHighway.properties['@id'],
+              _fromWay: highwayToEvaluate.properties['@id'],
+              _toWay: overlapHighway.properties['@id'],
               _osmlint: osmlint,
               _type: classification(majorRoads, minorRoads, pathRoads, highwayToEvaluate.properties.highway, overlapHighway.properties.highway)
             };
-            if (fromHighway.properties['@id'] > toHighway.properties['@id']) {
+            if (highwayToEvaluate.properties['@id'] > overlapHighway.properties['@id']) {
               output[bbox[4].toString().concat(overlapBbox[4])] = intersectPoint;
             } else {
               output[overlapBbox[4].toString().concat(bbox[4])] = intersectPoint;
