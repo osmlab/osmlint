@@ -23,7 +23,7 @@ module.exports = function(tileLayers, tile, writeData, done) {
       preserveType.man_made[val.properties.man_made]
     );
 
-    if (val.geometry.type === 'LineString' && valueType) {
+    if (val.geometry.type === 'LineString' && valueType && !(val.properties.source && val.properties.source === 'NHD')) {
       var coordinates = val.geometry.coordinates;
       var firstCoord = coordinates[0];
       var lastCoord = coordinates[coordinates.length - 1];
