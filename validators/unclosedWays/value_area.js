@@ -110,7 +110,7 @@ module.exports = {
     'works': true
   },
   building: {
-    'yes': true,    
+    'yes': true,
     'no': false,
     'apartments': true,
     'farm': true,
