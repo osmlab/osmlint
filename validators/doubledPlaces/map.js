@@ -10,7 +10,7 @@ module.exports = function(tileLayers, tile, writeData, done) {
 
   for (var i = 0; i < layer.features.length; i++) {
     var val = layer.features[i];
-    if (val.properties.highway !== 'bus_stop' && val.properties.railway !== 'station' && val.properties.name !== undefined && (val.geometry.type === 'Point' || val.geometry.type === 'Polygon')) {
+    if (val.properties.name !== undefined && (val.geometry.type === 'Point' || val.geometry.type === 'Polygon') && val.properties.public_transport === undefined && val.properties.railway === undefined  && val.properties.amenity !== 'bus_station' && val.properties.highway === undefined && val.properties.place === undefined && val.properties.amenity !== 'parking_entrance' && val.properties['addr:housenumber'] === undefined) {
       if (!objnames[val.properties.name]) {
         objnames[val.properties.name] = val;
       } else if (objnames[val.properties.name].properties['@id'] !== val.properties['@id'] && objnames[val.properties.name].geometry.type !== val.geometry.type && getDistance(objnames[val.properties.name], val) < 0.03) {
