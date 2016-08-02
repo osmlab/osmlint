@@ -46,7 +46,8 @@ module.exports = function(tileLayers, tile, writeData, done) {
     'weir': true,
     'waterfall': true,
     'stream': true,
-    'ditch': true
+    'ditch': true,
+    'derelict_canal': true
   };
   var fords = {};
   var osmlint = 'crossingwaterwayshighways';
