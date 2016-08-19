@@ -24,6 +24,7 @@ var turnLanesTiles = path.join(__dirname, '/fixtures/turnLanes.mbtiles');
 var strangelayerTiles = path.join(__dirname, '/fixtures/strangelayer.mbtiles');
 var missingOnewaysTiles = path.join(__dirname, '/fixtures/missingOneways.mbtiles');
 var mixedLayerTiles = path.join(__dirname, '/fixtures/mixedlayer.mbtiles');
+var doubledPlacesTiles = path.join(__dirname, '/fixtures/doubledPlaces.mbtiles');
 
 var monacoOpts = {
   bbox: [7.4068451, 43.723259, 7.4422073, 43.752901],
@@ -56,6 +57,11 @@ var missingOnewaysOpts = {
 
 var mixedLayerOpts = {
   bbox: [-75.584564, -10.275904, -74.373322, -9.2581718],
+  zoom: zoom
+};
+
+var doubledPlacesOpts = {
+  bbox: [11.700697, 42.208939, 11.811247, 42.276801],
   zoom: zoom
 };
 
@@ -388,6 +394,20 @@ test('mixedLayer', function(t) {
     var geoJSON = JSON.parse(logs);
     t.equal(geoJSON.features[0].properties._osmlint, 'mixedlayer', 'Should be mixedlayer');
     t.equal(geoJSON.features[0].geometry.type, 'LineString', 'Should be  LineString');
+    t.end();
+  });
+});
+
+test('doubledPlaces', function(t) {
+  t.plan(4);
+  logInterceptor();
+  processors.doubledPlaces(doubledPlacesOpts, doubledPlacesTiles, function() {
+    var logs = logInterceptor.end();
+    var geoJSON = JSON.parse(logs);
+    t.equal(geoJSON.features[0].properties._osmlint, 'doubledplaces', 'Should be doubledPlaces');
+    t.equal(geoJSON.features[0].geometry.type, 'Point', 'Should be  Point');
+    t.equal(geoJSON.features[1].properties._osmlint, 'doubledplaces', 'Should be doubledPlaces');
+    t.equal(geoJSON.features[1].geometry.type, 'Polygon', 'Should be  Polygon');
     t.end();
   });
 });
