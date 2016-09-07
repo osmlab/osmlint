@@ -5,6 +5,7 @@ var flatten = require('geojson-flatten');
 
 module.exports = function(tileLayers, tile, writeData, done) {
   var layer = tileLayers.osm.osm;
+  var valueAngle = 30;
   var majorRoads = {
     'motorway': true,
     'trunk': true,
@@ -59,7 +60,7 @@ module.exports = function(tileLayers, tile, writeData, done) {
     var coords = highways[z].geometry.coordinates;
     for (var j = 0; j < coords.length - 2; j++) {
       var angle = findAngle(coords[j], coords[j + 1], coords[j + 2]);
-      if (angle < 10) {
+      if (angle < valueAngle) {
         var point = turf.point(coords[j + 1]);
         var type;
         if (majorRoads[highways[z].properties.highway]) {
