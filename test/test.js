@@ -24,6 +24,8 @@ var turnLanesTiles = path.join(__dirname, '/fixtures/turnLanes.mbtiles');
 var strangelayerTiles = path.join(__dirname, '/fixtures/strangelayer.mbtiles');
 var missingOnewaysTiles = path.join(__dirname, '/fixtures/missingOneways.mbtiles');
 var mixedLayerTiles = path.join(__dirname, '/fixtures/mixedlayer.mbtiles');
+var deprecateHighwaysTiles = path.join(__dirname, '/fixtures/deprecateHighways.mbtiles');
+
 
 var monacoOpts = {
   bbox: [7.4068451, 43.723259, 7.4422073, 43.752901],
@@ -56,6 +58,11 @@ var missingOnewaysOpts = {
 
 var mixedLayerOpts = {
   bbox: [-75.584564, -10.275904, -74.373322, -9.2581718],
+  zoom: zoom
+};
+
+var deprecateHighwaysOpts = {
+  bbox: [-76.96077346801758, -6.103516703951734, -76.86927795410156, -6.033017816106606],
   zoom: zoom
 };
 
@@ -387,6 +394,18 @@ test('mixedLayer', function(t) {
     var logs = logInterceptor.end();
     var geoJSON = JSON.parse(logs);
     t.equal(geoJSON.features[0].properties._osmlint, 'mixedlayer', 'Should be mixedlayer');
+    t.equal(geoJSON.features[0].geometry.type, 'LineString', 'Should be  LineString');
+    t.end();
+  });
+});
+
+test('deprecateHighways', function(t) {
+  t.plan(2);
+  logInterceptor();
+  processors.deprecateHighways(deprecateHighwaysOpts, deprecateHighwaysTiles, function() {
+    var logs = logInterceptor.end();
+    var geoJSON = JSON.parse(logs);
+    t.equal(geoJSON.features[0].properties._osmlint, 'deprecateroads', 'Should be deprecateroads');
     t.equal(geoJSON.features[0].geometry.type, 'LineString', 'Should be  LineString');
     t.end();
   });
