@@ -22,5 +22,6 @@ module.exports = {
   'turnLanes': require('./validators/turnLanes'),
   'missingOneways': require('./validators/missingOneways'),
   'mixedLayer': require('./validators/mixedLayer'),
+  'deprecateHighways': require('./validators/deprecateHighways'),
   'doubledPlaces': require('./validators/doubledPlaces')
 };

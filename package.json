@@ -2,7 +2,7 @@
   "name": "osmlint",
   "version": "0.0.1",
   "scripts": {
-    "test": "eslint src test validators/*/*.js && node test/test.js"
+    "test": "eslint src test validators/*/*.js && NODE_ENV=test tape test/*.test.js | tap-spec"
   },
   "bin": {
     "osmlint": "cli.js"
@@ -29,6 +29,7 @@
     "eslint-config-mourner": "^1.0.1",
     "geojson-validation": "^0.1.6",
     "log-interceptor": "^1.0.0",
-    "tap": "^2.3.1"
+    "tap-spec": "^4.1.1",
+    "tape": "^4.6.0"
   }
 }
