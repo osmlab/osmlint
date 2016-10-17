@@ -6,6 +6,7 @@ var rbush = require('rbush');
 module.exports = function(tileLayers, tile, writeData, done) {
   var layer = tileLayers.osm.osm;
   var listOfObjects = {};
+  var listOfAvoidPoints = {};
   var bboxes = [];
   var majorRoads = {
     'motorway': true,
@@ -43,10 +44,17 @@ module.exports = function(tileLayers, tile, writeData, done) {
   for (var i = 0; i < layer.features.length; i++) {
     var val = layer.features[i];
     if ((preserveType[val.properties.highway] || val.properties.building) && (val.geometry.type === 'LineString' || val.geometry.type === 'MultiLineString' || val.geometry.type === 'Polygon')) {
+      if (val.geometry.type === 'Polygon') {
+        val.geometry.type = 'LineString';
+        val.geometry.coordinates = val.geometry.coordinates[0];
+      }
       var bboxObj = turf.extent(val);
       bboxObj.push(val.properties['@id']);
       bboxes.push(bboxObj);
       listOfObjects[val.properties['@id']] = val;
+    }
+    if (val.properties.amenity && val.properties.amenity === 'parking_entrance' && val.geometry.type === 'Point') {
+      listOfAvoidPoints[val.geometry.coordinates.join(',')] = false;
     }
   }
   var objsTree = rbush(bboxes.length);
@@ -61,11 +69,14 @@ module.exports = function(tileLayers, tile, writeData, done) {
         var overlapBbox = overlaps[k];
         var overlapObj = listOfObjects[overlapBbox[4]];
         if (overlapObj.properties.building) {
-          // console.log(overlapObj.properties.building)
           var intersectPoint = turf.intersect(overlapObj, objToEvaluate);
-          if (intersectPoint && (intersectPoint.geometry.type === 'Point' || intersectPoint.geometry.type === 'MultiPoint')) {
+          if (intersectPoint && ((intersectPoint.geometry.type === 'Point' && listOfAvoidPoints[intersectPoint.geometry.coordinates.join(',')]) || intersectPoint.geometry.type === 'MultiPoint')) {
             objToEvaluate.properties._osmlint = osmlint;
             overlapObj.properties._osmlint = osmlint;
+            if (overlapObj.geometry.type === 'LineString') {
+              overlapObj.geometry.type = 'Polygon';
+              overlapObj.geometry.coordinates = [overlapObj.geometry.coordinates];
+            }
             intersectPoint.properties = {
               _fromWay: objToEvaluate.properties['@id'],
               _toWay: overlapObj.properties['@id'],
