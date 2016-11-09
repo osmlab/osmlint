@@ -1,6 +1,6 @@
 #### Description
 
-This validator detects highways with less likely turning angles. The threshold currently is less than 10 degrees.
+This validator detects highways with less likely turning angles. The threshold currently is less than 30 degrees.
 
 ![image](https://cloud.githubusercontent.com/assets/1152236/14332852/2f6b08d6-fc11-11e5-81c9-9dcf6ceaa7d9.png)
 

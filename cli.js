@@ -1,7 +1,9 @@
 #!/usr/bin/env node
+
 'use strict';
 
 var fs = require('fs');
+var exec = require('child_process').exec;
 var argv = require('minimist')(process.argv.slice(2));
 var path = require('path');
 
@@ -13,7 +15,9 @@ var usage = function() {
 
 (function() {
   if (argv.validators) {
-    console.log(fs.readFileSync(path.join(__dirname, '/validators.txt'), 'UTF-8'));
+    exec('sh validators.txt', function(err, stdout, stderr) {
+      console.log(stdout);
+    });
     return;
   }
   if (argv._.length < 2) {
