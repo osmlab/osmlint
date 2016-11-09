@@ -28,7 +28,7 @@
 
   *Identifies bridges with a missing layer tag and sends them to stdout.*
 
-  `osmlint missinglayerbridges --bbox="[7.4, 43.7, 7.4, 43.7]" --zoom=12 osm.mbtiles tiger.mbtiles`
+  `osmlint missinglayerbridges --bbox="[7.4, 43.7, 7.4, 43.7]" --zoom=12 osm.mbtiles`
 
 #### osmlint untaggedways
 
