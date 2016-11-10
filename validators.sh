@@ -96,4 +96,8 @@ echo ${GREEN}# osmlint deprecatehighways${NONE}
 echo "${T}Identifies highways which are deprecated and them to stdout."
 echo "${T}${YELLOW}osmlint deprecatehighways --bbox=\"[7.4, 43.7, 7.4, 43.7]\" --zoom=12 osm.mbtiles${NONE}${N}"
 
+echo ${GREEN}# osmlint crossinghighwaysbuildings${NONE}
+echo "${T}Identifies all highways that intersect with buildings and them to stdout."
+echo "${T}${YELLOW}osmlint crossinghighwaysbuildings --bbox=\"[7.4, 43.7, 7.4, 43.7]\" --zoom=12 osm.mbtiles${NONE}${N}"
+
 tput sgr0

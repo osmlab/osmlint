@@ -131,3 +131,9 @@
   *Identifies highways which are deprecated and them to stdout.*
 
   `osmlint deprecatehighways --bbox="[7.4, 43.7, 7.4, 43.7]" --zoom=12 osm.mbtiles`
+
+#### osmlint crossinghighwaysbuildings
+
+  *Identifies all highways that intersect with buildings and them to stdout.*
+
+  `osmlint crossinghighwaysbuildings --bbox="[7.4, 43.7, 7.4, 43.7]" --zoom=12 osm.mbtiles`

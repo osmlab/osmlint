@@ -15,7 +15,7 @@ var usage = function() {
 
 (function() {
   if (argv.validators) {
-    exec('sh validators.txt', function(err, stdout, stderr) {
+    exec('sh validators.sh', function(err, stdout, stderr) {
       console.log(stdout);
     });
     return;
