@@ -3,7 +3,7 @@
 - Clone this repository
 
 ```sh
-$ git clone https://github.com/osmlab/osmlint.git
+$ git clone https://github.com/osmlab/osmlint.git --depth=1
 $ cd osmlint
 $ npm install
 ```

@@ -36,7 +36,7 @@ See [`validators`](https://github.com/osmlab/osmlint/blob/master/validators.md).
 ## Development
 
 ```sh
-git clone https://github.com/osmlab/osmlint.git
+git clone https://github.com/osmlab/osmlint.git --depth=1
 cd osmlint
 npm install
 ```
