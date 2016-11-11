@@ -3,35 +3,37 @@
 - Clone this repository
 
 ```sh
-git clone https://github.com/osmlab/osmlint.git
-cd osmlint
-npm install
+$ git clone https://github.com/osmlab/osmlint.git
+$ cd osmlint
+$ npm install
 ```
 
-- Check if all tests pass before making your changes with npm test
+- Before making any changes, check if all tests pass by running `npm test`
 
-- Create a new test file in the directory `test/` and a fixture file in the directory `test/fixtures/`
+- Create a new test file (in `test/`) and a new fixture file (in `test/fixtures/`)
   
-    *e.g*
+    For example,
     - Test file: `deprecatehighways.test.js`
     - Fixture file: `deprecatehighways.mbtiles`
 
- `deprecatehighways.mbtiles` could be a [country file](http://osmlab.github.io/osm-qa-tiles/country.html), or use [mbtiles-extracts](https://github.com/mapbox/mbtiles-extracts) to get a small size of mbtiles, usually for the app we use this tool to add mbtiles fixtures
+ The fixture could be a [country file](http://osmlab.github.io/osm-qa-tiles/country.html) or from [mbtiles-extracts](https://github.com/mapbox/mbtiles-extracts) to get a smaller file size. Usually we use `mbtiles-extracts` to add fixtures.
 
-- Create a copy of folder `validators/01_dir_template` and then rename it with the validator name , 
-
+- Create a copy of template folder `validators/01_dir_template` and rename it with the name of your validator 
   
     e.g  `deprecateHighways`
 
-- Start writing the validator
+- Write the validator
 
-- Add the validator in `index.js`.
+- Add the validator to `index.js`, like so
+  
+```
+'deprecatehighways': require('./validators/deprecateHighways')
+```
 
-  'deprecatehighways': require('./validators/deprecateHighways')
+- To run the validator use
 
-- Execute the validator 
+```
+osmlint deprecatehighways --bbox="[7.4, 43.7, 7.4, 43.7]" --zoom=12 osm.mbtiles
+```
 
-`osmlint deprecatehighways --bbox="[7.4, 43.7, 7.4, 43.7]" --zoom=12 osm.mbtiles`
-
-
-- Write the test and execute it with `npm test`
+- Write tests and execute them with `npm test`
