@@ -3,7 +3,6 @@
 'use strict';
 
 var fs = require('fs');
-var exec = require('child_process').exec;
 var argv = require('minimist')(process.argv.slice(2));
 var path = require('path');
 
@@ -15,9 +14,7 @@ var usage = function() {
 
 (function() {
   if (argv.validators) {
-    exec('sh validators.sh', function(err, stdout, stderr) {
-      console.log(stdout);
-    });
+    console.log(fs.readFileSync(path.join(__dirname, '/validators.md'), 'UTF-8'));
     return;
   }
   if (argv._.length < 2) {
