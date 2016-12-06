@@ -18,4 +18,3 @@ module.exports = function(opts, mbtilesPath, callback) {
     callback && callback();
   });
 };
-

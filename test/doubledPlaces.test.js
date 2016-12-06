@@ -6,7 +6,7 @@ var processors = require('../index.js');
 var zoom = 12;
 var doubledPlacesTiles = path.join(__dirname, '/fixtures/doubledPlaces.mbtiles');
 var doubledPlacesOpts = {
-  bbox: [12.154741, 45.859352, 12.190619, 45.902612],
+  bbox: [11.731682, 42.229471, 11.783695, 42.264543],
   zoom: zoom
 };
 test('doubledPlaces', function(t) {
@@ -19,7 +19,7 @@ test('doubledPlaces', function(t) {
       t.comment('Pass: ' + (i + 1));
       if (geoJSON.features.length > 0) {
         t.equal(geoJSON.features[0].properties._osmlint, 'doubledplaces', 'Should be doubledplaces');
-        t.equal(geoJSON.features[0].geometry.type, 'Polygon', 'Should be polygon');
+        t.equal(geoJSON.features[0].geometry.type, 'Point', 'Should be point');
       }
     }
     t.end();
