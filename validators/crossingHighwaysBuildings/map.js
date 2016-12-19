@@ -43,7 +43,7 @@ module.exports = function(tileLayers, tile, writeData, done) {
   var osmlint = 'crossinghighwaysbuildings';
   for (var i = 0; i < layer.features.length; i++) {
     var val = layer.features[i];
-    if ((preserveType[val.properties.highway] || val.properties.building) && (val.geometry.type === 'LineString' || val.geometry.type === 'MultiLineString' || val.geometry.type === 'Polygon')) {
+    if ((preserveType[val.properties.highway] || val.properties.building) && (val.geometry.type === 'LineString' || val.geometry.type === 'MultiLineString' || val.geometry.type === 'Polygon') && val.properties.layer === undefined) {
       if (val.geometry.type === 'Polygon') {
         val.geometry.type = 'LineString';
         val.geometry.coordinates = val.geometry.coordinates[0];
