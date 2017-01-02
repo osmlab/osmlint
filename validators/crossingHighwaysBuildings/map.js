@@ -43,7 +43,7 @@ module.exports = function(tileLayers, tile, writeData, done) {
   var osmlint = 'crossinghighwaysbuildings';
   for (var i = 0; i < layer.features.length; i++) {
     var val = layer.features[i];
-    if ((preserveType[val.properties.highway] || val.properties.building) && (val.geometry.type === 'LineString' || val.geometry.type === 'MultiLineString' || val.geometry.type === 'Polygon') && val.properties.layer === undefined) {
+    if ((preserveType[val.properties.highway] || val.properties.building) && (val.geometry.type === 'LineString' || val.geometry.type === 'MultiLineString' || val.geometry.type === 'Polygon')) {
       if (val.geometry.type === 'Polygon') {
         val.geometry.type = 'LineString';
         val.geometry.coordinates = val.geometry.coordinates[0];
@@ -69,23 +69,25 @@ module.exports = function(tileLayers, tile, writeData, done) {
         var overlapBbox = overlaps[k];
         var overlapObj = listOfObjects[overlapBbox[4]];
         if (overlapObj.properties.building) {
-          var intersectPoint = turf.intersect(overlapObj, objToEvaluate);
-          if (intersectPoint && ((intersectPoint.geometry.type === 'Point' && listOfAvoidPoints[intersectPoint.geometry.coordinates.join(',')]) || intersectPoint.geometry.type === 'MultiPoint')) {
-            objToEvaluate.properties._osmlint = osmlint;
-            overlapObj.properties._osmlint = osmlint;
-            if (overlapObj.geometry.type === 'LineString') {
-              overlapObj.geometry.type = 'Polygon';
-              overlapObj.geometry.coordinates = [overlapObj.geometry.coordinates];
+          if (!(overlapObj.properties.layer && overlapObj.properties.layer > 0) && !(objToEvaluate.properties.layer && objToEvaluate.properties.layer < 0)) {
+            var intersectPoint = turf.intersect(overlapObj, objToEvaluate);
+            if (intersectPoint && ((intersectPoint.geometry.type === 'Point' && listOfAvoidPoints[intersectPoint.geometry.coordinates.join(',')]) || intersectPoint.geometry.type === 'MultiPoint')) {
+              objToEvaluate.properties._osmlint = osmlint;
+              overlapObj.properties._osmlint = osmlint;
+              if (overlapObj.geometry.type === 'LineString') {
+                overlapObj.geometry.type = 'Polygon';
+                overlapObj.geometry.coordinates = [overlapObj.geometry.coordinates];
+              }
+              intersectPoint.properties = {
+                _fromWay: objToEvaluate.properties['@id'],
+                _toWay: overlapObj.properties['@id'],
+                _osmlint: osmlint,
+                _type: classification(majorRoads, minorRoads, pathRoads, objToEvaluate.properties.highway)
+              };
+              output[objToEvaluate.properties['@id']] = objToEvaluate;
+              output[overlapObj.properties['@id']] = overlapObj;
+              output[objToEvaluate.properties['@id'] + '-' + overlapObj.properties['@id']] = intersectPoint;
             }
-            intersectPoint.properties = {
-              _fromWay: objToEvaluate.properties['@id'],
-              _toWay: overlapObj.properties['@id'],
-              _osmlint: osmlint,
-              _type: classification(majorRoads, minorRoads, pathRoads, objToEvaluate.properties.highway)
-            };
-            output[objToEvaluate.properties['@id']] = objToEvaluate;
-            output[overlapObj.properties['@id']] = overlapObj;
-            output[objToEvaluate.properties['@id'] + '-' + overlapObj.properties['@id']] = intersectPoint;
           }
         }
       }
