@@ -23,6 +23,7 @@ module.exports = {
   'missingOneways': require('./validators/missingOneways'),
   'mixedLayer': require('./validators/mixedLayer'),
   'deprecateHighways': require('./validators/deprecateHighways'),
-  'misspelledTags': require('./validators/misspelledTags')
   'crossinghighwaysbuildings': require('./validators/crossingHighwaysBuildings'),
+  'buildingpartyes': require('./validators/buildingPartYes'),
+  'misspelledTags': require('./validators/misspelledTags')
 };
