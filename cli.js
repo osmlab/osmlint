@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+
 'use strict';
 
 var fs = require('fs');
@@ -13,7 +14,7 @@ var usage = function() {
 
 (function() {
   if (argv.validators) {
-    console.log(fs.readFileSync(path.join(__dirname, '/validators.txt'), 'UTF-8'));
+    console.log(fs.readFileSync(path.join(__dirname, '/validators.md'), 'UTF-8'));
     return;
   }
   if (argv._.length < 2) {
