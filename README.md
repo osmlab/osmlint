@@ -31,12 +31,12 @@ require('osmlint').bridgeOnNode({bbox: [-122.1, 36.9, -121.9, 37.0], zoom: 12}, 
 
 ## Available validators
 
-See [`validators.txt`](https://github.com/osmlab/osmlint/blob/master/validators.txt).
+See [`validators`](https://github.com/osmlab/osmlint/blob/master/validators.md).
 
 ## Development
 
 ```sh
-git clone https://github.com/osmlab/osmlint.git
+git clone https://github.com/osmlab/osmlint.git --depth=1
 cd osmlint
 npm install
 ```

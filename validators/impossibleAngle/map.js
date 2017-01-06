@@ -5,7 +5,7 @@ var flatten = require('geojson-flatten');
 
 module.exports = function(tileLayers, tile, writeData, done) {
   var layer = tileLayers.osm.osm;
-  var valueAngle = 30;
+  var valueAngle = 10;
   var majorRoads = {
     'motorway': true,
     'trunk': true,
