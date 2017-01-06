@@ -76,7 +76,7 @@
 
   *Identifies missing roads on osm which exist in TIGER 2015 and sends them to stdout.*
 
-  `osmlint tigerdelta --bbox="[7.4, 43.7, 7.4, 43.7]" --zoom=12 osm.mbtiles`
+  `osmlint tigerdelta --bbox="[7.4, 43.7, 7.4, 43.7]" --zoom=12 osm.mbtiles tiger2016.mbtiles`
 
 #### osmlint strangelayer
 
