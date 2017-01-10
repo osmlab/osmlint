@@ -1,5 +1,5 @@
 'use strict';
-
+/* eslint-disable camelcase */
 module.exports = {
   natural: { //false = linestring and Polygon
     'wood': true,
@@ -168,3 +168,4 @@ module.exports = {
     'no': false
   }
 };
+/* eslint-enable camelcase */
