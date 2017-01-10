@@ -24,5 +24,6 @@ module.exports = {
   'mixedLayer': require('./validators/mixedLayer'),
   'deprecateHighways': require('./validators/deprecateHighways'),
   'crossinghighwaysbuildings': require('./validators/crossingHighwaysBuildings'),
-  'buildingpartyes': require('./validators/buildingPartYes')
+  'buildingpartyes': require('./validators/buildingPartYes'),
+  'misspelledTags': require('./validators/misspelledTags')
 };
