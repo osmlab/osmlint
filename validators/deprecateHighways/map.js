@@ -4,6 +4,7 @@ var turf = require('turf');
 module.exports = function(tileLayers, tile, writeData, done) {
   var layer = tileLayers.osm.osm;
   var result = [];
+  /* eslint-disable camelcase */
   var deprecatedFeatures = {
     incline: true,
     incline_steep: true,
@@ -15,7 +16,7 @@ module.exports = function(tileLayers, tile, writeData, done) {
     no: true,
     road: true
   };
-
+  /* eslint-enable camelcase */
   var osmlint = 'deprecateroads';
   for (var i = 0; i < layer.features.length; i++) {
     var val = layer.features[i];
