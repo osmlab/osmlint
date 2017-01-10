@@ -11,7 +11,11 @@ module.exports = function(tileLayers, tile, writeData, done) {
 
   for (var i = 0; i < layer.features.length; i++) {
     var val = layer.features[i];
-    if (val.properties.name !== undefined && (val.properties.historic !== undefined || val.properties.leisure !== undefined || val.properties.landuse !== undefined || val.properties.shop !== undefined) && (val.geometry.type === 'Point' || val.geometry.type === 'Polygon') && val.properties.public_transport === undefined && val.properties.railway === undefined && val.properties.amenity !== 'bus_station' && val.properties.highway === undefined && val.properties.place === undefined && val.properties.amenity !== 'parking_entrance' && val.properties['addr:housenumber'] === undefined) {
+    var evaluateTags = val.properties.historic || val.properties.leisure || val.properties.landuse || val.properties.shop;
+    var evaluateGeom = val.geometry.type === 'Point' || val.geometry.type === 'Polygon';
+    var avoidTags = !val.properties.public_transport && !val.properties.railway && !val.properties.highway && !val.properties.place && !val.properties['addr:housenumber'];
+    var exceptionsTags = val.properties.amenity !== 'bus_station' && val.properties.amenity !== 'parking_entrance';
+    if (val.properties.name && evaluateTags && evaluateGeom && avoidTags && exceptionsTags) {
       var nlc = val.properties.name.toLowerCase();
       if (!objnames[nlc]) {
         objnames[nlc] = val;
@@ -30,6 +34,7 @@ module.exports = function(tileLayers, tile, writeData, done) {
     writeData(JSON.stringify(fc) + '\n');
   }
   done(null, null);
+
 };
 
 function getDistance(o1, o2) {
