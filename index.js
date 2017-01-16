@@ -25,5 +25,6 @@ module.exports = {
   'deprecateHighways': require('./validators/deprecateHighways'),
   'doubledPlaces': require('./validators/doubledPlaces'),
   'crossinghighwaysbuildings': require('./validators/crossingHighwaysBuildings'),
-  'buildingpartyes': require('./validators/buildingPartYes')
+  'buildingpartyes': require('./validators/buildingPartYes'),
+  'misspelledTags': require('./validators/misspelledTags')
 };

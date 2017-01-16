@@ -22,7 +22,8 @@
     "tile-reduce": "^3.0.0",
     "time": "^0.11.4",
     "turf": "2.0.2",
-    "underscore": "^1.8.3"
+    "underscore": "^1.8.3",
+    "fast-levenshtein": "2.0.6"
   },
   "devDependencies": {
     "eslint": "^1.10.2",
