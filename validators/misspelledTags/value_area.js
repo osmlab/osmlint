@@ -1,5 +1,5 @@
 'use strict';
-
+/* eslint-disable camelcase */
 module.exports = {
   aerialway: [
     'cable_car',
@@ -1094,3 +1094,4 @@ module.exports = {
   tower: [], //Doesn't exist https://wiki.openstreetmap.org/wiki/Tower, should be http://wiki.openstreetmap.org/wiki/Key:tower:type
   ship: [] //http://wiki.openstreetmap.org/w/index.php?title=Key:ship&redirect=no
 };
+/* eslint-enable camelcase */
