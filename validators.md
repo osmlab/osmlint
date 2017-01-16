@@ -137,3 +137,15 @@
   *Identifies all highways that intersect with buildings and them to stdout.*
 
   `osmlint crossinghighwaysbuildings --bbox="[7.4, 43.7, 7.4, 43.7]" --zoom=12 osm.mbtiles`
+
+#### osmlint misspelledtags
+
+  *Identifies all features that have a tag typo.*
+
+  `osmlint misspelledtags --bbox="[7.4, 43.7, 7.4, 43.7]" --zoom=12 osm.mbtiles`
+
+#### osmlint doubledplaces
+
+  *Identifies features that are doubled mapped as a point and polygon.*
+
+  `osmlint doubledplaces --bbox="[7.4, 43.7, 7.4, 43.7]" --zoom=12 osm.mbtiles`
