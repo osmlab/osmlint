@@ -23,7 +23,7 @@ module.exports = {
   },
   aeroway: {
     'aerodrome': true,
-    'apron': true,
+    'apron': false,
     'hangar': true,
     'helipad': true,
     'heliport': true,
