@@ -63,31 +63,29 @@ module.exports = function(tileLayers, tile, writeData, done) {
   for (var j = 0; j < bboxes.length; j++) {
     var bbox = bboxes[j];
     var objToEvaluate = listOfObjects[bbox[4]];
-    if (objToEvaluate.properties.highway) {
+    if (objToEvaluate.properties.highway && objToEvaluate.properties.tunnel !== 'building_passage' && !objToEvaluate.properties.bridge && !objToEvaluate.properties.layer) {
       var overlaps = objsTree.search(bbox);
       for (var k = 0; k < overlaps.length; k++) {
         var overlapBbox = overlaps[k];
         var overlapObj = listOfObjects[overlapBbox[4]];
-        if (overlapObj.properties.building) {
-          if (!(overlapObj.properties.layer && overlapObj.properties.layer > 0) && !(objToEvaluate.properties.layer && objToEvaluate.properties.layer < 0)) {
-            var intersectPoint = turf.intersect(overlapObj, objToEvaluate);
-            if (intersectPoint && ((intersectPoint.geometry.type === 'Point' && listOfAvoidPoints[intersectPoint.geometry.coordinates.join(',')]) || intersectPoint.geometry.type === 'MultiPoint')) {
-              objToEvaluate.properties._osmlint = osmlint;
-              overlapObj.properties._osmlint = osmlint;
-              if (overlapObj.geometry.type === 'LineString') {
-                overlapObj.geometry.type = 'Polygon';
-                overlapObj.geometry.coordinates = [overlapObj.geometry.coordinates];
-              }
-              intersectPoint.properties = {
-                _fromWay: objToEvaluate.properties['@id'],
-                _toWay: overlapObj.properties['@id'],
-                _osmlint: osmlint,
-                _type: classification(majorRoads, minorRoads, pathRoads, objToEvaluate.properties.highway)
-              };
-              output[objToEvaluate.properties['@id']] = objToEvaluate;
-              output[overlapObj.properties['@id']] = overlapObj;
-              output[objToEvaluate.properties['@id'] + '-' + overlapObj.properties['@id']] = intersectPoint;
+        if (overlapObj.properties.building && overlapObj.properties.building !== 'no' && overlapObj.properties.building !== 'roof') {
+          var intersectPoint = turf.intersect(overlapObj, objToEvaluate);
+          if (intersectPoint && ((intersectPoint.geometry.type === 'Point' && listOfAvoidPoints[intersectPoint.geometry.coordinates.join(',')]) || intersectPoint.geometry.type === 'MultiPoint')) {
+            objToEvaluate.properties._osmlint = osmlint;
+            overlapObj.properties._osmlint = osmlint;
+            if (overlapObj.geometry.type === 'LineString') {
+              overlapObj.geometry.type = 'Polygon';
+              overlapObj.geometry.coordinates = [overlapObj.geometry.coordinates];
             }
+            intersectPoint.properties = {
+              _fromWay: objToEvaluate.properties['@id'],
+              _toWay: overlapObj.properties['@id'],
+              _osmlint: osmlint,
+              _type: classification(majorRoads, minorRoads, pathRoads, objToEvaluate.properties.highway)
+            };
+            output[objToEvaluate.properties['@id']] = objToEvaluate;
+            output[overlapObj.properties['@id']] = overlapObj;
+            output[objToEvaluate.properties['@id'] + '-' + overlapObj.properties['@id']] = intersectPoint;
           }
         }
       }
