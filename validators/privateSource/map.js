@@ -5,7 +5,7 @@ module.exports = function(tileLayers, tile, writeData, done) {
   var layer = tileLayers.osm.osm;
   var osmlint = 'privatesource';
   var result = [];
-  var unallowedsource = {
+  var unallowedSource = {
     'Google Maps': true,
     'Google Satellite': true,
     'Google Earth': true,
@@ -19,7 +19,7 @@ module.exports = function(tileLayers, tile, writeData, done) {
   };
   for (var i = 0; i < layer.features.length; i++) {
     var val = layer.features[i];
-    if (val.properties.source && (unallowedsource[val.properties.source])) {
+    if (val.properties.source && unallowedSource[val.properties.source]) {
       val.properties._osmlint = osmlint;
       result.push(val);
     }
