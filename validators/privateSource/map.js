@@ -11,7 +11,7 @@ module.exports = function(tileLayers, tile, writeData, done) {
     'Google Earth': true,
     'Google Street View': true,
     'Waze': true,
-    'ERE Maps': true,
+    'HERE Maps': true,
     'Geodata from Wikipedia': true,
     'Wikimapia': true,
     'Malfreemaps': true,
