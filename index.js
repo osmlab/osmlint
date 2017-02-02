@@ -28,5 +28,7 @@ module.exports = {
   'buildingpartyes': require('./validators/buildingPartYes'),
   'misspelledTags': require('./validators/misspelledTags'),
   'filterMajorHighways': require('./validators/filterMajorHighways'),
+  'userNameMatch': require('./validators/userNameMatch'),
+  'missingRoundabout': require('./validators/missingRoundabout'),
   'privatesource': require('./validators/privateSource')
 };
