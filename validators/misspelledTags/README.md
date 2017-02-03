@@ -2,7 +2,7 @@
 
 This validator detects objects that are misspelled. 
 
-![image](https://cloud.githubusercontent.com/assets/10425629/13935875/c9155090-ef87-11e5-9211-099c083f24e2.png)
+![image](https://cloud.githubusercontent.com/assets/10425629/22605862/bf03e10a-ea1f-11e6-89e2-b1b24eff974d.png)
 
 #### Usage
 
