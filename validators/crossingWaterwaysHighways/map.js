@@ -58,7 +58,7 @@ module.exports = function(tileLayers, tile, writeData, done) {
     if (preserveType[val.properties.highway] && val.properties.bridge === undefined && val.properties.tunnel === undefined && val.properties.ford === undefined) {
       if (val.geometry.type === 'LineString') {
         var idWayL = id + 'L';
-        bbox = turf.extent(val);
+        bbox = turf.bbox(val);
         bbox.push(idWayL);
         highwaybboxes.push(bbox);
         highways[idWayL] = val;
@@ -67,7 +67,7 @@ module.exports = function(tileLayers, tile, writeData, done) {
         for (var f = 0; f < arrayWays.length; f++) {
           if (arrayWays[f].geometry.type === 'LineString') {
             var idWayM = id + 'M' + f;
-            bbox = turf.extent(arrayWays[f]);
+            bbox = turf.bbox(arrayWays[f]);
             bbox.push(idWayM);
             highwaybboxes.push(bbox);
             arrayWays[f].properties = val.properties;
@@ -81,7 +81,7 @@ module.exports = function(tileLayers, tile, writeData, done) {
         val.geometry.coordinates = val.geometry.coordinates[0];
       }
       var idWaterway = id + 'W';
-      bbox = turf.extent(val);
+      bbox = turf.bbox(val);
       bbox.push(idWaterway);
       waterwaybboxes.push(bbox);
       waterways[idWaterway] = val;
@@ -131,7 +131,7 @@ module.exports = function(tileLayers, tile, writeData, done) {
   var result = _.values(output);
 
   if (result.length > 0) {
-    var fc = turf.featurecollection(result);
+    var fc = turf.featureCollection(result);
     writeData(JSON.stringify(fc) + '\n');
   }
 

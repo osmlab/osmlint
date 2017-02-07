@@ -21,7 +21,7 @@
     "rbush": "^1.4.2",
     "tile-reduce": "^3.0.0",
     "time": "^0.11.4",
-    "turf": "2.0.2",
+    "turf": "^3.0.14",
     "underscore": "^1.8.3",
     "fast-levenshtein": "2.0.6"
   },
