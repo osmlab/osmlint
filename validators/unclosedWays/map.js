@@ -6,13 +6,11 @@ var preventSource = require('./value_avoid');
 // Find unclosed ways.
 module.exports = function(tileLayers, tile, writeData, done) {
   var layer = tileLayers.osm.osm;
-  var bbox = turf.extent(layer);
+  var bbox = turf.bbox(layer);
   var bboxLineString = turf.bboxPolygon(bbox);
-
   bboxLineString.geometry.type = 'LineString';
   bboxLineString.geometry.coordinates = bboxLineString.geometry.coordinates[0];
-  var buffer = turf.buffer(bboxLineString, 0.0005, 'miles').features[0];
-
+  var buffer = turf.buffer(bboxLineString, 0.0005, 'miles');
   var result = layer.features.filter(function(val) {
     val.properties._osmlint = 'unclosedways';
     var valueType = (
@@ -37,7 +35,7 @@ module.exports = function(tileLayers, tile, writeData, done) {
   });
 
   if (result.length > 0) {
-    var fc = turf.featurecollection(result);
+    var fc = turf.featureCollection(result);
     writeData(JSON.stringify(fc) + '\n');
   }
 
