@@ -38,7 +38,7 @@ module.exports = function(tileLayers, tile, writeData, done) {
       var id = val.properties['@id'] + 'L';
       for (var f = 0; f < flat.length; f++) {
         if (flat[f].geometry.type === 'LineString') {
-          var bboxM = turf.extent(flat[f]);
+          var bboxM = turf.bbox(flat[f]);
           var idFlat = id + 'M' + f;
           bboxM.push(idFlat);
           highwaysBboxes.push(bboxM);
@@ -48,7 +48,7 @@ module.exports = function(tileLayers, tile, writeData, done) {
       }
     }
     if (preserveType[val.properties.highway] && val.geometry.type === 'LineString') {
-      var bboxHighway = turf.extent(val);
+      var bboxHighway = turf.bbox(val);
       bboxHighway.push(val.properties['@id']);
       listOfHighways[val.properties['@id']] = val;
       var coords = val.geometry.coordinates;
@@ -114,7 +114,7 @@ module.exports = function(tileLayers, tile, writeData, done) {
   }
 
   if (result.length > 0) {
-    var fc = turf.featurecollection(result);
+    var fc = turf.featureCollection(result);
     writeData(JSON.stringify(fc) + '\n');
   }
 

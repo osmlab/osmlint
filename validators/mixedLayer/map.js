@@ -47,7 +47,7 @@ module.exports = function(tileLayers, tile, writeData, done) {
     if (preserveType[val.properties.highway]) {
       if (val.geometry.type === 'LineString') {
         var idWayL = id + 'L';
-        bbox = turf.extent(val);
+        bbox = turf.bbox(val);
         bbox.push(idWayL);
         highwaysBboxes.push(bbox);
         listOfHighways[idWayL] = val;
@@ -56,7 +56,7 @@ module.exports = function(tileLayers, tile, writeData, done) {
         for (var f = 0; f < arrayWays.length; f++) {
           if (arrayWays[f].geometry.type === 'LineString') {
             var idWayM = id + 'M' + f;
-            bbox = turf.extent(arrayWays[f]);
+            bbox = turf.bbox(arrayWays[f]);
             bbox.push(idWayM);
             highwaysBboxes.push(bbox);
             arrayWays[f].properties = val.properties;
@@ -119,7 +119,7 @@ module.exports = function(tileLayers, tile, writeData, done) {
   var result = _.values(output);
 
   if (result.length > 0) {
-    var fc = turf.featurecollection(result);
+    var fc = turf.featureCollection(result);
     writeData(JSON.stringify(fc) + '\n');
   }
 
