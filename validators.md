@@ -149,3 +149,21 @@
   *Identifies features that are doubled mapped as a point and polygon.*
 
   `osmlint doubledplaces --bbox="[7.4, 43.7, 7.4, 43.7]" --zoom=12 osm.mbtiles`
+
+#### osmlint buildingpartyes
+
+  *This validator detects all the buildings that has building:part=yes and building=yes tag.*
+
+  `osmlint buildingpartyes --bbox="[7.4, 43.7, 7.4, 43.7]" --zoom=12 osm.mbtiles`
+
+#### osmlint missingroundabout
+
+  *Detect missing  'junction=roundabout' tag in highways.*
+
+  `osmlint missingroundabout --bbox="[7.4, 43.7, 7.4, 43.7]" --zoom=12 osm.mbtiles`
+
+#### osmlint usernamematch
+
+  *This validator detects all the highways features that has the user name as the name of the feature.*
+
+  `osmlint usernamematch --bbox="[7.4, 43.7, 7.4, 43.7]" --zoom=12 osm.mbtiles`

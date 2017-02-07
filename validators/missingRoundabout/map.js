@@ -108,6 +108,11 @@ module.exports = function(tileLayers, tile, writeData, done) {
       }
       if ((salidas > 1 && entradas > 1 && !roundaboutToEvaluate.properties.junction && !roundaboutToEvaluate.properties.oneway)) {
         roundaboutToEvaluate.properties._osmlint = osmlint;
+        if (majorRoads[roundaboutToEvaluate.properties.highway]) {
+          roundaboutToEvaluate.properties._type = 'major';
+        } else if (minorRoads[roundaboutToEvaluate.properties.highway]) {
+          roundaboutToEvaluate.properties._type = 'minor';
+        }
         result.push(roundaboutToEvaluate);
       }
     }

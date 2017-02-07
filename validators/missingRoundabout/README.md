@@ -1,6 +1,6 @@
 #### Description
 
-Detect a missing tag 'junction=roundabout' on highways 
+Detect missing  'junction=roundabout' tag in highways 
 
 #### Usage
 
