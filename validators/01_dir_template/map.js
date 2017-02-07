@@ -1,5 +1,5 @@
 'use strict';
-var turf = require('turf');
+var turf = require('@turf/turf');
 
 module.exports = function(tileLayers, tile, writeData, done) {
   var layer = tileLayers.osm.osm;

@@ -1,5 +1,5 @@
 'use strict';
-var turf = require('turf');
+var turf = require('@turf/turf');
 
 // Find bridges that does not have a layer tag
 module.exports = function(tileLayers, tile, writeData, done) {

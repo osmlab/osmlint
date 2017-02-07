@@ -1,5 +1,5 @@
 'use strict';
-var turf = require('turf');
+var turf = require('@turf/turf');
 var preserveType = require('./value_area');
 var preventSource = require('./value_avoid');
 

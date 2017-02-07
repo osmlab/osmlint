@@ -1,5 +1,5 @@
 'use strict';
-var turf = require('turf');
+var turf = require('@turf/turf');
 var _ = require('underscore');
 
 module.exports = function(tileLayers, tile, writeData, done) {

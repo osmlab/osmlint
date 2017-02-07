@@ -1,5 +1,5 @@
 'use strict';
-var turf = require('turf');
+var turf = require('@turf/turf');
 var rbush = require('rbush');
 var _ = require('underscore');
 var flatten = require('geojson-flatten');
