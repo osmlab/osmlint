@@ -15,9 +15,9 @@ module.exports = function(tileLayers, tile, writeData, done) {
     if (val.geometry.type === 'Polygon' && val.properties.building) {
       var kinks = turf.kinks(val);
       if (kinks && kinks.features.length === 0) {
-        var bbox = turf.bbox(val);
-        bbox.push(val.properties['@id']);
-        bboxes.push(bbox);
+        var valBbox = turf.bbox(val);
+        valBbox.push(val.properties['@id']);
+        bboxes.push(valBbox);
         buildings[val.properties['@id']] = val;
       } else if (kinks && kinks.features.length === 1) {
         val.properties._osmlint = osmlint;
@@ -27,13 +27,9 @@ module.exports = function(tileLayers, tile, writeData, done) {
         output[val.properties['@id']] = val;
         output[val.properties['@id'] + 'P'] = kinks.features[0];
       } else if (kinks && kinks.features.length > 1) {
-        var multiCoords = [];
-        for (var k = 0; k < kinks.features.length; k++) {
-          multiCoords.push(kinks.features[k].geometry.coordinates);
-        }
-        var multiPt = turf.multiPoint(multiCoords);
+        var multiPt = turf.combine(kinks).features[0];
         multiPt.properties._osmlint = osmlint;
-        multiPt.properties['@id'] = val.properties['@id'];
+        multiPt.properties._fromWay = val.properties['@id'];
         //save detection
         output[val.properties['@id']] = val;
         output[val.properties['@id'] + 'M'] = multiPt;
