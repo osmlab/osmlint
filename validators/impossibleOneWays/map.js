@@ -1,5 +1,5 @@
 'use strict';
-var turf = require('turf');
+var turf = require('@turf/turf');
 var _ = require('underscore');
 var rbush = require('rbush');
 var flatten = require('geojson-flatten');
@@ -7,10 +7,10 @@ var flatten = require('geojson-flatten');
 module.exports = function(tileLayers, tile, writeData, done) {
   var layer = tileLayers.osm.osm;
   var bboxes = [];
-  var bboxLayer = turf.bboxPolygon(turf.extent(layer));
+  var bboxLayer = turf.bboxPolygon(turf.bbox(layer));
   bboxLayer.geometry.type = 'LineString';
   bboxLayer.geometry.coordinates = bboxLayer.geometry.coordinates[0];
-  var bufferLayer = turf.buffer(bboxLayer, 0.01, 'miles').features[0];
+  var bufferLayer = turf.buffer(bboxLayer, 0.01, 'miles');
   var highways = {};
   var majorRoads = {
     'motorway': true,
@@ -28,8 +28,8 @@ module.exports = function(tileLayers, tile, writeData, done) {
     'unclassified': true,
     'residential': true,
     'living_street': true
-    // 'service': true,
-    // 'road': true
+      // 'service': true,
+      // 'road': true
   };
   var pathRoads = {
     'pedestrian': true,
@@ -192,7 +192,7 @@ module.exports = function(tileLayers, tile, writeData, done) {
 
   var result = _.values(features);
   if (result.length > 0) {
-    var fc = turf.featurecollection(result);
+    var fc = turf.featureCollection(result);
     writeData(JSON.stringify(fc) + '\n');
   }
 

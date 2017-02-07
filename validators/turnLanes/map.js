@@ -1,5 +1,5 @@
 'use strict';
-var turf = require('turf');
+var turf = require('@turf/turf');
 var _ = require('underscore');
 
 module.exports = function(tileLayers, tile, writeData, done) {
@@ -54,7 +54,7 @@ module.exports = function(tileLayers, tile, writeData, done) {
   }
 
   if (result.length > 0) {
-    var fc = turf.featurecollection(result);
+    var fc = turf.featureCollection(result);
     writeData(JSON.stringify(fc) + '\n');
   }
 
