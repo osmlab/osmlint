@@ -1,5 +1,5 @@
 'use strict';
-var turf = require('turf');
+var turf = require('@turf/turf');
 var _ = require('underscore');
 var rbush = require('rbush');
 
@@ -7,7 +7,7 @@ module.exports = function(tileLayers, tile, writeData, done) {
   var layer = tileLayers.osm.osm;
   var listOfObjects = {};
   var listOfAvoidPoints = {};
-  var bboxes = [];
+  var objsBboxes = [];
   var majorRoads = {
     'motorway': true,
     'trunk': true,
@@ -40,35 +40,44 @@ module.exports = function(tileLayers, tile, writeData, done) {
   preserveType = _.extend(preserveType, majorRoads);
   preserveType = _.extend(preserveType, minorRoads);
   //preserveType = _.extend(preserveType, pathRoads);
+  var preserveGeometry = {
+    'LineString': true,
+    'MultiLineString': true,
+    'Polygon': true
+  };
+
   var osmlint = 'crossinghighwaysbuildings';
   for (var i = 0; i < layer.features.length; i++) {
     var val = layer.features[i];
-    if ((preserveType[val.properties.highway] || val.properties.building) && (val.geometry.type === 'LineString' || val.geometry.type === 'MultiLineString' || val.geometry.type === 'Polygon')) {
+    if (preserveGeometry[val.geometry.type]) {
       if (val.geometry.type === 'Polygon') {
         val.geometry.type = 'LineString';
         val.geometry.coordinates = val.geometry.coordinates[0];
       }
-      var bboxObj = turf.extent(val);
-      bboxObj.push(val.properties['@id']);
-      bboxes.push(bboxObj);
-      listOfObjects[val.properties['@id']] = val;
-    }
-    if (val.properties.amenity && val.properties.amenity === 'parking_entrance' && val.geometry.type === 'Point') {
+      if ((preserveType[val.properties.highway] && val.properties.tunnel !== 'building_passage' && !val.properties.bridge && !val.properties.layer) ||
+        (val.properties.building && val.properties.building !== 'no' && val.properties.building !== 'roof')) {
+        var bboxObj = turf.bbox(val);
+        bboxObj.push(val.properties['@id']);
+        listOfObjects[val.properties['@id']] = val;
+        objsBboxes.push(bboxObj);
+      }
+    } else if (val.properties.amenity && val.properties.amenity === 'parking_entrance' && val.geometry.type === 'Point') {
       listOfAvoidPoints[val.geometry.coordinates.join(',')] = false;
     }
   }
-  var objsTree = rbush(bboxes.length);
-  objsTree.load(bboxes);
+
+  var objsTree = rbush(objsBboxes.length);
+  objsTree.load(objsBboxes);
   var output = {};
-  for (var j = 0; j < bboxes.length; j++) {
-    var bbox = bboxes[j];
+  for (var j = 0; j < objsBboxes.length; j++) {
+    var bbox = objsBboxes[j];
     var objToEvaluate = listOfObjects[bbox[4]];
-    if (objToEvaluate.properties.highway && objToEvaluate.properties.tunnel !== 'building_passage' && !objToEvaluate.properties.bridge && !objToEvaluate.properties.layer) {
+    if (objToEvaluate.properties.highway) {
       var overlaps = objsTree.search(bbox);
       for (var k = 0; k < overlaps.length; k++) {
         var overlapBbox = overlaps[k];
         var overlapObj = listOfObjects[overlapBbox[4]];
-        if (overlapObj.properties.building && overlapObj.properties.building !== 'no' && overlapObj.properties.building !== 'roof') {
+        if (overlapObj.properties.building) {
           var intersectPoint = turf.intersect(overlapObj, objToEvaluate);
           if (intersectPoint && ((intersectPoint.geometry.type === 'Point' && listOfAvoidPoints[intersectPoint.geometry.coordinates.join(',')]) || intersectPoint.geometry.type === 'MultiPoint')) {
             objToEvaluate.properties._osmlint = osmlint;
@@ -93,7 +102,7 @@ module.exports = function(tileLayers, tile, writeData, done) {
   }
   var result = _.values(output);
   if (result.length > 0) {
-    var fc = turf.featurecollection(result);
+    var fc = turf.featureCollection(result);
     writeData(JSON.stringify(fc) + '\n');
   }
 

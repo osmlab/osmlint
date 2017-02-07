@@ -1,5 +1,5 @@
 'use strict';
-var turf = require('turf');
+var turf = require('@turf/turf');
 
 module.exports = function(tileLayers, tile, writeData, done) {
   var osmLayer = tileLayers.osm.osm;
@@ -47,7 +47,7 @@ module.exports = function(tileLayers, tile, writeData, done) {
         var tigerWay = tigerFC[j];
         var tigerPoints = turf.explode(tigerWay);
         var nodes;
-        nodes = turf.within(tigerPoints, buffer);
+        nodes = turf.within(tigerPoints, turf.featureCollection([buffer]));
         if (nodes.features.length >= (tigerPoints.features.length / 2) && tigerWay.properties.FULLNAME) {
           osmWay.properties._osmlint = osmlint;
           osmWay.properties.name = tigerWay.properties.FULLNAME;
@@ -58,7 +58,7 @@ module.exports = function(tileLayers, tile, writeData, done) {
   }
 
   if (result.length > 0) {
-    var fc = turf.featurecollection(result);
+    var fc = turf.featureCollection(result);
     writeData(JSON.stringify(fc) + '\n');
   }
 

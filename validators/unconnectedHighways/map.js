@@ -1,15 +1,15 @@
 'use strict';
-var turf = require('turf');
+var turf = require('@turf/turf');
 var _ = require('underscore');
 var rbush = require('rbush');
 var flatten = require('geojson-flatten');
 
 module.exports = function(tileLayers, tile, writeData, done) {
   var layer = tileLayers.osm.osm;
-  var bboxLayer = turf.bboxPolygon(turf.extent(layer));
+  var bboxLayer = turf.bboxPolygon(turf.bbox(layer));
   bboxLayer.geometry.type = 'LineString';
   bboxLayer.geometry.coordinates = bboxLayer.geometry.coordinates[0];
-  var bufferLayer = turf.buffer(bboxLayer, 0.01, 'miles').features[0];
+  var bufferLayer = turf.buffer(bboxLayer, 0.01, 'miles');
   var majorRoads = {
     'motorway': true,
     'trunk': true,
@@ -53,19 +53,19 @@ module.exports = function(tileLayers, tile, writeData, done) {
     var val = layer.features[i];
     // Linestring evaluation
     if (val.geometry.type === 'LineString' && val.properties.highway) {
-      var bboxL = turf.extent(val);
+      var bboxL = turf.bbox(val);
       bboxL.push(val.properties['@id'] + 'L');
       bboxes.push(bboxL);
       highways[val.properties['@id'] + 'L'] = {
         highway: val,
-        buffer: turf.buffer(val, distance, unit).features[0]
+        buffer: turf.buffer(val, distance, unit)
       };
     } else if (val.geometry.type === 'MultiLineString' && val.properties.highway) { //MultiLineString evaluation
       var flat = flatten(val);
       var id = val.properties['@id'] + 'L';
       for (var f = 0; f < flat.length; f++) {
         if (flat[f].geometry.type === 'LineString') {
-          var bboxM = turf.extent(flat[f]);
+          var bboxM = turf.bbox(flat[f]);
           var idFlat = id + 'M' + f;
           bboxM.push(idFlat);
           bboxes.push(bboxM);
@@ -96,11 +96,11 @@ module.exports = function(tileLayers, tile, writeData, done) {
     if (preserveType[fromHighway.properties.highway] && !_.isEqual(firstCoord, endCoord)) {
       var overlapsFirstPoint = [];
       if (!turf.inside(firstPoint, bufferLayer)) {
-        overlapsFirstPoint = highwaysTree.search(turf.extent(turf.buffer(firstPoint, distance, unit)));
+        overlapsFirstPoint = highwaysTree.search(turf.bbox(turf.buffer(firstPoint, distance, unit)));
       }
       var overlapsEndPoint = [];
       if (!turf.inside(endPoint, bufferLayer)) {
-        overlapsEndPoint = highwaysTree.search(turf.extent(turf.buffer(endPoint, distance, unit)));
+        overlapsEndPoint = highwaysTree.search(turf.bbox(turf.buffer(endPoint, distance, unit)));
       }
       var overlapBboxes = overlapsFirstPoint.concat(overlapsEndPoint);
       var arrayCorrd = [];
@@ -184,7 +184,7 @@ module.exports = function(tileLayers, tile, writeData, done) {
   var result = _.values(output);
 
   if (result.length > 0) {
-    var fc = turf.featurecollection(result);
+    var fc = turf.featureCollection(result);
     writeData(JSON.stringify(fc) + '\n');
   }
 
