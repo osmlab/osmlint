@@ -56,7 +56,7 @@ module.exports = function(tileLayers, tile, writeData, done) {
       }
       if ((preserveType[val.properties.highway] && val.properties.tunnel !== 'building_passage' && !val.properties.bridge && !val.properties.layer) ||
         (val.properties.building && val.properties.building !== 'no' && val.properties.building !== 'roof')) {
-        var bboxObj = turf.extent(val);
+        var bboxObj = turf.bbox(val);
         bboxObj.push(val.properties['@id']);
         listOfObjects[val.properties['@id']] = val;
         objsBboxes.push(bboxObj);
@@ -102,7 +102,7 @@ module.exports = function(tileLayers, tile, writeData, done) {
   }
   var result = _.values(output);
   if (result.length > 0) {
-    var fc = turf.featurecollection(result);
+    var fc = turf.featureCollection(result);
     writeData(JSON.stringify(fc) + '\n');
   }
 
