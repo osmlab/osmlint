@@ -71,7 +71,7 @@ module.exports = function(tileLayers, tile, writeData, done) {
           bboxes.push(bboxM);
           highways[idFlat] = {
             highway: flat[f],
-            buffer: turf.buffer(flat[f], distance, unit).features[0]
+            buffer: turf.buffer(flat[f], distance, unit)
           };
         }
       }
