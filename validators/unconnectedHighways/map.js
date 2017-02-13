@@ -168,9 +168,9 @@ module.exports = function(tileLayers, tile, writeData, done) {
                   output[valueBbox[4]] = fromHighway;
                   output[overlapPointEnd[4]] = toHighwayEnd;
                   if (fromHighway.properties['@id'] > toHighwayEnd.properties['@id']) {
-                    output[valueBbox[4].toString().concat(overlapPointEnd[4])] = endPoint;
+                    output[fromHighway.properties['@id'].toString().concat(toHighwayEnd.properties['@id'])] = endPoint;
                   } else {
-                    output[overlapPointEnd[4].toString().concat(valueBbox[4])] = endPoint;
+                    output[toHighwayEnd.properties['@id'].toString().concat(fromHighway.properties['@id'])] = endPoint;
                   }
                 }
               }
