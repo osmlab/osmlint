@@ -57,6 +57,7 @@ module.exports = function(tileLayers, tile, writeData, done) {
     }
     if (val.properties.highway === 'traffic_signals' && val.geometry.type === 'Point') {
       var c = val.geometry.coordinates;
+      val.properties._osmlint = osmlint;
       trafficLights.push(val);
     }
   }
