@@ -382,7 +382,7 @@ module.exports = {
     'traffic_signals',
     'turning_circle'
   ],
-  
+
   healthcare: [
     'alternative',
     'yes',
@@ -626,7 +626,7 @@ module.exports = {
     'sinkhole',
     'cave_entrance'
   ],
-  
+
   office: [
     'accountant',
     'administrative',
@@ -738,7 +738,7 @@ module.exports = {
     'square',
     'locality'
   ],
-  
+
   power: [
     'plant',
     'cable',
@@ -764,7 +764,7 @@ module.exports = {
     'station',
     'stop_area'
   ],
-  
+
   railway: [
     'abandoned',
     'construction',
@@ -795,7 +795,7 @@ module.exports = {
     'roundhouse',
     'traverser'
   ],
-  
+
   route: [
     'bicycle',
     'bus',
@@ -952,7 +952,7 @@ module.exports = {
     'vacant',
     'weapons'
   ],
-  
+
   sport: [
     '9pin',
     '10pin',
