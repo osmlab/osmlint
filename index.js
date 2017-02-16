@@ -29,5 +29,6 @@ module.exports = {
   'misspelledTags': require('./validators/misspelledTags'),
   'filterMajorHighways': require('./validators/filterMajorHighways'),
   'userNameMatch': require('./validators/userNameMatch'),
-  'missingRoundabout': require('./validators/missingRoundabout')
+  'missingRoundabout': require('./validators/missingRoundabout'),
+  'unconnectedTrafficLights': require('./validators/unconnectedTrafficLights')  
 };
