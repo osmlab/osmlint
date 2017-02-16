@@ -12,7 +12,7 @@ var monacoOpts = {
   zoom: zoom
 };
 
-test('trafficLightsUnconnected', function(t) {
+test('UnconnectedtrafficLights', function(t) {
   t.plan(4);
   logInterceptor();
   processors.trafficLightsUnconnected(monacoOpts, monacoTiles, function() {
@@ -22,7 +22,7 @@ test('trafficLightsUnconnected', function(t) {
       t.equal(GJV.isFeatureCollection(geoJSON), true, 'Should be a FeatureCollection');
       t.equal(geoJSON.features[0].properties['highway'], 'traffic_signals', 'Should be traffic_signals');
       t.equal(geoJSON.features[0].properties['@type'], 'node', 'Should be node');
-      t.equal(geoJSON.features[0].properties._osmlint, 'trafficlightsunconnected', 'Should be trafficLightsUnconnected');
+      t.equal(geoJSON.features[0].properties._osmlint, 'unconnectedtrafficlights', 'Should be unconnectedtrafficlights');
     }
     t.end();
   });

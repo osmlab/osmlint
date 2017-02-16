@@ -30,5 +30,5 @@ module.exports = {
   'filterMajorHighways': require('./validators/filterMajorHighways'),
   'userNameMatch': require('./validators/userNameMatch'),
   'missingRoundabout': require('./validators/missingRoundabout'),
-  'trafficLightsUnconnected': require('./validators/trafficLightsUnconnected')
+  'unconnectedTrafficLights': require('./validators/unconnectedTrafficLights')
 };
