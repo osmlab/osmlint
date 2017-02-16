@@ -382,6 +382,7 @@ module.exports = {
     'traffic_signals',
     'turning_circle'
   ],
+
   healthcare: [
     'alternative',
     'yes',
@@ -625,6 +626,7 @@ module.exports = {
     'sinkhole',
     'cave_entrance'
   ],
+
   office: [
     'accountant',
     'administrative',
@@ -736,6 +738,7 @@ module.exports = {
     'square',
     'locality'
   ],
+
   power: [
     'plant',
     'cable',
@@ -761,6 +764,7 @@ module.exports = {
     'station',
     'stop_area'
   ],
+
   railway: [
     'abandoned',
     'construction',
@@ -791,6 +795,7 @@ module.exports = {
     'roundhouse',
     'traverser'
   ],
+
   route: [
     'bicycle',
     'bus',
@@ -947,6 +952,7 @@ module.exports = {
     'vacant',
     'weapons'
   ],
+
   sport: [
     '9pin',
     '10pin',
@@ -1094,4 +1100,3 @@ module.exports = {
   tower: [], //Doesn't exist https://wiki.openstreetmap.org/wiki/Tower, should be http://wiki.openstreetmap.org/wiki/Key:tower:type
   ship: [] //http://wiki.openstreetmap.org/w/index.php?title=Key:ship&redirect=no
 };
-/* eslint-enable camelcase */
