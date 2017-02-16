@@ -15,7 +15,7 @@ var monacoOpts = {
 test('UnconnectedtrafficLights', function(t) {
   t.plan(4);
   logInterceptor();
-  processors.trafficLightsUnconnected(monacoOpts, monacoTiles, function() {
+  processors.unconnectedTrafficLights(monacoOpts, monacoTiles, function() {
     var logs = logInterceptor.end();
     for (var i = 0; i < 1; i++) {
       var geoJSON = JSON.parse(logs[i]);

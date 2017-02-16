@@ -48,13 +48,13 @@ module.exports = function(tileLayers, tile, writeData, done) {
   for (var j = 0; j < trafficLights.length; j++) {
     var coordString = trafficLights[j].geometry.coordinates.join(',');
     if (!highwayCoords[coordString]) {
-      trafficLights[j]._osmlint = osmlint;
+      trafficLights[j].properties._osmlint = osmlint;
       result.push(trafficLights[j]);
     }
   }
 
   if (result.length > 0) {
-    var fc = turf.featurecollection(result);
+    var fc = turf.featureCollection(result);
     writeData(JSON.stringify(fc) + '\n');
   }
   done(null, null);
