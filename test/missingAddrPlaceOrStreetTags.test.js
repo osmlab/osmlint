@@ -6,7 +6,7 @@ var GJV = require('geojson-validation');
 var processors = require('../index.js');
 
 var zoom = 12;
-var monacoTiles = path.join(__dirname, '/fixtures/wrongaddress.mbtiles');
+var monacoTiles = path.join(__dirname, '/fixtures/missingaddrplaceorstreettags.mbtiles');
 var monacoOpts = {
   bbox: [7.4068451, 43.723259, 7.4422073, 43.752901],
   zoom: zoom
@@ -22,7 +22,7 @@ test('missingaddrplaceorstreetTags', function(t) {
       t.equal(GJV.isFeatureCollection(geoJSON), true, 'Should be a isFeatureCollection');
       t.equal(geoJSON.features[0].geometry.type, 'Point', ' Point ok');
       t.equal(geoJSON.features[1].geometry.type, 'LineString', ' LineString ok');
-      t.equal(geoJSON.features[0].properties._osmlint, 'missingaddrplaceorstreettags', ' wrongaddresstags ok');
+      t.equal(geoJSON.features[0].properties._osmlint, 'missingaddrplaceorstreettags', ' missingaddrplaceorstreettags ok');
     }
     t.end();
   });
