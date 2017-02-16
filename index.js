@@ -27,5 +27,8 @@ module.exports = {
   'crossinghighwaysbuildings': require('./validators/crossingHighwaysBuildings'),
   'buildingpartyes': require('./validators/buildingPartYes'),
   'misspelledTags': require('./validators/misspelledTags'),
-  'wrongAddressTags': require('./validators/wrongAddressTags')
+  'filterMajorHighways': require('./validators/filterMajorHighways'),
+  'userNameMatch': require('./validators/userNameMatch'),
+  'missingRoundabout': require('./validators/missingRoundabout'),
+  'missingAddrPlaceOrStreetTags': require('./validators/missingAddrPlaceOrStreetTags')
 };

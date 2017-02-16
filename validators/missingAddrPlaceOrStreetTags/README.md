@@ -1,6 +1,6 @@
 #### Description
 
-Wrong Address Tag
+Missing `addr:place` or `addr:street` tags
 
 #### Usage
 

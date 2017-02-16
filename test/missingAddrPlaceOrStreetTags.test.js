@@ -12,17 +12,17 @@ var monacoOpts = {
   zoom: zoom
 };
 
-test('wrongAddressTags', function(t) {
+test('missingaddrplaceorstreetTags', function(t) {
   t.plan(4);
   logInterceptor();
-  processors.wrongAddressTags(monacoOpts, monacoTiles, function() {
+  processors.missingAddrPlaceOrStreetTags(monacoOpts, monacoTiles, function() {
     var logs = logInterceptor.end();
     for (var i = 0; i < 1; i++) {
       var geoJSON = JSON.parse(logs[i]);
       t.equal(GJV.isFeatureCollection(geoJSON), true, 'Should be a isFeatureCollection');
       t.equal(geoJSON.features[0].geometry.type, 'Point', ' Point ok');
       t.equal(geoJSON.features[1].geometry.type, 'LineString', ' LineString ok');
-      t.equal(geoJSON.features[0].properties._osmlint, 'wrongaddresstags', ' wrongaddresstags ok');
+      t.equal(geoJSON.features[0].properties._osmlint, 'missingaddrplaceorstreettags', ' wrongaddresstags ok');
     }
     t.end();
   });
