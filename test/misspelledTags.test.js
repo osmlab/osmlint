@@ -19,7 +19,7 @@ test('misspelledTags', function(t) {
       t.comment('Pass: ' + (i + 1));
       if (geoJSON.features.length > 0) {
         t.equal(geoJSON.features[0].properties._osmlint, 'misspelledtags', 'Should be misspelledTags');
-        t.equal(geoJSON.features[0].geometry.type, 'Point', 'Should be point');
+        t.equal(geoJSON.features[0].geometry.type, 'Polygon', 'Should be polygon');
       }
     }
     t.end();

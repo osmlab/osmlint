@@ -1,7 +1,7 @@
 'use strict';
 /* eslint-disable camelcase */
 module.exports = {
-  /*aerialway: [
+  aerialway: [
     'cable_car',
     'gondola',
     'chair_lift',
@@ -31,7 +31,7 @@ module.exports = {
     'taxiway',
     'terminal',
     'windsock'
-  ],*/
+  ],
 
   amenity: [
     'bar',
@@ -141,7 +141,7 @@ module.exports = {
 
   ],
 
-  /*barrier: [
+  barrier: [
     'cable_barrier',
     'city_wall',
     'ditch',
@@ -183,7 +183,7 @@ module.exports = {
     'toll_booth',
     'turnstile',
     'yes'
-  ],*/
+  ],
   boundary: [
     'administrative',
     'historic',
@@ -246,7 +246,7 @@ module.exports = {
     'kiosk',
     'ruins'
   ],
-/*
+
   craft: [
     'agricultural_engines',
     'basket_maker',
@@ -327,7 +327,7 @@ module.exports = {
     'moraine',
     'outcrop',
     'palaeontological_site'
-  ],*/
+  ],
 
   cycleway: [
     'lane',
@@ -382,7 +382,7 @@ module.exports = {
     'traffic_signals',
     'turning_circle'
   ],
-  /*
+
   healthcare: [
     'alternative',
     'yes',
@@ -435,7 +435,7 @@ module.exports = {
     'wreck',
     'yes'
   ],
-*/
+
   landuse: [
     'allotments',
     'basin',
@@ -494,7 +494,7 @@ module.exports = {
     'water_park',
     'wildlife_hide'
   ],
-/*
+
   man_made: [
     'MDF',
     'adit',
@@ -590,7 +590,7 @@ module.exports = {
     'training_area',
     'trench'
   ],
-*/
+
   natural: [
     'wood',
     'tree_row',
@@ -626,7 +626,7 @@ module.exports = {
     'sinkhole',
     'cave_entrance'
   ],
-  /*
+
   office: [
     'accountant',
     'administrative',
@@ -709,7 +709,7 @@ module.exports = {
     'telecommunication',
     'travel_agent',
     'water_utility'
-  ],*/
+  ],
   place: [
     'country',
     'state',
@@ -738,7 +738,7 @@ module.exports = {
     'square',
     'locality'
   ],
-  /*
+
   power: [
     'plant',
     'cable',
@@ -757,14 +757,14 @@ module.exports = {
     'terminal',
     'tower',
     'transformer'
-  ],*/
+  ],
   public_transport: [
     'stop_position',
     'platform',
     'station',
     'stop_area'
   ],
-  /*
+
   railway: [
     'abandoned',
     'construction',
@@ -795,7 +795,7 @@ module.exports = {
     'roundhouse',
     'traverser'
   ],
-  */
+
   route: [
     'bicycle',
     'bus',
@@ -952,7 +952,7 @@ module.exports = {
     'vacant',
     'weapons'
   ],
-  /*
+
   sport: [
     '9pin',
     '10pin',
@@ -1054,7 +1054,7 @@ module.exports = {
     'E',
     'E;W',
     'NE'
-  ],*/
+  ],
   tourism: [
     'alpine_hut',
     'apartment',
@@ -1100,4 +1100,3 @@ module.exports = {
   tower: [], //Doesn't exist https://wiki.openstreetmap.org/wiki/Tower, should be http://wiki.openstreetmap.org/wiki/Key:tower:type
   ship: [] //http://wiki.openstreetmap.org/w/index.php?title=Key:ship&redirect=no
 };
-/* eslint-enable camelcase */
