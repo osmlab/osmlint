@@ -1047,14 +1047,6 @@ module.exports = {
     'wrestling',
     'yoga'
   ],
-  stop: [
-    'yes',
-    'both',
-    '-1',
-    'E',
-    'E;W',
-    'NE'
-  ],
   tourism: [
     'alpine_hut',
     'apartment',
@@ -1098,5 +1090,6 @@ module.exports = {
     'water_point'
   ],
   tower: [], //Doesn't exist https://wiki.openstreetmap.org/wiki/Tower, should be http://wiki.openstreetmap.org/wiki/Key:tower:type
-  ship: [] //http://wiki.openstreetmap.org/w/index.php?title=Key:ship&redirect=no
+  ship: [], //http://wiki.openstreetmap.org/w/index.php?title=Key:ship&redirect=no
+  stop: [] // just to avoid false positive with shop
 };
