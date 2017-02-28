@@ -30,5 +30,6 @@ module.exports = {
   'filterMajorHighways': require('./validators/filterMajorHighways'),
   'userNameMatch': require('./validators/userNameMatch'),
   'missingRoundabout': require('./validators/missingRoundabout'),
-  'privatesource': require('./validators/privateSource')
+  'privatesource': require('./validators/privateSource'),
+  'waterBodiesV1': require('./validators/waterBodiesV1')
 };
