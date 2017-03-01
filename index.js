@@ -33,4 +33,5 @@ module.exports = {
   'privatesource': require('./validators/privateSource'),
   'waterBodiesV1': require('./validators/waterBodiesV1'),
   'largeNames': require('./validators/largeNames'),
+  'invalidHighwayTag': require('./validators/invalidHighwayTag')
 };
