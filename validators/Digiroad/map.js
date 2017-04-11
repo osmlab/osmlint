@@ -1,26 +1,27 @@
 'use strict';
 var turf = require('turf');
+var cover = require('tile-cover');
 
 module.exports = function(tileLayers, tile, writeData, done) {
   var layer = tileLayers.osm.osm;
-  var osmlint = '01_dir_template';
+  var osmlint = 'digiroad';
   var result = 0;
+  var limits = {
+    min_zoom: 12,
+    max_zoom: 12
+  };
+  var bbox = turf.bbox(layer);
+  var bboxPolygon = turf.bboxPolygon(bbox);
+  var centroidPt = turf.centroid(bboxPolygon);
+  var tilePoly = cover.geojson(centroidPt.geometry, limits);
   for (var i = 0; i < layer.features.length; i++) {
     var val = layer.features[i];
-    //here comes all your code to validate the data
     if (val.geometry.type == 'LineString') {
       var dist = turf.lineDistance(val, 'kilometers');
       result = result + dist;
-      // writeData(dist + '\n')
     }
-    // val.properties._osmlint = osmlint;
-    // result.push(val);
   }
-
-  if (result > 0) {
-    // var fc = turf.featureCollection(result);
-    writeData('"' + tile + '",' + result + '\n');
-  }
-
+  tilePoly.features[0].properties.missroads = result
+  writeData(JSON.stringify(tilePoly) + '\n');
   done(null, null);
 };

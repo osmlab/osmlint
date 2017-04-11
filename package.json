@@ -23,6 +23,7 @@
     "minimist": "^1.1.1",
     "rbush": "^1.4.2",
     "sphericalmercator": "^1.0.5",
+    "tile-cover": "^3.0.1",
     "tile-reduce": "^3.1.1",
     "tilebelt": "^1.0.1",
     "tiletype": "^0.3.0",

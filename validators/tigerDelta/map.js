@@ -6,7 +6,7 @@ module.exports = function(data, tile, writeData, done) {
   var osmlint = 'tigerdelta';
 
   //filter and normalize input geometry
-  var tiger = toLines(data.tiger.tiger2016);
+  var tiger = toLines(data.fonecta.fonecta);
   var streets = toLines(data.osm.osm);
 
   //find tiger parts that are not covered by streets within 10 pixels;

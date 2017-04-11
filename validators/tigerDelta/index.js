@@ -12,7 +12,7 @@ module.exports = function(opts, qaTilesPath, tigerTilesPath, callback) {
       mbtiles: qaTilesPath,
       raw: true
     }, {
-      name: 'tiger',
+      name: 'fonecta',
       mbtiles: tigerTilesPath,
       raw: true
     }]
