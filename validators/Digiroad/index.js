@@ -2,7 +2,7 @@
 var tileReduce = require('tile-reduce');
 var path = require('path');
 
-module.exports = function(opts, mbtilesPath, callback) {
+module.exports = function(opts, mbtilesPath, tigerTilesPath, callback) {
   tileReduce({
     bbox: opts.bbox,
     zoom: opts.zoom,
@@ -10,6 +10,10 @@ module.exports = function(opts, mbtilesPath, callback) {
     sources: [{
       name: 'osm',
       mbtiles: mbtilesPath,
+      raw: false
+    },{
+      name: 'fonecta',
+      mbtiles: tigerTilesPath,
       raw: false
     }]
   })
