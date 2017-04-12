@@ -30,6 +30,7 @@ module.exports = {
   'filterMajorHighways': require('./validators/filterMajorHighways'),
   'userNameMatch': require('./validators/userNameMatch'),
   'missingRoundabout': require('./validators/missingRoundabout'),
+  'privatesource': require('./validators/privateSource'),
   'unconnectedTrafficLights': require('./validators/unconnectedTrafficLights'),
   'missingAddrPlaceOrStreetTags': require('./validators/missingAddrPlaceOrStreetTags'),
   'crossingBuildings': require('./validators/crossingBuildings')
