@@ -19,7 +19,7 @@ module.exports = {
   'fixmeTag': require('./validators/fixmeTag'),
   'strangeLayer': require('./validators/strangeLayer'),
   'impossibleOneWays': require('./validators/impossibleOneWays'),
-  'turnLanes': require('./validators/turnLanes'),
+  'invalidTurnLanes': require('./validators/invalidTurnLanes'),
   'missingOneways': require('./validators/missingOneways'),
   'mixedLayer': require('./validators/mixedLayer'),
   'deprecateHighways': require('./validators/deprecateHighways'),
