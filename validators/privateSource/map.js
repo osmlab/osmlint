@@ -1,5 +1,6 @@
 'use strict';
 var turf = require('turf');
+var fastl = require('fast-levenshtein');
 
 module.exports = function(tileLayers, tile, writeData, done) {
   var layer = tileLayers.osm.osm;
@@ -19,7 +20,7 @@ module.exports = function(tileLayers, tile, writeData, done) {
     var val = layer.features[i];
     if (val.properties.source) {
       for (var k = 0; k < unallowedSource.length; k++) {
-        if (val.properties.source.toLowerCase().includes(unallowedSource[k])) {
+        if (val.properties.source.toLowerCase().includes(unallowedSource[k]) || fastl.get(val.properties.source.toLowerCase(), unallowedSource[k]) < 3) {
           val.properties._osmlint = osmlint;
           result.push(val);
         }
