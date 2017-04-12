@@ -20,7 +20,7 @@ module.exports = function(tileLayers, tile, writeData, done) {
     'living_street': true,
     'road': true
   };
-  var osmlint = 'missinghighwayus';
+  var osmlint = 'missingnamehighwayus';
   var osmFC = [];
   var tigerFC = [];
 

@@ -6,7 +6,7 @@ module.exports = {
   'filterUsers': require('./validators/filterUsers'),
   'missingLayerBridges': require('./validators/missingLayerBridges'),
   'untaggedWays': require('./validators/untaggedWays'),
-  'missingHighwaysUS': require('./validators/missingHighwaysUS'),
+  'missingNameHighwaysUS': require('./validators/missingNameHighwaysUS'),
   'selfIntersectingHighways': require('./validators/selfIntersectingHighways'),
   'unclosedWays': require('./validators/unclosedWays'),
   'crossingHighways': require('./validators/crossingHighways'),
@@ -19,7 +19,7 @@ module.exports = {
   'fixmeTag': require('./validators/fixmeTag'),
   'strangeLayer': require('./validators/strangeLayer'),
   'impossibleOneWays': require('./validators/impossibleOneWays'),
-  'turnLanes': require('./validators/turnLanes'),
+  'invalidTurnLanes': require('./validators/invalidTurnLanes'),
   'missingOneways': require('./validators/missingOneways'),
   'mixedLayer': require('./validators/mixedLayer'),
   'deprecateHighways': require('./validators/deprecateHighways'),
@@ -30,5 +30,7 @@ module.exports = {
   'filterMajorHighways': require('./validators/filterMajorHighways'),
   'userNameMatch': require('./validators/userNameMatch'),
   'missingRoundabout': require('./validators/missingRoundabout'),
-  'privatesource': require('./validators/privateSource')
+  'privatesource': require('./validators/privateSource'),
+  'unconnectedTrafficLights': require('./validators/unconnectedTrafficLights'),
+  'crossingBuildings': require('./validators/crossingBuildings')
 };
