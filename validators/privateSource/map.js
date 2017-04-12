@@ -1,6 +1,5 @@
 'use strict';
 var turf = require('turf');
-var fastl = require('fast-levenshtein');
 
 module.exports = function(tileLayers, tile, writeData, done) {
   var layer = tileLayers.osm.osm;
@@ -13,14 +12,14 @@ module.exports = function(tileLayers, tile, writeData, done) {
     'waze',
     'apple',
     'tomtom',
-    'import',
     'wikimapia'
   ];
   for (var i = 0; i < layer.features.length; i++) {
     var val = layer.features[i];
-    if (val.properties.source) {
+    if (val.properties.source && typeof val.properties.source !== 'number') {
       for (var k = 0; k < unallowedSource.length; k++) {
-        if (val.properties.source.toLowerCase().includes(unallowedSource[k]) || fastl.get(val.properties.source.toLowerCase(), unallowedSource[k]) < 3) {
+        var source = val.properties.source.toLowerCase();
+        if (source.indexOf(unallowedSource[k]) > -1) {
           val.properties._osmlint = osmlint;
           result.push(val);
         }
