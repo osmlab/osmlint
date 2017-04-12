@@ -31,5 +31,7 @@ module.exports = {
   'userNameMatch': require('./validators/userNameMatch'),
   'missingRoundabout': require('./validators/missingRoundabout'),
   'unconnectedTrafficLights': require('./validators/unconnectedTrafficLights'),
+  'missingAddrPlaceOrStreetTags': require('./validators/missingAddrPlaceOrStreetTags'),
   'crossingBuildings': require('./validators/crossingBuildings')
 };
+
