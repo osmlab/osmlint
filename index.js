@@ -34,5 +34,5 @@ module.exports = {
   'unconnectedTrafficLights': require('./validators/unconnectedTrafficLights'),
   'missingAddrPlaceOrStreetTags': require('./validators/missingAddrPlaceOrStreetTags'),
   'crossingBuildings': require('./validators/crossingBuildings'),
-  'waterbodiesv1': require('./validators/waterBodiesV1')
+  'bigV1Objects': require('./validators/bigV1Objects')
 };
