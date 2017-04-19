@@ -9,7 +9,7 @@ module.exports = function(tileLayers, tile, writeData, done) {
   var objnames = {};
 
   var featuresE = ['shop', 'landuse', 'leisure', 'historic'];
-  var osmlint = 'doubledplaces';
+  var osmlint = 'doubledpoi';
   for (var i = 0; i < layer.features.length; i++) {
     var val = layer.features[i];
     if ((val.geometry.type === 'Point' || val.geometry.type === 'Polygon') && val.properties.name && !val.properties.public_transport && !val.properties.railway && val.properties.amenity !== 'bus_station' && !val.properties.highway && !val.properties.place && val.properties.amenity !== 'parking_entrance' && val.properties['addr:housenumber'] === undefined) {
