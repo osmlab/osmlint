@@ -4,7 +4,7 @@ var _ = require('underscore');
 
 module.exports = function(tileLayers, tile, writeData, done) {
   var layer = tileLayers.osm.osm;
-  var osmlint = 'doublecities';
+  var osmlint = 'doubleplaces';
   var result = [];
   var objs = {};
   var places = {

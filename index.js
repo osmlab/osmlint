@@ -23,7 +23,7 @@ module.exports = {
   'missingOneways': require('./validators/missingOneways'),
   'mixedLayer': require('./validators/mixedLayer'),
   'deprecateHighways': require('./validators/deprecateHighways'),
-  'doubledPlaces': require('./validators/doubledPlaces'),
+  'doubledPOI': require('./validators/doubledPOI'),
   'crossinghighwaysbuildings': require('./validators/crossingHighwaysBuildings'),
   'buildingpartyes': require('./validators/buildingPartYes'),
   'misspelledTags': require('./validators/misspelledTags'),
@@ -34,6 +34,6 @@ module.exports = {
   'unconnectedTrafficLights': require('./validators/unconnectedTrafficLights'),
   'missingAddrPlaceOrStreetTags': require('./validators/missingAddrPlaceOrStreetTags'),
   'crossingBuildings': require('./validators/crossingBuildings'),
-  'doubleCities': require('./validators/doubleCities'),
+  'doublePlaces': require('./validators/doublePlaces'),
   'bigV1Objects': require('./validators/bigV1Objects')
 };
