@@ -4,7 +4,7 @@ var _ = require('underscore');
 
 module.exports = function(tileLayers, tile, writeData, done) {
   var layer = tileLayers.osm.osm;
-  var osmlint = 'doubledcity';
+  var osmlint = 'doublecities';
   var result = [];
   var objs = {};
   var places = {
@@ -40,14 +40,14 @@ module.exports = function(tileLayers, tile, writeData, done) {
       }
     }
   }
-  _.each(objs, function(v, k) {
+  _.each(objs, function(v) {
     var coordPoints = [];
     if (v.length > 1) {
       for (var i = 0; i < v.length; i++) {
         if (v[i].geometry.type === 'Polygon') {
           var points = turf.explode(v[i]);
           for (var n = 0; n < points.features.length; n++) {
-            coordPoints.push(points.features[n].geometry.coordinates)
+            coordPoints.push(points.features[n].geometry.coordinates);
           }
         } else if (v[i].geometry.type === 'Point') {
           coordPoints.push(v[i].geometry.coordinates);
@@ -55,6 +55,7 @@ module.exports = function(tileLayers, tile, writeData, done) {
       }
       var multiPt = turf.multiPoint(coordPoints);
       multiPt.properties = v[0].properties;
+      multiPt.properties._osmlint = osmlint;
       result.push(multiPt);
     }
   });
