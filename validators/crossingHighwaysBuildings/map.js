@@ -82,10 +82,6 @@ module.exports = function(tileLayers, tile, writeData, done) {
           if (intersectPoint && ((intersectPoint.geometry.type === 'Point' && listOfAvoidPoints[intersectPoint.geometry.coordinates.join(',')]) || intersectPoint.geometry.type === 'MultiPoint')) {
             objToEvaluate.properties._osmlint = osmlint;
             overlapObj.properties._osmlint = osmlint;
-            if (overlapObj.geometry.type === 'LineString') {
-              overlapObj.geometry.type = 'Polygon';
-              overlapObj.geometry.coordinates = [overlapObj.geometry.coordinates];
-            }
             intersectPoint.properties = {
               _fromWay: objToEvaluate.properties['@id'],
               _toWay: overlapObj.properties['@id'],
