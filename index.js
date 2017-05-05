@@ -35,5 +35,6 @@ module.exports = {
   'missingAddrPlaceOrStreetTags': require('./validators/missingAddrPlaceOrStreetTags'),
   'crossingBuildings': require('./validators/crossingBuildings'),
   'doublePlaces': require('./validators/doublePlaces'),
-  'bigV1Objects': require('./validators/bigV1Objects')
+  'bigV1Objects': require('./validators/bigV1Objects'),
+  'selfIntersectingWaterway': require('./validators/selfIntersectingWaterway')  
 };

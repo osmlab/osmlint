@@ -56,6 +56,7 @@ module.exports = function(tileLayers, tile, writeData, done) {
       var bboxL = turf.bbox(val);
       bboxL.push(val.properties['@id'] + 'L');
       bboxes.push(bboxL);
+
       highways[val.properties['@id'] + 'L'] = {
         highway: val,
         buffer: turf.buffer(val, distance, unit)
@@ -87,13 +88,14 @@ module.exports = function(tileLayers, tile, writeData, done) {
 
   for (var m = 0; m < bboxes.length; m++) {
     var valueBbox = bboxes[m];
-    var fromHighway = highways[valueBbox[4]].highway;
+    var valueHighway = highways[valueBbox[4]].highway;
     //obtaining first and last coordinates
-    var firstCoord = fromHighway.geometry.coordinates[0];
+    var firstCoord = valueHighway.geometry.coordinates[0];
     var firstPoint = turf.point(firstCoord);
-    var endCoord = fromHighway.geometry.coordinates[fromHighway.geometry.coordinates.length - 1];
+    var endCoord = valueHighway.geometry.coordinates[valueHighway.geometry.coordinates.length - 1];
     var endPoint = turf.point(endCoord);
-    if (preserveType[fromHighway.properties.highway] && !_.isEqual(firstCoord, endCoord)) {
+
+    if (preserveType[valueHighway.properties.highway] && !_.isEqual(firstCoord, endCoord)) {
       var overlapsFirstPoint = [];
       if (!turf.inside(firstPoint, bufferLayer)) {
         overlapsFirstPoint = highwaysTree.search(turf.bbox(turf.buffer(firstPoint, distance, unit)));
@@ -112,9 +114,9 @@ module.exports = function(tileLayers, tile, writeData, done) {
       }
 
       var props = {
-        _fromWay: fromHighway.properties['@id'],
+        _fromWay: valueHighway.properties['@id'],
         _osmlint: osmlint,
-        _type: classification(majorRoads, minorRoads, pathRoads, fromHighway.properties.highway)
+        _type: classification(majorRoads, minorRoads, pathRoads, valueHighway.properties.highway)
       };
 
       if (!avoidPoints[firstCoord.join('-')]) {
@@ -127,17 +129,17 @@ module.exports = function(tileLayers, tile, writeData, done) {
               props.toWay = toHighwayFirst.properties['@id'];
               firstPoint.properties = props;
               //Check out whether the streets are connected at some point
-              var coordinatesF = fromHighway.geometry.coordinates;
+              var coordinatesF = valueHighway.geometry.coordinates;
               var valueCoorF = _.flatten([coordinatesF[1], coordinatesF[2]]);
               var overlapCoorF = _.flatten(toHighwayFirst.geometry.coordinates);
               if (_.intersection(valueCoorF, overlapCoorF).length < 2) {
-                fromHighway.properties._osmlint = osmlint;
+                valueHighway.properties._osmlint = osmlint;
                 toHighwayFirst.properties._osmlint = osmlint;
                 //both roads must have the same layer and road to connect should not be in construction
-                if ((fromHighway.properties.layer === toHighwayFirst.properties.layer) && toHighwayFirst.properties.highway !== 'construction') {
-                  output[valueBbox[4]] = fromHighway;
+                if ((valueHighway.properties.layer === toHighwayFirst.properties.layer) && toHighwayFirst.properties.highway !== 'construction') {
+                  output[valueBbox[4]] = valueHighway;
                   output[overlapPointFirst[4]] = toHighwayFirst;
-                  if (fromHighway.properties['@id'] > toHighwayFirst.properties['@id']) {
+                  if (valueHighway.properties['@id'] > toHighwayFirst.properties['@id']) {
                     output[valueBbox[4].toString().concat(overlapPointFirst[4])] = firstPoint;
                   } else {
                     output[overlapPointFirst[4].toString().concat(valueBbox[4])] = firstPoint;
@@ -157,20 +159,20 @@ module.exports = function(tileLayers, tile, writeData, done) {
               props.toWay = toHighwayEnd.properties['@id'];
               endPoint.properties = props;
               //Check out whether the streets are connected at some point
-              var coordinatesE = fromHighway.geometry.coordinates;
+              var coordinatesE = valueHighway.geometry.coordinates;
               var valueCoorE = _.flatten([coordinatesE[coordinatesE.length - 1], coordinatesE[coordinatesE.length - 2]]);
               var overlapCoorE = _.flatten(toHighwayEnd.geometry.coordinates);
               if (_.intersection(valueCoorE, overlapCoorE).length < 2) {
-                fromHighway.properties._osmlint = osmlint;
+                valueHighway.properties._osmlint = osmlint;
                 toHighwayEnd.properties._osmlint = osmlint;
                 //both roads must have the same layer and road to connect should not be in construction
-                if ((fromHighway.properties.layer === toHighwayEnd.properties.layer) && toHighwayEnd.properties.highway !== 'construction') {
-                  output[valueBbox[4]] = fromHighway;
+                if ((valueHighway.properties.layer === toHighwayEnd.properties.layer) && toHighwayEnd.properties.highway !== 'construction') {
+                  output[valueBbox[4]] = valueHighway;
                   output[overlapPointEnd[4]] = toHighwayEnd;
-                  if (fromHighway.properties['@id'] > toHighwayEnd.properties['@id']) {
-                    output[fromHighway.properties['@id'].toString().concat(toHighwayEnd.properties['@id'])] = endPoint;
+                  if (valueHighway.properties['@id'] > toHighwayEnd.properties['@id']) {
+                    output[valueHighway.properties['@id'].toString().concat(toHighwayEnd.properties['@id'])] = endPoint;
                   } else {
-                    output[toHighwayEnd.properties['@id'].toString().concat(fromHighway.properties['@id'])] = endPoint;
+                    output[toHighwayEnd.properties['@id'].toString().concat(valueHighway.properties['@id'])] = endPoint;
                   }
                 }
               }
