@@ -9,4 +9,4 @@ Detecting traffic lights which are unconnected from highways.
 
 ### How to fix this error
 
-If the junction is simple (between two highways),join the traffic sign node to the junction.
+If its a simple junction, merge the traffic sign node to the junction.

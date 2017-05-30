@@ -23,7 +23,7 @@ _Tag should be `turn:lanes=left|left;through`_
 _Tag should be `lanes=5`_
 
 ![image](https://cloud.githubusercontent.com/assets/10425629/16020783/324d0b3c-3175-11e6-8db5-a1bc36ac05b2.png)
-_Tag should be deleted since it's very clear this doesn't have any sign in the street and this is not  `oneway=yes`_
+_Tag should be deleted since it doesn't have any sign in the street and this is not  `oneway=yes`_
 
 ![image](https://cloud.githubusercontent.com/assets/10425629/16020912/b2bef5a0-3175-11e6-9315-d06887472f0c.png)
 _Tag should be `turn:lanes=left||`_

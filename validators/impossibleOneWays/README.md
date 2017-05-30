@@ -1,6 +1,6 @@
 ### Description
 
-Ensure highways with `oneway=yes` are no blocked because of the direction of the roads connected to it.
+Check if highways with `oneway=yes` are not blocked because of the direction of the roads connected to it.
 
 ### Usage
 
@@ -17,7 +17,7 @@ Fix this error by:
 #### Common issues
 
 ![image](https://cloud.githubusercontent.com/assets/10425629/16501066/3612f4f6-3ecd-11e6-97aa-ee60a5153c85.png)
-_Reverse the way and ensure it has `oneway=yes` instead of `oneway=-1` tag_
+_Reverse the way and make sure it has `oneway=yes` instead of `oneway=-1` tag_
 
 ![image](https://cloud.githubusercontent.com/assets/10425629/16501774/b58e0c90-3ed0-11e6-9862-ffd712485ed0.png)
 _Join all nodes_

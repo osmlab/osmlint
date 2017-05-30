@@ -12,8 +12,8 @@ This validator detects all the bridges that does not have the tag `layer=*`.
 Fix this error by:
 
 - Checking satellite imagery/Mapillary to make sure a bridge is visible:
-  - If a bridge is visible add `layer=1` tag. For complex intersections add appropriate `layer=` value based on the overlap order
-  - If bridge clearly does not exist and there is no crossing ways, remove the `bridge` tag
+  - If a bridge is visible add `layer=1` tag. For complex intersections add the correct `layer=` value based on the overlap order
+  - If bridge does not exist and there are no crossing ways, remove the `bridge` tag
 
 #### Common issues
 

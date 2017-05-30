@@ -9,9 +9,7 @@ Detects highway nodes (start/end) near another highway and does not connect.
 
 ### How to fix the error
 
-Connect roads that are motorable and end near another road but not connected to it. By: 
-
-- Joining disconnected roads and junctions verifiable from satellite imagery (Do not make connections where there is a possibility of a fence or barrier in between the roads)
+Connect road motorable roads with the other road. Always verify with satellite imagery.   Do not connect if there is a possibility of a fence or barrier in between the roads.
 
 #### Common issues
 ![imagen 1](https://cloud.githubusercontent.com/assets/10425629/8985611/e3ca6ec8-369d-11e5-8c0b-350e67f9b749.png)

@@ -1,6 +1,6 @@
 ### Description
 
-Find new street names by comparing latest US Census Bureau TIGER data to OpenStreetMap. This validator uses two mbtiles sets:
+Find new street names by comparing latest US Census Bureau TIGER data to OpenStreetMap. This validator uses two MBTiles sets:
 
 1. [OSM QA Tiles for USA](https://s3.amazonaws.com/mapbox/osm-qa-tiles/latest.country/united_states_of_america.mbtiles.gz)
 2. [TIGER](https://s3.amazonaws.com/mapbox/tile-reduce-watchbot/mbtiles/tiger2015.mbtiles)

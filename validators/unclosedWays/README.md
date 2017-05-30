@@ -9,8 +9,8 @@ This validator detects areas that are not closed.
 
 ### How to fix this error
 
-- If the highway has any tag for areas (i.e. `landuse` or `buildings`) delete this tag.
-- If the area has a self-intersect node, disengage it and reshape the area.
+- If the highway has any tag for areas (for example, `landuse` or `buildings`) delete this tag.
+- If the area has a self-intersecting node, disengage it and reshape the area.
 
 #### Common issues
 
