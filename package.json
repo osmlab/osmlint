@@ -19,7 +19,7 @@
     "geojson-normalize": "0.0.1",
     "lineclip": "^1.1.5",
     "linematch": "^1.0.3",
-    "mapbox-data-team": "^1.1.0",
+    "mapbox-data-team": "*",
     "minimist": "^1.1.1",
     "rbush": "^1.4.2",
     "sphericalmercator": "^1.0.5",
