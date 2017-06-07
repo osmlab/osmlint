@@ -12,6 +12,7 @@
     "url": "https://github.com/osmlab/osmlint.git"
   },
   "dependencies": {
+    "@turf/turf": "^4.4.0",
     "fast-levenshtein": "2.0.6",
     "geojson-area": "^0.2.1",
     "geojson-coords": "0.0.0",
@@ -27,7 +28,6 @@
     "tilebelt": "^1.0.1",
     "tiletype": "^0.3.0",
     "time": "^0.11.4",
-    "turf": "^3.0.14",
     "underscore": "^1.8.3"
   },
   "devDependencies": {
