@@ -36,5 +36,6 @@ module.exports = {
   'crossingBuildings': require('./validators/crossingBuildings'),
   'doublePlaces': require('./validators/doublePlaces'),
   'bigV1Objects': require('./validators/bigV1Objects'),
-  'selfIntersectingWaterway': require('./validators/selfIntersectingWaterway')  
+  'selfIntersectingWaterway': require('./validators/selfIntersectingWaterway'),
+  'wikiDataNoEnglishName': require('./validators/wikiDataNoEnglishName')
 };
