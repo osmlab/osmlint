@@ -8,7 +8,7 @@ module.exports = function(tileLayers, tile, writeData, done) {
 
   for (var i = 0; i < layer.features.length; i++) {
     var val = layer.features[i];
-    if (val.geometry.type == 'Point' && val.properties.place && val.properties.wikidata && !val.properties['name:en']) {
+    if (val.geometry.type === 'Point' && val.properties.place && val.properties.wikidata && !val.properties['name:en']) {
       val.properties._osmlint = osmlint;
       result.push(val);
     }
