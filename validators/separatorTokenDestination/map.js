@@ -3,7 +3,7 @@ var turf = require('turf');
 
 module.exports = function(tileLayers, tile, writeData, done) {
   var layer = tileLayers.osm.osm;
-  var osmlint = 'separatortoken';
+  var osmlint = 'separatortokendestination';
   var motorwayRoads = {
     'motorway': true,
     'motorway_link': true,
