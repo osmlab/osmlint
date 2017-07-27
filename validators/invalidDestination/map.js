@@ -7,6 +7,7 @@ module.exports = function(tileLayers, tile, writeData, done) {
   var osmlint = 'invaliddestination';
   var output = {};
   var abbrev = ['ave', 'blvd', 'cir', 'ct', 'expy', 'fwy', 'ln', 'pky', 'rd', 'sq', 'st', 'tpke'];
+  var ordinalAbbrev = ['st', 'nd', 'rd', 'th'];
   for (var i = 0; i < layer.features.length; i++) {
     var val = layer.features[i];
     //here comes all your code to validate the data
@@ -20,10 +21,12 @@ module.exports = function(tileLayers, tile, writeData, done) {
           output[val.properties['@id']] = val;
           output[val.properties['@id']] = val;
         }
-      } else if (val.properties.lanes && val.properties['destination:lanes'] &&
+      }
+      if (val.properties.lanes && val.properties['destination:lanes'] &&
         (val.properties['destination:lanes'].split('|') - 1) === parseInt(val.properties.lanes)) {
         output[val.properties['@id']] = val;
-      } else if (val.properties.lanes && val.properties['destination:ref:lanes'] &&
+      }
+      if (val.properties.lanes && val.properties['destination:ref:lanes'] &&
         (val.properties['destination:ref:lanes'].split('|') - 1) === parseInt(val.properties.lanes)) {
         output[val.properties['@id']] = val;
       }
@@ -41,7 +44,12 @@ module.exports = function(tileLayers, tile, writeData, done) {
         output[val.properties['@id']] = val;
       }
       if (val.properties['destination'] && val.properties['destination'].match(/\d+/g)) {
-        output[val.properties['@id']] = val;
+        var num = val.properties['destination'].match(/\d+/g).toString().toLowerCase();
+        var index = val.properties['destination'].indexOf(num) + num.length;
+        var ord = val.properties['destination'].substring(index, index + 2);
+        if (ordinalAbbrev.indexOf(ord) === -1) {
+          output[val.properties['@id']] = val;
+        }
       }
       // All the abbreviations in destination=* should be elaborated
       if (val.properties['destination']) {
