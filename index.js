@@ -39,5 +39,7 @@ module.exports = {
   'selfIntersectingWaterway': require('./validators/selfIntersectingWaterway'),
   'wikiDataNoEnglishName': require('./validators/wikiDataNoEnglishName'),
   'invalidDestination' : require('./validators/invalidDestination'),
-  'invalidMotorwayJunctions': require('./validators/invalidMotorwayJunctions')
+  'invalidMotorwayJunctions': require('./validators/invalidMotorwayJunctions'),
+  'missingDestination' :require('./validators/missingDestination')
 };
+
