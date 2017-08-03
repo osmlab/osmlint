@@ -2,7 +2,7 @@
 var turf = require('turf');
 var _ = require('underscore');
 var rbush = require('rbush');
-// Check if all the missing exit and entrance motorway_links in the block are mapped with destination=* or destination:ref=* tagsß
+// Check the missing exit and entrance motorway_links in the block are mapped with destination=* or destination:ref=* tagsß
 module.exports = function(tileLayers, tile, writeData, done) {
   var layer = tileLayers.osm.osm;
   var bboxes = [];
