@@ -38,5 +38,6 @@ module.exports = {
   'bigV1Objects': require('./validators/bigV1Objects'),
   'selfIntersectingWaterway': require('./validators/selfIntersectingWaterway'),
   'wikiDataNoEnglishName': require('./validators/wikiDataNoEnglishName'),
-  'invalidDestination' : require('./validators/invalidDestination')
+  'invalidDestination' : require('./validators/invalidDestination'),
+  'invalidMotorwayJunctions': require('./validators/invalidMotorwayJunctions')
 };
