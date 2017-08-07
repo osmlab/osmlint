@@ -1,6 +1,6 @@
 #### Description
 
-Detect junction which need to split.
+Detect junction which needs to split.
 
 e.g:
 
