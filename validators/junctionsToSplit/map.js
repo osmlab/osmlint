@@ -26,19 +26,11 @@ module.exports = function(tileLayers, tile, writeData, done) {
     'service': true,
     'road': true
   };
-  var pathRoads = {
-    'track': true,
-    'footway': true,
-    'path': true,
-    'cycleway': true,
-    'steps': true
-  };
 
   var preserveType = {};
   preserveType = _.extend(preserveType, majorRoads);
   preserveType = _.extend(preserveType, minorRoads);
-  // preserveType = _.extend(preserveType, pathRoads);
-  var osmlint = 'missingdestination';
+  var osmlint = 'junctionstosplit';
   for (var z = 0; z < layer.features.length; z++) {
     var val = layer.features[z];
     if (val.geometry.type === 'LineString' && preserveType[val.properties.highway]) {
@@ -60,7 +52,6 @@ module.exports = function(tileLayers, tile, writeData, done) {
     if (valueHighway.properties.highway === 'motorway_link') {
       var overlaps = highwaysTree.search(valueBbox);
       var isEntrance = false;
-      var firstCoord = valueHighway.geometry.coordinates[0];
       var valueHighwayCoords = valueHighway.geometry.coordinates;
       var intersectHighway;
       for (var k = 0; k < overlaps.length; k++) {
@@ -88,7 +79,11 @@ module.exports = function(tileLayers, tile, writeData, done) {
               intersectHighway = overlapHighway;
               output[valueHighway.properties['@id']] = valueHighway;
               output[intersectHighway.properties['@id']] = intersectHighway;
-              intersection.properties = valueHighway.properties;
+              intersection.properties = {
+                _toWay: valueHighway.properties['@id'],
+                _fromWay: overlapHighway.properties['@id'],
+                _osmlint: osmlint
+              };
               output[valueHighway.properties['@id'] + 'P'] = intersection;
             }
           }
@@ -105,7 +100,6 @@ module.exports = function(tileLayers, tile, writeData, done) {
 
   done(null, null);
 };
-
 
 function flatten(coords) {
   var array = [];
