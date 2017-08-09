@@ -48,9 +48,12 @@ module.exports = function(tileLayers, tile, writeData, done) {
         var overlap = overlaps[k];
         var overlapObj = motorwayJunction[overlap[4].id];
         if (overlapObj && valueHighway.properties['@id'] !== overlapObj.properties['@id'] && overlapObj.properties.highway === 'motorway_junction') {
-          var coords = _.flatten(valueHighway.geometry.coordinates);
+          var coords = valueHighway.geometry.coordinates[valueHighway.geometry.coordinates.length - 1];
           var overlapCoords = overlapObj.geometry.coordinates;
-          if (_.intersection(coords, overlapCoords).length === 2) {
+          if (_.intersection(coords, overlapCoords).length === 2 && (
+              valueHighway.properties['turn:lanes:backward'] ||
+              valueHighway.properties['turn:lanes:forward'] ||
+              valueHighway.properties['turn:lanes'])) {
             output[valueHighway.properties['@id']] = valueHighway;
             output[overlap[4].id] = overlapObj;
           }
