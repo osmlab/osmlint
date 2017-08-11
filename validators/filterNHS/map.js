@@ -7,13 +7,8 @@ module.exports = function(tileLayers, tile, writeData, done) {
   var result = [];
   for (var i = 0; i < layer.features.length; i++) {
     var val = layer.features[i];
-
-    //writeData(JSON.stringify(val) + '\n');
-    //here comes all your code to validate the data
-    // val.properties._osmlint = osmlint;
-    // result.push(val);
-    if (val.properties.FULLNAME && val.properties.FULLNAME ==='US Hwy 1'){
-  result.push(val);
+    if (val.properties.FULLNAME && val.properties.FULLNAME.replace(/\s+/g, '').toLowerCase().indexOf('ushwy1') > -1) {
+      result.push(val);
     }
   }
 
