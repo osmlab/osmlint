@@ -63,15 +63,27 @@ module.exports = function(tileLayers, tile, writeData, done) {
 
 function isValid(turnLanes, lanes) {
   var listLines = turnLanes.split('|');
+  listLines = listLines.map(function(item) {
+    if (item === '' || item === 'none') {
+      return 'through';
+    }
+    return item;
+  });
+
   //Check num lanes
   if (lanes && parseInt(lanes) !== listLines.length) {
     return false;
   }
   // check sort of turns
   for (var i = 0; i < listLines.length; i++) {
-    if (listLines[i].indexOf(';') > 0 && (listLines[i].indexOf('none') > 0 || !validate(listLines[i]))) {
+    if (listLines[i].indexOf(';') > -1 && (listLines[i].indexOf('none') > -1 || !validate(listLines[i]))) {
       return false;
     }
+  }
+  listLines = listLines.join(';').split(';');
+  listLines = _.unique(listLines).join(';');
+  if (!validate(listLines)) {
+    return false;
   }
   return true;
 }

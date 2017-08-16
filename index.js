@@ -38,5 +38,9 @@ module.exports = {
   'bigV1Objects': require('./validators/bigV1Objects'),
   'selfIntersectingWaterway': require('./validators/selfIntersectingWaterway'),
   'separatorToken': require('./validators/separatorTokenDestination'),
-  'wikiDataNoEnglishName': require('./validators/wikiDataNoEnglishName')
+  'wikiDataNoEnglishName': require('./validators/wikiDataNoEnglishName'),
+  'invalidDestination': require('./validators/invalidDestination'),
+  'invalidMotorwayJunctions': require('./validators/invalidMotorwayJunctions'),
+  'missingDestination': require('./validators/missingDestination'),
+  'junctionsToSplit': require('./validators/junctionsToSplit')
 };
