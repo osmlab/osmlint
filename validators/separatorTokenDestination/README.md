@@ -1,11 +1,11 @@
 ### Description
 
 This validator detects invalid separator token in tags such as   `destination` , `destination:ref` or `destination:street`
-The correct separator in these  tags is semmicolon `;`
+The correct separator in these  tags is semicolon `;`
 
 Example: 
-`destination`=` Mila Street | Mariposa Street `
-`destination:ref`=`3A|3B`
+* `destination`=` Mila Street | Mariposa Street `
+* `destination:ref`=`3A|3B`
 
 ### Usage
 
