@@ -2,7 +2,7 @@
 var turf = require('turf');
 var _ = require('underscore');
 var rbush = require('rbush');
-// Check the missing exit and entrance motorway_links in the block are mapped with destination=* or destination:ref=* tagsß
+
 module.exports = function(tileLayers, tile, writeData, done) {
   var layer = tileLayers.osm.osm;
   var bboxes = [];
@@ -58,8 +58,7 @@ module.exports = function(tileLayers, tile, writeData, done) {
     var valueBbox = bboxes[i];
     var valueHighway = highways[valueBbox[4].id];
     valueHighway.properties._osmlint = osmlint;
-    if (valueHighway.properties.highway === 'motorway_link'
-     &(valueHighway.properties['destination:ref'] && !hasCardinal(valueHighway.properties['destination:ref']))) {
+    if (valueHighway.properties.highway === 'motorway_link' && (valueHighway.properties['destination:ref'] && !hasCardinal(valueHighway.properties['destination:ref']))) {
       var overlaps = highwaysTree.search(valueBbox);
       for (var k = 0; k < overlaps.length; k++) {
         var overlap = overlaps[k];
@@ -91,9 +90,9 @@ function hasCardinal(tag) {
   var cards = ['south', 'west', 'north', 'east'];
   for (var i = 0; i < cards.length; i++) {
     if (tag.toLowerCase().indexOf(cards[i]) > -1) {
-      return true
+      return true;
     }
   }
   return false;
-}
 
+}

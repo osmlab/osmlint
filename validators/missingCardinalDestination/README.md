@@ -1,3 +1,7 @@
 #### Description
 
-Check missing entrance motorway_links in the block are mapped with destination=* or destination:ref=* tags
+Check `destinations:ref` tags in `motorway_links` were missing cardinal direction
+
+**Example**
+
+- https://www.openstreetmap.org/way/6325165/history
