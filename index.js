@@ -37,7 +37,6 @@ module.exports = {
   'doublePlaces': require('./validators/doublePlaces'),
   'bigV1Objects': require('./validators/bigV1Objects'),
   'selfIntersectingWaterway': require('./validators/selfIntersectingWaterway'),
-  'separatorToken': require('./validators/separatorTokenDestination'),
   'signPuntuaction': require('./validators/signPuntuaction'),
   'wikiDataNoEnglishName': require('./validators/wikiDataNoEnglishName')
 };
