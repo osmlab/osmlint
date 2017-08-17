@@ -23,7 +23,8 @@ module.exports = function(tileLayers, tile, writeData, done) {
       var ref = val.properties.ref.replace(/\s+/g, '').toLowerCase();
       var name = val.properties.name.replace(/\s+/g, '').toLowerCase();
       if ((val.properties.highway && majorRoads[val.properties.highway]) &&
-        (ref.indexOf('-') > -1 || name.indexOf(ref) > -1)) {
+        (ref.indexOf('-') > -1 ||
+          (name.indexOf(ref) > -1 && hasNumbers(ref) && ref.length > 1))) {
         val.properties._osmlint = osmlint;
         result.push(val);
       }
@@ -37,3 +38,8 @@ module.exports = function(tileLayers, tile, writeData, done) {
 
   done(null, null);
 };
+
+function hasNumbers(t) {
+  var regex = /\d/g;
+  return regex.test(t);
+}
