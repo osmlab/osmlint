@@ -17,12 +17,7 @@ module.exports = function(tileLayers, tile, writeData, done) {
     'trunk': true,
     'primary': true,
     'secondary': true,
-    'tertiary': true,
-    'motorway_link': true,
-    'trunk_link': true,
-    'primary_link': true,
-    'secondary_link': true,
-    'tertiary_link': true
+    'tertiary': true
   };
 
   var roadSegments = {};
@@ -51,27 +46,41 @@ module.exports = function(tileLayers, tile, writeData, done) {
     var valueSegment = roadSegments[key];
     var overlapsegements = highwaysTree.search(valueSegment.bbox);
     for (var y = 0; y < overlapsegements.length; y++) {
-      // writeData(valueSegment.properties['@id'] +'====================\n')
       if (valueSegment.properties['@id'] !== overlapsegements[y][4].osmid) {
         var overlapsegement = roadSegments[overlapsegements[y][4].localid]
-        var valueSegmentCoordA = valueSegment.geometry.coordinates[0];
-        var valueSegmentCoordB = valueSegment.geometry.coordinates[1];
-        var overlapSegmentCoordA = overlapsegement.geometry.coordinates[0];
-        var overlapSegmentCoordB = overlapsegement.geometry.coordinates[1];
-        if (valueSegmentCoordB[0] === overlapSegmentCoordA[0] && valueSegmentCoordB[1] === overlapSegmentCoordA[1]) {
-          var angle = findAngle(valueSegmentCoordA, valueSegmentCoordB, overlapSegmentCoordB)
-          if (angle < 70 && angle > 60) {
-            result.push(valueSegment);
-            result.push(overlapsegement);
+          /**
+           * [valueSegmentLanes: result of lanes, (lanes:backward + lanes:forward) greater than 3]
+           * @type {boolean}
+           */
+        var valueSegmentLanes = ((valueSegment.properties.lanes && valueSegment.properties.lanes > 3) ||
+          (valueSegment.properties['lanes:forward'] && valueSegment.properties['lanes:backward'] &&
+            (valueSegment.properties['lanes:forward'] + valueSegment.properties['lanes:backward']) > 3));
+        /**
+         * [valueSegmentLanes: result of lanes, (lanes:backward + lanes:forward) greater than 3]
+         * @type {boolean}
+         */
+        var overlapsegementLanes = ((overlapsegement.properties.lanes && overlapsegement.properties.lanes > 3) ||
+          (overlapsegement.properties['lanes:forward'] && overlapsegement.properties['lanes:backward'] &&
+            (overlapsegement.properties['lanes:forward'] + overlapsegement.properties['lanes:backward']) > 3));
+
+        if (valueSegmentLanes || overlapsegementLanes) {
+          var valueSegmentCoordA = valueSegment.geometry.coordinates[0];
+          var valueSegmentCoordB = valueSegment.geometry.coordinates[1];
+          var overlapSegmentCoordA = overlapsegement.geometry.coordinates[0];
+          var overlapSegmentCoordB = overlapsegement.geometry.coordinates[1];
+          if (valueSegmentCoordB[0] === overlapSegmentCoordA[0] && valueSegmentCoordB[1] === overlapSegmentCoordA[1]) {
+            var angle = findAngle(valueSegmentCoordA, valueSegmentCoordB, overlapSegmentCoordB)
+            if (angle < 70 && angle > 60) {
+              result.push(valueSegment);
+              result.push(overlapsegement);
+            }
           }
         }
+
       }
     }
-    // writeData(JSON.stringify(overlapsegements.length) + '\n');
   }
-  // var features = {};
 
-  // var result = _.values(features);
   if (result.length > 0) {
     var fc = turf.featureCollection(result);
     writeData(JSON.stringify(fc) + '\n');
