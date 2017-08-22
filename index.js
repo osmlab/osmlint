@@ -36,5 +36,11 @@ module.exports = {
   'crossingBuildings': require('./validators/crossingBuildings'),
   'doublePlaces': require('./validators/doublePlaces'),
   'bigV1Objects': require('./validators/bigV1Objects'),
-  'selfIntersectingWaterway': require('./validators/selfIntersectingWaterway')  
+  'selfIntersectingWaterway': require('./validators/selfIntersectingWaterway'),
+  'wikiDataNoEnglishName': require('./validators/wikiDataNoEnglishName'),
+  'invalidDestination': require('./validators/invalidDestination'),
+  'invalidMotorwayJunctions': require('./validators/invalidMotorwayJunctions'),
+  'missingDestination': require('./validators/missingDestination'),
+  'junctionsToSplit': require('./validators/junctionsToSplit'),
+  'separatorToken': require('./validators/separatorTokenDestination')
 };
