@@ -43,5 +43,6 @@ module.exports = {
   'missingDestination': require('./validators/missingDestination'),
   'junctionsToSplit': require('./validators/junctionsToSplit'),
   'separatorToken': require('./validators/separatorTokenDestination'),
+  'signPuntuaction': require('./validators/signPuntuaction'),
   'duplicateWayNameRef': require('./validators/duplicateWayNameRef')
 };
