@@ -22,7 +22,34 @@ module.exports = function(tileLayers, tile, writeData, done) {
   for (var i = 0; i < layer.features.length; i++) {
     var val = layer.features[i];
     val.properties._osmlint = osmlint;
-    if (val.properties.highway && highways[val.properties.highway] && (val.properties.name && (val.properties.name.indexOf('@') > -1 || val.properties.name.indexOf('!') > -1 || val.properties.name.indexOf('$') > -1)))
+    if (val.properties.highway &&
+      highways[val.properties.highway] &&
+      (val.properties.name &&
+      (val.properties.name.indexOf('!') > -1 ||
+      val.properties.name.indexOf('"') > -1 ||
+      val.properties.name.indexOf('#') > -1 ||
+      val.properties.name.indexOf('$') > -1 ||
+      val.properties.name.indexOf('&') > -1 ||
+      val.properties.name.indexOf('/') > -1 ||
+      val.properties.name.indexOf('(') > -1 ||
+      val.properties.name.indexOf(')') > -1 ||
+      val.properties.name.indexOf('*') > -1 ||
+      val.properties.name.indexOf('+') > -1 ||
+      val.properties.name.indexOf(',') > -1 ||
+      val.properties.name.indexOf('-') > -1 ||
+      val.properties.name.indexOf(':') > -1 ||
+      val.properties.name.indexOf(';') > -1 ||
+      val.properties.name.indexOf('<') > -1 ||
+      val.properties.name.indexOf('>') > -1 ||
+      val.properties.name.indexOf('=') > -1 ||
+      val.properties.name.indexOf('?') > -1 ||
+      val.properties.name.indexOf('@') > -1 ||
+      val.properties.name.indexOf('[') > -1 ||
+      val.properties.name.indexOf(']') > -1 ||
+      val.properties.name.indexOf('^') > -1 ||
+      val.properties.name.indexOf('_') > -1 ||
+      val.properties.name.indexOf('{') > -1 ||
+      val.properties.name.indexOf('}') > -1)))
       result.push(val);
   }
 
@@ -33,4 +60,3 @@ module.exports = function(tileLayers, tile, writeData, done) {
 
   done(null, null);
 };
-
