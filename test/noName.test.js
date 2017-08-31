@@ -5,7 +5,7 @@ var path = require('path');
 var processors = require('../index.js');
 var noName = path.join(__dirname, '/fixtures/noName.mbtiles');
 var commonOpts = {
-  bbox: [-82.195759, 25.611964, -78.526325, 29.238627],
+  bbox: [-80.448761, 27.430594, -80.403442, 27.464718],
   zoom: 12
 };
 test('noName', function(t) {
