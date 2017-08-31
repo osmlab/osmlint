@@ -6,7 +6,7 @@ var processors = require('../index.js');
 var zoom = 12;
 var signPuntuactionTiles = path.join(__dirname, '/fixtures/signPuntuaction.mbtiles');
 var signPuntuactionOpts = {
-  bbox: [-74.268436, -13.252812, -74.209900, -13.20167719],
+  bbox: [-123.05537, 44.026705, -123.02525, 44.047499],
   zoom: zoom
 };
 test('signPuntuaction', function(t) {
