@@ -15,9 +15,11 @@ test('deprecateHighways', function(t) {
   logInterceptor();
   processors.deprecateHighways(deprecateHighwaysOpts, deprecateHighwaysTiles, function() {
     var logs = logInterceptor.end();
-    var geoJSON = JSON.parse(logs);
-    t.equal(geoJSON.features[0].properties._osmlint, 'deprecateroads', 'Should be deprecateroads');
-    t.equal(geoJSON.features[0].geometry.type, 'LineString', 'Should be  LineString');
+    for (var i = 0; i < logs.length; i++) {
+      var geoJSON = JSON.parse(logs[i]);
+      t.equal(geoJSON.features[0].properties._osmlint, 'deprecateroads', 'Should be deprecateroads');
+      t.equal(geoJSON.features[0].geometry.type, 'LineString', 'Should be  LineString');
+    }
     t.end();
   });
 });
