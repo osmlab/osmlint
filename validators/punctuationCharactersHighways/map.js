@@ -3,7 +3,7 @@ var turf = require('turf');
 
 module.exports = function(tileLayers, tile, writeData, done) {
   var layer = tileLayers.osm.osm;
-  var osmlint = 'signpuntuaction';
+  var osmlint = 'punctuationcharactershighways';
   var result = [];
   var preserveType = {
     'motorway': true,

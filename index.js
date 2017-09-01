@@ -45,6 +45,6 @@ module.exports = {
   'separatorToken': require('./validators/separatorTokenDestination'),
   'duplicateWayNameRef': require('./validators/duplicateWayNameRef'),
   'deprecatedConstructionProposalTag': require('./validators/deprecatedConstructionProposalTag'),
-  'signPuntuaction': require('./validators/signPuntuaction'),
+  'punctuationCharactersHighways': require('./validators/punctuationCharactersHighways'),
   'noName': require('./validators/noName')
 };
