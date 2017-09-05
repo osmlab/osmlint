@@ -7,12 +7,11 @@ module.exports = function(tileLayers, tile, writeData, done) {
   var result = [];
   for (var i = 0; i < layer.features.length; i++) {
     var val = layer.features[i];
-    // Wrongly mapped, ref=*, noref=yes
+    // Wrongly mapped, objects which have ref=*, noref=yes
     if (val.properties.ref && val.properties.noref) {
       val.properties._osmlint = osmlint;
       result.push(val);
     }
-    // Missing highway=motorway_junction
     // When there are multiple ref’s for a junction, it should be assigned with ref:left=* and ref:right=*
     if (val.geometry.type === 'Point' && val.properties.ref) {
       var refs = val.properties.ref.split(';');
