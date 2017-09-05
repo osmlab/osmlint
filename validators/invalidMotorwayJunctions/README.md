@@ -1,6 +1,6 @@
 #### Description
 
-Check wrong ref tah in `motorway_junction`
+Check  for wrong ref tags in `motorway_junction`
 
 -  Wrongly mapped, ref=*, noref=yes
 -  When there are multiple ref’s for a junction, it should be assigned with ref:left=* and ref:right=*
@@ -8,4 +8,4 @@ Check wrong ref tah in `motorway_junction`
 
 #### Usage
 
-`osmlint deprecatehighways peru.mbtiles`
+`osmlint invalidmotorwayjunctions peru.mbtiles`
