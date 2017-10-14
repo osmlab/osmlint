@@ -114,16 +114,12 @@ function findAngle(roadA, roadB, position) {
   var coordB1 = roadB.geometry.coordinates[0];
   var coordB2 = roadB.geometry.coordinates[roadB.geometry.coordinates.length - 1];
   if (_.intersection(coordA1, coordB1).length === 2) {
-    // return angle(coordA2, coordA1, coordB2);
     return angle(coordA[position], coordA1, coordB[position]);
   } else if (_.intersection(coordA1, coordB2).length === 2) {
-    // return angle(coordA2, coordA1, coordB1);
     return angle(coordA[position], coordA1, coordB[coordB.length - (position + 1)]);
   } else if (_.intersection(coordA2, coordB1).length === 2) {
-    // return angle(coordA1, coordA2, coordB2);
     return angle(coordA[coordA.length - (position + 1)], coordA2, coordB[position]);
   } else if (_.intersection(coordA2, coordB2).length === 2) {
-    // return angle(coordA1, coordA2, coordB1);
     return angle(coordA[coordA.length - (position + 1)], coordA2, coordB[coordB.length - (position + 1)]);
   }
 }
@@ -140,26 +136,6 @@ function areConsecutive(roadA, roadB) {
   }
   return null;
 }
-
-// function areConnecting(road1, road2) {
-//   var coord1 = road1.geometry.coordinates;
-//   var coord2 = road2.geometry.coordinates;
-//   for (var i = 0; i < coord2.length; i++) {
-//     if (_.intersection(coord1[0], coord2[i]).length === 2) {
-//       return coord1[0];
-//     } else if (_.intersection(coord1[coord1.length - 1], coord2[i]).length === 2) {
-//       return coord1[coord1.length - 1];
-//     }
-//   }
-//   for (var j = 0; j < coord1.length; j++) {
-//     if (_.intersection(coord2[0], coord1[j]).length === 2) {
-//       return coord2[0];
-//     } else if (_.intersection(coord2[coord2.length - 1], coord1[j]).length === 2) {
-//       return coord2[coord2.length - 1];
-//     }
-//   }
-//   return null;
-// }
 
 
 function mergeIds(road1, road2) {
