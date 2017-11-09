@@ -32,7 +32,8 @@ function hasTag(properties) {
     'ref': true,
     'ref:left': true,
     'ref:right': true,
-    'noref': true
+    'noref': true,
+    'motorway_junction': true
   };
   for (var prop in properties) {
     if (preserveTags[prop]) {
