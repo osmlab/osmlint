@@ -1,6 +1,6 @@
 'use strict';
 var time = require('time')(Date);
-var turf = require('turf');
+var turf = require('@turf/turf');
 var today = (time.time() - 3 * 24 * 60 * 60);
 
 module.exports = function(tileLayers, tile, writeData, done) {

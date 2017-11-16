@@ -1,5 +1,5 @@
 'use strict';
-var turf = require('turf');
+var turf = require('@turf/turf');
 var levenshtein = require('fast-levenshtein');
 var preserveType = require('./value_area');
 var _ = require('underscore');

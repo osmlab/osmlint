@@ -1,5 +1,5 @@
 'use strict';
-var turf = require('turf');
+var turf = require('@turf/turf');
 var _ = require('underscore');
 
 // Identify object with the same name.

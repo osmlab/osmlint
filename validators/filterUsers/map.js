@@ -1,6 +1,6 @@
 'use strict';
 
-var turf = require('turf');
+var turf = require('@turf/turf');
 var users = require('mapbox-data-team').getUsernames();
 
 users = users.reduce(function(memo, currentValue) {

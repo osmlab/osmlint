@@ -1,6 +1,6 @@
 'use strict';
 
-var turf = require('turf');
+var turf = require('@turf/turf');
 var _ = require('underscore');
 var levenshtein = require('fast-levenshtein');
 

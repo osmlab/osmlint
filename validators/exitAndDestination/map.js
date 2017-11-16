@@ -1,5 +1,5 @@
 'use strict';
-var turf = require('turf');
+var turf = require('@turf/turf');
 var _ = require('underscore');
 var start = Date.parse('Jul 1, 2017') / 1000;
 
