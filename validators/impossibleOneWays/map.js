@@ -10,7 +10,9 @@ module.exports = function(tileLayers, tile, writeData, done) {
   var bboxLayer = turf.bboxPolygon(turf.bbox(layer));
   bboxLayer.geometry.type = 'LineString';
   bboxLayer.geometry.coordinates = bboxLayer.geometry.coordinates[0];
-  var bufferLayer = turf.buffer(bboxLayer, 0.01, 'miles');
+  var bufferLayer = turf.buffer(bboxLayer, 0.01, {
+    units: 'miles'
+  });
   var highways = {};
   var majorRoads = {
     'motorway': true,
@@ -62,7 +64,7 @@ module.exports = function(tileLayers, tile, writeData, done) {
     if (val.geometry.type === 'LineString' && val.properties.highway) {
       var coordsWayL = val.geometry.coordinates;
       var isClippedL = false;
-      if (turf.inside(turf.point(coordsWayL[0]), bufferLayer) || turf.inside(turf.point(coordsWayL[coordsWayL.length - 1]), bufferLayer)) {
+      if (turf.booleanPointInPolygon(turf.point(coordsWayL[0]), bufferLayer) || turf.booleanPointInPolygon(turf.point(coordsWayL[coordsWayL.length - 1]), bufferLayer)) {
         isClippedL = true;
       }
       var idWayL = id + 'L';
@@ -80,8 +82,7 @@ module.exports = function(tileLayers, tile, writeData, done) {
           position: positionL,
           isClipped: isClippedL
         };
-        var itemL = coordsWayL[j].reverse().concat(coordsWayL[j].reverse());
-        itemL.push(propsL);
+        var itemL = objBbox(turf.point(coordsWayL[j]), propsL);
         bboxes.push(itemL);
       }
       highways[idWayL] = val;
@@ -91,7 +92,7 @@ module.exports = function(tileLayers, tile, writeData, done) {
         if (arrayWays[f].geometry.type === 'LineString') {
           var coordsWayM = arrayWays[f].geometry.coordinates;
           var isClippedM = false;
-          if (turf.inside(turf.point(coordsWayM[0]), bufferLayer) || turf.inside(turf.point(coordsWayM[coordsWayM.length - 1]), bufferLayer)) {
+          if (turf.booleanPointInPolygon(turf.point(coordsWayM[0]), bufferLayer) || turf.booleanPointInPolygon(turf.point(coordsWayM[coordsWayM.length - 1]), bufferLayer)) {
             isClippedM = true;
           }
           var idWayM = id + 'M' + f;
@@ -109,8 +110,7 @@ module.exports = function(tileLayers, tile, writeData, done) {
               position: positionM,
               isClipped: isClippedM
             };
-            var itemM = coordsWayM[t].reverse().concat(coordsWayM[t].reverse());
-            itemM.push(propsM);
+            var itemM = objBbox(turf.point(coordsWayM[t]), propsM);
             bboxes.push(itemM);
             highways[idWayM] = arrayWays[f];
           }
@@ -127,15 +127,15 @@ module.exports = function(tileLayers, tile, writeData, done) {
     var firstCoor = valueHighway.geometry.coordinates[0];
     var endCoor = valueHighway.geometry.coordinates[valueHighway.geometry.coordinates.length - 1];
     if (valueHighway.properties.oneway && valueHighway.properties.oneway !== 'no' && preserveType[valueHighway.properties.highway] && _.intersection(firstCoor, endCoor).length !== 2 && !(valueHighway.properties.access && valueHighway.properties.access === 'no' && noaccess[valueHighway.properties.highway])) {
-      // evaluate the first node of road
-      var overlapsFirstcoor = highwaysTree.search(firstCoor.reverse().concat(firstCoor.reverse()));
+      var ext = objBbox(turf.point(firstCoor), 'id');
+      var overlapsFirstcoor = highwaysTree.search(ext);
       if (overlapsFirstcoor.length > 1) {
         var isExitFirst = false;
         var flagFirst = [];
         for (var u = 0; u < overlapsFirstcoor.length; u++) {
-          var connectRoad = highways[overlapsFirstcoor[u][4].id];
-          flagFirst.push(connection(overlapsFirstcoor[u][4].position, connectRoad.properties.oneway));
-          if ((valueHighway.properties['@id'] === connectRoad.properties['@id'] && overlapsFirstcoor[u][4].isClipped) || (overlapsFirstcoor[u][4].position === 'middle' || connectRoad.properties.oneway === 'no' || typeof connectRoad.properties.oneway === 'undefined')) {
+          var connectRoad = highways[overlapsFirstcoor[u].id.id];
+          flagFirst.push(connection(overlapsFirstcoor[u].id.position, connectRoad.properties.oneway));
+          if ((valueHighway.properties['@id'] === connectRoad.properties['@id'] && overlapsFirstcoor[u].id.isClipped) || (overlapsFirstcoor[u].id.position === 'middle' || connectRoad.properties.oneway === 'no' || typeof connectRoad.properties.oneway === 'undefined')) {
             isExitFirst = true;
           }
         }
@@ -153,8 +153,9 @@ module.exports = function(tileLayers, tile, writeData, done) {
         }
       }
       // evaluate the end node of road
-      var overlapsEndcoor = highwaysTree.search(endCoor.reverse().concat(endCoor.reverse()));
-      if (overlapsEndcoor.length === 1 && !overlapsEndcoor[0][4].isClipped) {
+      var extEnd = objBbox(turf.point(endCoor), 'id');
+      var overlapsEndcoor = highwaysTree.search(extEnd);
+      if (overlapsEndcoor.length === 1 && !overlapsEndcoor[0].id.isClipped) {
         valueHighway.properties._osmlint = osmlint;
         features[valueHighway.properties['@id']] = valueHighway;
         var endPointNoExit = turf.point(endCoor);
@@ -168,9 +169,9 @@ module.exports = function(tileLayers, tile, writeData, done) {
         var isExitEnd = false;
         var flagEnd = [];
         for (var m = 0; m < overlapsEndcoor.length; m++) {
-          var connectRoadEnd = highways[overlapsEndcoor[m][4].id];
-          flagEnd.push(connection(overlapsEndcoor[m][4].position, connectRoadEnd.properties.oneway));
-          if ((valueHighway.properties['@id'] === connectRoadEnd.properties['@id'] && overlapsEndcoor[m][4].isClipped) || (overlapsEndcoor[m][4].position === 'middle' || connectRoadEnd.properties.oneway === 'no' || typeof connectRoadEnd.properties.oneway === 'undefined')) {
+          var connectRoadEnd = highways[overlapsEndcoor[m].id.id];
+          flagEnd.push(connection(overlapsEndcoor[m].id.position, connectRoadEnd.properties.oneway));
+          if ((valueHighway.properties['@id'] === connectRoadEnd.properties['@id'] && overlapsEndcoor[m].id.isClipped) || (overlapsEndcoor[m].id.position === 'middle' || connectRoadEnd.properties.oneway === 'no' || typeof connectRoadEnd.properties.oneway === 'undefined')) {
             isExitEnd = true;
           }
         }
@@ -222,4 +223,15 @@ function classification(major, minor, path, highway) {
   } else if (path[highway]) {
     return 'path';
   }
+}
+
+function objBbox(obj, id) {
+  var bboxExtent = ['minX', 'minY', 'maxX', 'maxY'];
+  var bbox = {};
+  var valBbox = turf.bbox(obj);
+  for (var d = 0; d < valBbox.length; d++) {
+    bbox[bboxExtent[d]] = valBbox[d];
+  }
+  bbox.id = id || obj.properties['@id'];
+  return bbox;
 }
