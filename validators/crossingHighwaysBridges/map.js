@@ -43,22 +43,18 @@ module.exports = function(tileLayers, tile, writeData, done) {
   for (var i = 0; i < layer.features.length; i++) {
     var val = layer.features[i];
     var id = val.properties['@id'];
-    var bbox;
+    // var bbox;
     if (val.properties.highway && preserveType[val.properties.highway]) {
       if (val.geometry.type === 'LineString') {
         var idWayL = id + 'L';
-        bbox = turf.bbox(val);
-        bbox.push(idWayL);
-        highwaysBboxes.push(bbox);
+        highwaysBboxes.push(objBbox(val, idWayL));
         listOfHighways[idWayL] = val;
       } else if (val.geometry.type === 'MultiLineString') {
         var arrayWays = flatten(val);
         for (var f = 0; f < arrayWays.length; f++) {
           if (arrayWays[f].geometry.type === 'LineString') {
             var idWayM = id + 'M' + f;
-            bbox = turf.bbox(arrayWays[f]);
-            bbox.push(idWayM);
-            highwaysBboxes.push(bbox);
+            highwaysBboxes.push(objBbox(arrayWays[f], idWayM));
             arrayWays[f].properties = val.properties;
             listOfHighways[idWayM] = arrayWays[f];
           }
@@ -71,11 +67,12 @@ module.exports = function(tileLayers, tile, writeData, done) {
   highwaysTree.load(highwaysBboxes);
   var output = {};
   for (var j = 0; j < highwaysBboxes.length; j++) {
-    var highwayToEvaluate = listOfHighways[highwaysBboxes[j][4]];
+    var highwayToEvaluate = listOfHighways[highwaysBboxes[j].id];
     //Check only highways which has layer
     var overlapHighwaysBboxes = highwaysTree.search(highwaysBboxes[j]);
+    console.log(overlapHighwaysBboxes + '\n');
     for (var k = 0; k < overlapHighwaysBboxes.length; k++) {
-      var overlapHighway = listOfHighways[overlapHighwaysBboxes[k][4]];
+      var overlapHighway = listOfHighways[overlapHighwaysBboxes[k].id];
       if (highwayToEvaluate.properties['@id'] !== overlapHighway.properties['@id']) {
         if (!isContinuousRoads(highwayToEvaluate, overlapHighway)) {
           var intersectPoint = isIntersectingInNode(highwayToEvaluate, overlapHighway);
@@ -157,4 +154,15 @@ function isIntersectingInNode(road1, road2) {
       return intersectPoint;
     }
   }
+}
+
+function objBbox(obj, id) {
+  var bboxExtent = ['minX', 'minY', 'maxX', 'maxY'];
+  var bbox = {};
+  var valBbox = turf.bbox(obj);
+  for (var d = 0; d < valBbox.length; d++) {
+    bbox[bboxExtent[d]] = valBbox[d];
+  }
+  bbox.id = id || obj.properties['@id'];
+  return bbox;
 }

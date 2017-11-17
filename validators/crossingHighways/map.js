@@ -7,7 +7,6 @@ module.exports = function(tileLayers, tile, writeData, done) {
   var layer = tileLayers.osm.osm;
   var listOfHighways = {};
   var highwaysBboxes = [];
-  var bboxExtent = ['minX', 'minY', 'maxX', 'maxY'];
   var majorRoads = {
     'motorway': true,
     'trunk': true,
@@ -44,13 +43,7 @@ module.exports = function(tileLayers, tile, writeData, done) {
   for (var i = 0; i < layer.features.length; i++) {
     var val = layer.features[i];
     if (preserveType[val.properties.highway] && (val.geometry.type === 'LineString' || val.geometry.type === 'MultiLineString') && val.properties.layer === undefined) {
-      var bboxHighway = {};
-      var valBbox = turf.bbox(val);
-      for (var d = 0; d < valBbox.length; d++) {
-        bboxHighway[bboxExtent[d]] = valBbox[d];
-      }
-      bboxHighway.id = val.properties['@id'];
-      highwaysBboxes.push(bboxHighway);
+      highwaysBboxes.push(objBbox(val));
       listOfHighways[val.properties['@id']] = val;
     }
   }
@@ -153,4 +146,15 @@ function classification(major, minor, path, fromHighway, toHighway) {
   } else if (path[fromHighway] && path[toHighway]) {
     return 'path-path';
   }
+}
+
+function objBbox(obj, id) {
+  var bboxExtent = ['minX', 'minY', 'maxX', 'maxY'];
+  var bbox = {};
+  var valBbox = turf.bbox(obj);
+  for (var d = 0; d < valBbox.length; d++) {
+    bbox[id || bboxExtent[d]] = valBbox[d];
+  }
+  bbox.id = obj.properties['@id'];
+  return bbox;
 }
