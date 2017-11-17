@@ -29,11 +29,7 @@ module.exports = function(tileLayers, tile, writeData, done) {
       var coordsWayL = val.geometry.coordinates;
       var idWayL = id + 'L';
       for (var j = 0; j < coordsWayL.length; j++) {
-        var propsL = {
-          id: idWayL
-        };
-        var itemL = coordsWayL[j].reverse().concat(coordsWayL[j].reverse());
-        itemL.push(propsL);
+        var itemL = objBbox(turf.point(coordsWayL[j]), idWayL);
         bboxes.push(itemL);
       }
       highways[idWayL] = val;
@@ -44,11 +40,7 @@ module.exports = function(tileLayers, tile, writeData, done) {
           var coordsWayM = arrayWays[f].geometry.coordinates;
           var idWayM = id + 'M' + f;
           for (var t = 0; t < coordsWayM.length; t++) {
-            var propsM = {
-              id: idWayM
-            };
-            var itemM = coordsWayM[t].reverse().concat(coordsWayM[t].reverse());
-            itemM.push(propsM);
+            var itemM = objBbox(turf.point(coordsWayM[t]), idWayM);
             bboxes.push(itemM);
             highways[idWayM] = arrayWays[f];
           }
@@ -69,20 +61,21 @@ module.exports = function(tileLayers, tile, writeData, done) {
       valueHighway.properties._osmlint = osmlint;
       valueHighway.properties._type = classification(majorRoads, {}, {}, valueHighway.properties.highway);
       // evaluate the first node of road
-      var overlapsFirstcoor = highwaysTree.search(firstCoor.reverse().concat(firstCoor.reverse()));
+      var overlapsFirstcoor = highwaysTree.search(objBbox(turf.point(firstCoor), 'id'));
+
       if (overlapsFirstcoor.length > 1) {
         for (var u = 0; u < overlapsFirstcoor.length; u++) {
-          var connectRoadFrist = highways[overlapsFirstcoor[u][4].id];
+          var connectRoadFrist = highways[overlapsFirstcoor[u].id];
           if (valueHighway.properties['@id'] !== connectRoadFrist.properties['@id'] && connectRoadFrist.properties.oneway && connectRoadFrist.properties.highway === 'motorway') {
             features[valueHighway.properties['@id']] = valueHighway;
           }
         }
       }
       // evaluate the end node of road
-      var overlapsEndcoor = highwaysTree.search(endCoor.reverse().concat(endCoor.reverse()));
+      var overlapsEndcoor = highwaysTree.search(objBbox(turf.point(endCoor), 'id'));
       if (overlapsEndcoor.length > 1) {
         for (var p = 0; p < overlapsEndcoor.length; p++) {
-          var connectRoadEnd = highways[overlapsEndcoor[p][4].id];
+          var connectRoadEnd = highways[overlapsEndcoor[p].id];
           if (valueHighway.properties['@id'] !== connectRoadEnd.properties['@id'] && connectRoadEnd.properties.oneway && connectRoadEnd.properties.highway === 'motorway') {
             if (features[valueHighway.properties['@id']]) {
               delete features[valueHighway.properties['@id']];
@@ -113,4 +106,15 @@ function classification(major, minor, path, highway) {
   } else if (path[highway]) {
     return 'path';
   }
+}
+
+function objBbox(obj, id) {
+  var bboxExtent = ['minX', 'minY', 'maxX', 'maxY'];
+  var bbox = {};
+  var valBbox = turf.bbox(obj);
+  for (var d = 0; d < valBbox.length; d++) {
+    bbox[bboxExtent[d]] = valBbox[d];
+  }
+  bbox.id = id || obj.properties['@id'];
+  return bbox;
 }

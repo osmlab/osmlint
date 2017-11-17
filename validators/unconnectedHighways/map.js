@@ -9,7 +9,9 @@ module.exports = function(tileLayers, tile, writeData, done) {
   var bboxLayer = turf.bboxPolygon(turf.bbox(layer));
   bboxLayer.geometry.type = 'LineString';
   bboxLayer.geometry.coordinates = bboxLayer.geometry.coordinates[0];
-  var bufferLayer = turf.buffer(bboxLayer, 0.01, 'miles');
+  var bufferLayer = turf.buffer(bboxLayer, 0.01, {
+    units: 'miles'
+  });
   var majorRoads = {
     'motorway': true,
     'trunk': true,
@@ -41,7 +43,9 @@ module.exports = function(tileLayers, tile, writeData, done) {
   preserveType = _.extend(preserveType, majorRoads);
   preserveType = _.extend(preserveType, minorRoads);
   // preserveType = _.extend(preserveType, pathRoads);
-  var unit = 'meters';
+  var unit = {
+    units: 'meters'
+  };
   var distance = 5;
   var highways = {};
   var bboxes = [];
@@ -53,11 +57,10 @@ module.exports = function(tileLayers, tile, writeData, done) {
     var val = layer.features[i];
     // Linestring evaluation
     if (val.geometry.type === 'LineString' && val.properties.highway) {
-      var bboxL = turf.bbox(val);
-      bboxL.push(val.properties['@id'] + 'L');
+      var valIdL = val.properties['@id'] + 'L';
+      var bboxL = objBbox(val, valIdL);
       bboxes.push(bboxL);
-
-      highways[val.properties['@id'] + 'L'] = {
+      highways[valIdL] = {
         highway: val,
         buffer: turf.buffer(val, distance, unit)
       };
@@ -66,9 +69,8 @@ module.exports = function(tileLayers, tile, writeData, done) {
       var id = val.properties['@id'] + 'L';
       for (var f = 0; f < flat.length; f++) {
         if (flat[f].geometry.type === 'LineString') {
-          var bboxM = turf.bbox(flat[f]);
           var idFlat = id + 'M' + f;
-          bboxM.push(idFlat);
+          var bboxM = objBbox(flat[f], idFlat);
           bboxes.push(bboxM);
           highways[idFlat] = {
             highway: flat[f],
@@ -88,7 +90,7 @@ module.exports = function(tileLayers, tile, writeData, done) {
 
   for (var m = 0; m < bboxes.length; m++) {
     var valueBbox = bboxes[m];
-    var valueHighway = highways[valueBbox[4]].highway;
+    var valueHighway = highways[valueBbox.id].highway;
     //obtaining first and last coordinates
     var firstCoord = valueHighway.geometry.coordinates[0];
     var firstPoint = turf.point(firstCoord);
@@ -97,19 +99,19 @@ module.exports = function(tileLayers, tile, writeData, done) {
 
     if (preserveType[valueHighway.properties.highway] && !_.isEqual(firstCoord, endCoord)) {
       var overlapsFirstPoint = [];
-      if (!turf.inside(firstPoint, bufferLayer)) {
-        overlapsFirstPoint = highwaysTree.search(turf.bbox(turf.buffer(firstPoint, distance, unit)));
+      if (!turf.booleanPointInPolygon(firstPoint, bufferLayer)) {
+        overlapsFirstPoint = highwaysTree.search(objBbox(turf.bboxPolygon(turf.bbox(turf.buffer(firstPoint, distance, unit)), 'id')));
       }
       var overlapsEndPoint = [];
-      if (!turf.inside(endPoint, bufferLayer)) {
-        overlapsEndPoint = highwaysTree.search(turf.bbox(turf.buffer(endPoint, distance, unit)));
+      if (!turf.booleanPointInPolygon(endPoint, bufferLayer)) {
+        overlapsEndPoint = highwaysTree.search(objBbox(turf.bboxPolygon(turf.bbox(turf.buffer(endPoint, distance, unit)), 'id')));
       }
       var overlapBboxes = overlapsFirstPoint.concat(overlapsEndPoint);
       var arrayCorrd = [];
       for (var j = 0; j < overlapBboxes.length; j++) {
         var overlapBbox = overlapBboxes[j];
-        if (valueBbox[4] !== overlapBbox[4]) {
-          arrayCorrd = arrayCorrd.concat(_.flatten(highways[overlapBbox[4]].highway.geometry.coordinates));
+        if (valueBbox.id !== overlapBbox.id) {
+          arrayCorrd = arrayCorrd.concat(_.flatten(highways[overlapBbox.id].highway.geometry.coordinates));
         }
       }
 
@@ -122,10 +124,10 @@ module.exports = function(tileLayers, tile, writeData, done) {
       if (!avoidPoints[firstCoord.join('-')]) {
         for (var k = 0; k < overlapsFirstPoint.length; k++) {
           var overlapPointFirst = overlapsFirstPoint[k];
-          var toHighwayFirst = highways[overlapPointFirst[4]].highway;
+          var toHighwayFirst = highways[overlapPointFirst.id].highway;
 
-          if (valueBbox[4] !== overlapPointFirst[4] && (arrayCorrd.indexOf(firstCoord[0]) === -1 || arrayCorrd.indexOf(firstCoord[1]) === -1)) {
-            if (turf.inside(firstPoint, highways[overlapPointFirst[4]].buffer)) {
+          if (valueBbox.id !== overlapPointFirst.id && (arrayCorrd.indexOf(firstCoord[0]) === -1 || arrayCorrd.indexOf(firstCoord[1]) === -1)) {
+            if (turf.booleanPointInPolygon(firstPoint, highways[overlapPointFirst.id].buffer)) {
               props.toWay = toHighwayFirst.properties['@id'];
               firstPoint.properties = props;
               //Check out whether the streets are connected at some point
@@ -137,12 +139,12 @@ module.exports = function(tileLayers, tile, writeData, done) {
                 toHighwayFirst.properties._osmlint = osmlint;
                 //both roads must have the same layer and road to connect should not be in construction
                 if ((valueHighway.properties.layer === toHighwayFirst.properties.layer) && toHighwayFirst.properties.highway !== 'construction') {
-                  output[valueBbox[4]] = valueHighway;
-                  output[overlapPointFirst[4]] = toHighwayFirst;
+                  output[valueBbox.id] = valueHighway;
+                  output[overlapPointFirst.id] = toHighwayFirst;
                   if (valueHighway.properties['@id'] > toHighwayFirst.properties['@id']) {
-                    output[valueBbox[4].toString().concat(overlapPointFirst[4])] = firstPoint;
+                    output[valueBbox.id.toString().concat(overlapPointFirst.id)] = firstPoint;
                   } else {
-                    output[overlapPointFirst[4].toString().concat(valueBbox[4])] = firstPoint;
+                    output[overlapPointFirst.id.toString().concat(valueBbox.id)] = firstPoint;
                   }
                 }
               }
@@ -153,9 +155,9 @@ module.exports = function(tileLayers, tile, writeData, done) {
       if (!avoidPoints[endCoord.join('-')]) {
         for (var l = 0; l < overlapsEndPoint.length; l++) {
           var overlapPointEnd = overlapsEndPoint[l];
-          var toHighwayEnd = highways[overlapPointEnd[4]].highway;
-          if (valueBbox[4] !== overlapPointEnd[4] && (arrayCorrd.indexOf(endCoord[0]) === -1 || arrayCorrd.indexOf(endCoord[1]) === -1)) {
-            if (turf.inside(endPoint, highways[overlapPointEnd[4]].buffer)) {
+          var toHighwayEnd = highways[overlapPointEnd.id].highway;
+          if (valueBbox.id !== overlapPointEnd.id && (arrayCorrd.indexOf(endCoord[0]) === -1 || arrayCorrd.indexOf(endCoord[1]) === -1)) {
+            if (turf.booleanPointInPolygon(endPoint, highways[overlapPointEnd.id].buffer)) {
               props.toWay = toHighwayEnd.properties['@id'];
               endPoint.properties = props;
               //Check out whether the streets are connected at some point
@@ -167,8 +169,8 @@ module.exports = function(tileLayers, tile, writeData, done) {
                 toHighwayEnd.properties._osmlint = osmlint;
                 //both roads must have the same layer and road to connect should not be in construction
                 if ((valueHighway.properties.layer === toHighwayEnd.properties.layer) && toHighwayEnd.properties.highway !== 'construction') {
-                  output[valueBbox[4]] = valueHighway;
-                  output[overlapPointEnd[4]] = toHighwayEnd;
+                  output[valueBbox.id] = valueHighway;
+                  output[overlapPointEnd.id] = toHighwayEnd;
                   if (valueHighway.properties['@id'] > toHighwayEnd.properties['@id']) {
                     output[valueHighway.properties['@id'].toString().concat(toHighwayEnd.properties['@id'])] = endPoint;
                   } else {
@@ -202,4 +204,15 @@ function classification(major, minor, path, highway) {
   } else if (path[highway]) {
     return 'path';
   }
+}
+
+function objBbox(obj, id) {
+  var bboxExtent = ['minX', 'minY', 'maxX', 'maxY'];
+  var bbox = {};
+  var valBbox = turf.bbox(obj);
+  for (var d = 0; d < valBbox.length; d++) {
+    bbox[bboxExtent[d]] = valBbox[d];
+  }
+  bbox.id = id || obj.properties['@id'];
+  return bbox;
 }

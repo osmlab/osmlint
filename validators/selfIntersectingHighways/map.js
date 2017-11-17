@@ -87,25 +87,31 @@ module.exports = function(tileLayers, tile, writeData, done) {
       highwayToEvaluate.properties._osmlint = osmlint;
       result.push(highwayToEvaluate);
     } else {
-      var intersect = turf.intersect(highwayToEvaluate, highwayToEvaluate);
-      if (intersect.geometry.coordinates.length > highwayToEvaluateCoords.length) {
-        var intersectObjs = {};
-        for (var m = 0; m < intersect.geometry.coordinates.length; m++) {
-          if (!vhObjs[intersect.geometry.coordinates[m][0].join('-')]) {
-            intersectObjs[intersect.geometry.coordinates[m][0].join('-')] = intersect.geometry.coordinates[m][0];
+      var intersect = turf.lineIntersect(highwayToEvaluate, highwayToEvaluate);
+      if (intersect && intersect.features.length > 0) {
+        if (intersect.features.length > 1) {
+          intersect = turf.combine(intersect);
+        }
+        intersect = intersect.features[0];
+        if ((intersect.geometry.coordinates.length + 1) > highwayToEvaluateCoords.length) {
+          var intersectObjs = {};
+          for (var m = 0; m < intersect.geometry.coordinates.length; m++) {
+            if (!vhObjs[intersect.geometry.coordinates[m].join('-')]) {
+              intersectObjs[intersect.geometry.coordinates[m].join('-')] = intersect.geometry.coordinates[m];
+            }
           }
+          var intersectCoords = _.values(intersectObjs);
+          for (var t = 0; t < intersectCoords.length; t++) {
+            var intersectPoint = turf.point(intersectCoords[t]);
+            intersectPoint.properties._osmlint = osmlint;
+            intersectPoint.properties._fromWay = highwayToEvaluate.properties['@id'];
+            intersectPoint.properties._type = type;
+            result.push(intersectPoint);
+          }
+          highwayToEvaluate.properties._type = type;
+          highwayToEvaluate.properties._osmlint = osmlint;
+          result.push(highwayToEvaluate);
         }
-        var intersectCoords = _.values(intersectObjs);
-        for (var t = 0; t < intersectCoords.length; t++) {
-          var intersectPoint = turf.point(intersectCoords[t]);
-          intersectPoint.properties._osmlint = osmlint;
-          intersectPoint.properties._fromWay = highwayToEvaluate.properties['@id'];
-          intersectPoint.properties._type = type;
-          result.push(intersectPoint);
-        }
-        highwayToEvaluate.properties._type = type;
-        highwayToEvaluate.properties._osmlint = osmlint;
-        result.push(highwayToEvaluate);
       }
     }
   }

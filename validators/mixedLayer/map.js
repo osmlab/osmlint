@@ -43,22 +43,19 @@ module.exports = function(tileLayers, tile, writeData, done) {
   for (var i = 0; i < layer.features.length; i++) {
     var val = layer.features[i];
     var id = val.properties['@id'];
-    var bbox;
     if (preserveType[val.properties.highway]) {
       if (val.geometry.type === 'LineString') {
         var idWayL = id + 'L';
-        bbox = turf.bbox(val);
-        bbox.push(idWayL);
-        highwaysBboxes.push(bbox);
+        var LineBbox = objBbox(val, idWayL);
+        highwaysBboxes.push(LineBbox);
         listOfHighways[idWayL] = val;
       } else if (val.geometry.type === 'MultiLineString') {
         var arrayWays = flatten(val);
         for (var f = 0; f < arrayWays.length; f++) {
           if (arrayWays[f].geometry.type === 'LineString') {
             var idWayM = id + 'M' + f;
-            bbox = turf.bbox(arrayWays[f]);
-            bbox.push(idWayM);
-            highwaysBboxes.push(bbox);
+            var multiLineBbox = objBbox(arrayWays[f], idWayM);
+            highwaysBboxes.push(multiLineBbox);
             arrayWays[f].properties = val.properties;
             listOfHighways[idWayM] = arrayWays[f];
           }
@@ -71,7 +68,7 @@ module.exports = function(tileLayers, tile, writeData, done) {
   highwaysTree.load(highwaysBboxes);
   var output = {};
   for (var j = 0; j < highwaysBboxes.length; j++) {
-    var highwayToEvaluate = listOfHighways[highwaysBboxes[j][4]];
+    var highwayToEvaluate = listOfHighways[highwaysBboxes[j].id];
     //Check only highways which has layer
     if (highwayToEvaluate.properties.layer && highwayToEvaluate.properties.layer !== '0' && highwayToEvaluate.geometry.coordinates.length > 2) {
       var overlapHighwaysBboxes = highwaysTree.search(highwaysBboxes[j]);
@@ -83,7 +80,7 @@ module.exports = function(tileLayers, tile, writeData, done) {
         objHighwayToEvaluate[coordHighwayToEvaluate[m].join('-')] = true;
       }
       for (var k = 0; k < overlapHighwaysBboxes.length; k++) {
-        var overlapHighway = listOfHighways[overlapHighwaysBboxes[k][4]];
+        var overlapHighway = listOfHighways[overlapHighwaysBboxes[k].id];
         //Compare layers between value and overlap highway
         if (highwayToEvaluate.properties['@id'] !== overlapHighway.properties['@id'] && highwayToEvaluate.properties.layer !== overlapHighway.properties.layer && overlapHighway.geometry.coordinates.length > 2) {
           var coordOverlaphighway = overlapHighway.geometry.coordinates;
@@ -140,4 +137,15 @@ function classification(major, minor, path, fromHighway, toHighway) {
   } else if (path[fromHighway] && path[toHighway]) {
     return 'path-path';
   }
+}
+
+function objBbox(obj, id) {
+  var bboxExtent = ['minX', 'minY', 'maxX', 'maxY'];
+  var bbox = {};
+  var valBbox = turf.bbox(obj);
+  for (var d = 0; d < valBbox.length; d++) {
+    bbox[bboxExtent[d]] = valBbox[d];
+  }
+  bbox.id = id || obj.properties['@id'];
+  return bbox;
 }

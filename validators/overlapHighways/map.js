@@ -43,8 +43,7 @@ module.exports = function(tileLayers, tile, writeData, done) {
   for (var i = 0; i < layer.features.length; i++) {
     var val = layer.features[i];
     if (preserveType[val.properties.highway] && (val.geometry.type === 'LineString' || val.geometry.type === 'MultiLineString') && val.properties.layer === undefined) {
-      var bboxHighway = turf.bbox(val);
-      bboxHighway.push(val.properties['@id']);
+      var bboxHighway = objBbox(val);
       bboxes.push(bboxHighway);
       highways[val.properties['@id']] = val;
     }
@@ -57,11 +56,16 @@ module.exports = function(tileLayers, tile, writeData, done) {
     var overlaps = traceTree.search(bbox);
     for (var k = 0; k < overlaps.length; k++) {
       var overlap = overlaps[k];
-      if (bbox[4] !== overlap[4]) {
-        var fromHighway = highways[bbox[4]];
-        var toHighway = highways[overlap[4]];
-        var intersect = turf.intersect(toHighway, fromHighway);
-        if (intersect !== undefined && (intersect.geometry.type === 'LineString' || intersect.geometry.type === 'MultiLineString')) {
+      if (bbox.id !== overlap.id) {
+        var fromHighway = highways[bbox.id];
+        var toHighway = highways[overlap.id];
+        var intersect = turf.lineIntersect(toHighway, fromHighway);
+        if (intersect && intersect.features.length > 0) {
+          if (intersect.features.length > 1) {
+            intersect = turf.combine(intersect);
+          }
+          intersect = intersect.features[0];
+          // if (intersect.geometry.type === 'LineString' || intersect.geometry.type === 'MultiLineString') {
           var coordinates = intersect.geometry.coordinates;
           var type;
           if (majorRoads[fromHighway.properties.highway] && majorRoads[toHighway.properties.highway]) {
@@ -80,8 +84,8 @@ module.exports = function(tileLayers, tile, writeData, done) {
 
           var props = {
             _osmlint: osmlint,
-            _fromWay: bbox[4],
-            _toWay: overlap[4],
+            _fromWay: bbox.id,
+            _toWay: overlap.id,
             _type: type
           };
           if (intersect.geometry.type === 'MultiLineString') {
@@ -91,13 +95,13 @@ module.exports = function(tileLayers, tile, writeData, done) {
               output[coor[coor.length - 1]] = turf.point(coor[coor.length - 1], props);
             }
           } else {
-            output[coordinates[0]] = turf.point(coordinates[0], props);
-            output[coordinates[coordinates.length - 1]] = turf.point(coordinates[coordinates.length - 1], props);
+            output[coordinates] = turf.point(coordinates, props);
           }
           fromHighway.properties._osmlint = osmlint;
           toHighway.properties._osmlint = osmlint;
-          output[bbox[4]] = fromHighway;
-          output[overlap[4]] = toHighway;
+          output[bbox.id] = fromHighway;
+          output[overlap.id] = toHighway;
+          // }
         }
       }
     }
@@ -112,3 +116,14 @@ module.exports = function(tileLayers, tile, writeData, done) {
   done(null, null);
 
 };
+
+function objBbox(obj, id) {
+  var bboxExtent = ['minX', 'minY', 'maxX', 'maxY'];
+  var bbox = {};
+  var valBbox = turf.bbox(obj);
+  for (var d = 0; d < valBbox.length; d++) {
+    bbox[bboxExtent[d]] = valBbox[d];
+  }
+  bbox.id = id || obj.properties['@id'];
+  return bbox;
+}

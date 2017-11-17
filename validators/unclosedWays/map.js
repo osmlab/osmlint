@@ -10,7 +10,9 @@ module.exports = function(tileLayers, tile, writeData, done) {
   var bboxLineString = turf.bboxPolygon(bbox);
   bboxLineString.geometry.type = 'LineString';
   bboxLineString.geometry.coordinates = bboxLineString.geometry.coordinates[0];
-  var buffer = turf.buffer(bboxLineString, 0.0005, 'miles');
+  var buffer = turf.buffer(bboxLineString, 0.0005, {
+    units: 'miles'
+  });
   var result = layer.features.filter(function(val) {
     val.properties._osmlint = 'unclosedways';
     var valueType = (

@@ -38,9 +38,8 @@ module.exports = function(tileLayers, tile, writeData, done) {
       var id = val.properties['@id'] + 'L';
       for (var f = 0; f < flat.length; f++) {
         if (flat[f].geometry.type === 'LineString') {
-          var bboxM = turf.bbox(flat[f]);
           var idFlat = id + 'M' + f;
-          bboxM.push(idFlat);
+          var bboxM = objBbox(flat[f], idFlat);
           highwaysBboxes.push(bboxM);
           flat[f].properties = val.properties;
           listOfHighways[idFlat] = flat[f];
@@ -48,8 +47,7 @@ module.exports = function(tileLayers, tile, writeData, done) {
       }
     }
     if (preserveType[val.properties.highway] && val.geometry.type === 'LineString') {
-      var bboxHighway = turf.bbox(val);
-      bboxHighway.push(val.properties['@id']);
+      var bboxHighway = objBbox(val);
       listOfHighways[val.properties['@id']] = val;
       var coords = val.geometry.coordinates;
       if (coords[0][0] === coords[coords.length - 1][0] && coords[0][1] === coords[coords.length - 1][1]) {
@@ -63,7 +61,7 @@ module.exports = function(tileLayers, tile, writeData, done) {
   var highwaysTree = rbush(highwaysBboxes.length);
   highwaysTree.load(highwaysBboxes);
   for (var k = 0; k < suspRoundaboutBboxes.length; k++) {
-    var roundaboutToEvaluate = listOfHighways[suspRoundaboutBboxes[k][4]];
+    var roundaboutToEvaluate = listOfHighways[suspRoundaboutBboxes[k].id];
     if (isOval(roundaboutToEvaluate)) {
       var coordgObjSerial = {};
       var coordsRoundabout = roundaboutToEvaluate.geometry.coordinates;
@@ -74,7 +72,7 @@ module.exports = function(tileLayers, tile, writeData, done) {
       }
       var overlaps = highwaysTree.search(suspRoundaboutBboxes[k]);
       for (var y = 0; y < overlaps.length; y++) {
-        var overlapHighway = listOfHighways[overlaps[y][4]];
+        var overlapHighway = listOfHighways[overlaps[y].id];
         var coordsOverlapHighway = overlapHighway.geometry.coordinates;
         //if the highway is entering to roundabout
         if (coordgObjSerial[coordsOverlapHighway[coordsOverlapHighway.length - 1].join(',')]) {
@@ -134,7 +132,9 @@ function isOval(highway) {
   var totalDistace = 0;
   var distances = [];
   for (var i = 0; i < points.features.length; i++) {
-    var distance = turf.distance(centroidPt, points.features[i], 'kilometers');
+    var distance = turf.distance(centroidPt, points.features[i], {
+      units: 'kilometers'
+    });
     distances.push(distance);
     totalDistace += distance;
   }
@@ -145,4 +145,15 @@ function isOval(highway) {
     }
   }
   return flag;
+}
+
+function objBbox(obj, id) {
+  var bboxExtent = ['minX', 'minY', 'maxX', 'maxY'];
+  var bbox = {};
+  var valBbox = turf.bbox(obj);
+  for (var d = 0; d < valBbox.length; d++) {
+    bbox[bboxExtent[d]] = valBbox[d];
+  }
+  bbox.id = id || obj.properties['@id'];
+  return bbox;
 }

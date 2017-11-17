@@ -42,7 +42,9 @@ module.exports = function(tileLayers, tile, writeData, done) {
   if (osmFC.length > 0) {
     for (var i = 0; i < osmFC.length; i++) {
       var osmWay = osmFC[i];
-      var buffer = turf.buffer(osmWay, 0.004, 'miles');
+      var buffer = turf.buffer(osmWay, 0.004, {
+        units: 'miles'
+      });
       for (var j = 0; j < tigerFC.length; j++) {
         var tigerWay = tigerFC[j];
         var tigerPoints = turf.explode(tigerWay);
