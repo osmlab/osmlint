@@ -34,10 +34,7 @@ module.exports = function(tileLayers, tile, writeData, done) {
   for (var z = 0; z < layer.features.length; z++) {
     var val = layer.features[z];
     if (val.geometry.type === 'LineString' && preserveType[val.properties.highway]) {
-      var bboxA = turf.bbox(val);
-      bboxA.push({
-        id: val.properties['@id']
-      });
+      var bboxA = objBbox(val);
       bboxes.push(bboxA);
       highways[val.properties['@id']] = val;
     }
@@ -47,7 +44,7 @@ module.exports = function(tileLayers, tile, writeData, done) {
   highwaysTree.load(bboxes);
   for (var i = 0; i < bboxes.length; i++) {
     var valueBbox = bboxes[i];
-    var valueHighway = highways[valueBbox[4].id];
+    var valueHighway = highways[valueBbox.id];
     valueHighway.properties._osmlint = osmlint;
     if (valueHighway.properties.highway === 'motorway_link') {
       var overlaps = highwaysTree.search(valueBbox);
@@ -57,11 +54,12 @@ module.exports = function(tileLayers, tile, writeData, done) {
       for (var k = 0; k < overlaps.length; k++) {
         var overlap = overlaps[k];
         var isIntersect = false;
-        var overlapHighway = highways[overlap[4].id];
+        var overlapHighway = highways[overlap.id];
         if (valueHighway.properties['@id'] !== overlapHighway.properties['@id'] && overlapHighway.properties.highway !== 'motorway_link') {
           var overlapHighwayCoords = overlapHighway.geometry.coordinates;
-          var intersection = turf.intersect(valueHighway, overlapHighway);
-          if (intersection) {
+          var intersection = turf.lineIntersect(valueHighway, overlapHighway);
+          if (intersection && intersection.features.length > 0) {
+            intersection = intersection.features[0];
             var interCoordsF = flatten(intersection.geometry.coordinates);
             if (_.intersection(valueHighwayCoords[0], interCoordsF).length === 2) {
               isEntrance = true;
@@ -111,4 +109,15 @@ function flatten(coords) {
     }
   }
   return array;
+}
+
+function objBbox(obj, id) {
+  var bboxExtent = ['minX', 'minY', 'maxX', 'maxY'];
+  var bbox = {};
+  var valBbox = turf.bbox(obj);
+  for (var d = 0; d < valBbox.length; d++) {
+    bbox[bboxExtent[d]] = valBbox[d];
+  }
+  bbox.id = id || obj.properties['@id'];
+  return bbox;
 }

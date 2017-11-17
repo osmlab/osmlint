@@ -43,10 +43,7 @@ module.exports = function(tileLayers, tile, writeData, done) {
   for (var z = 0; z < layer.features.length; z++) {
     var val = layer.features[z];
     if (val.geometry.type === 'LineString' && preserveType[val.properties.highway]) {
-      var bboxA = turf.bbox(val);
-      bboxA.push({
-        id: val.properties['@id']
-      });
+      var bboxA = objBbox(val);
       bboxes.push(bboxA);
       highways[val.properties['@id']] = val;
     }
@@ -56,13 +53,13 @@ module.exports = function(tileLayers, tile, writeData, done) {
   highwaysTree.load(bboxes);
   for (var i = 0; i < bboxes.length; i++) {
     var valueBbox = bboxes[i];
-    var valueHighway = highways[valueBbox[4].id];
+    var valueHighway = highways[valueBbox.id];
     valueHighway.properties._osmlint = osmlint;
     if (valueHighway.properties.highway === 'motorway_link' && (!valueHighway.properties.destination && !valueHighway.properties['destination:ref'])) {
       var overlaps = highwaysTree.search(valueBbox);
       for (var k = 0; k < overlaps.length; k++) {
         var overlap = overlaps[k];
-        var overlapHighway = highways[overlap[4].id];
+        var overlapHighway = highways[overlap.id];
         if (valueHighway.properties['@id'] !== overlapHighway.properties['@id']) {
           var firstCoord = valueHighway.geometry.coordinates[0];
           //entrance
@@ -85,3 +82,14 @@ module.exports = function(tileLayers, tile, writeData, done) {
 
   done(null, null);
 };
+
+function objBbox(obj, id) {
+  var bboxExtent = ['minX', 'minY', 'maxX', 'maxY'];
+  var bbox = {};
+  var valBbox = turf.bbox(obj);
+  for (var d = 0; d < valBbox.length; d++) {
+    bbox[bboxExtent[d]] = valBbox[d];
+  }
+  bbox.id = id || obj.properties['@id'];
+  return bbox;
+}
