@@ -70,7 +70,6 @@ module.exports = function(tileLayers, tile, writeData, done) {
     var highwayToEvaluate = listOfHighways[highwaysBboxes[j].id];
     //Check only highways which has layer
     var overlapHighwaysBboxes = highwaysTree.search(highwaysBboxes[j]);
-    console.log(overlapHighwaysBboxes + '\n');
     for (var k = 0; k < overlapHighwaysBboxes.length; k++) {
       var overlapHighway = listOfHighways[overlapHighwaysBboxes[k].id];
       if (highwayToEvaluate.properties['@id'] !== overlapHighway.properties['@id']) {
@@ -144,15 +143,23 @@ function isContinuousRoads(bridge, road2) {
 
 
 function isIntersectingInNode(road1, road2) {
-  var intersectPoint = turf.intersect(road1, road2);
-  if (intersectPoint && (intersectPoint.geometry.type === 'Point' || intersectPoint.geometry.type === 'MultiPoint')) {
-    var intersectCoords = _.flatten(intersectPoint.geometry.coordinates);
-    var roadsCoords = _.flatten([road1.geometry.coordinates, road2.geometry.coordinates]);
-    if (_.intersection(intersectCoords, roadsCoords).length === 0) {
-      return false;
-    } else {
-      return intersectPoint;
+  var intersectPoint = turf.lineIntersect(road1, road2);
+  if (intersectPoint.features.length > 0) {
+    if (intersectPoint.features.length > 1) {
+      intersectPoint = turf.combine(intersectPoint);
     }
+    intersectPoint = intersectPoint.features[0];
+    if (intersectPoint && (intersectPoint.geometry.type === 'Point' || intersectPoint.geometry.type === 'MultiPoint')) {
+      var intersectCoords = _.flatten(intersectPoint.geometry.coordinates);
+      var roadsCoords = _.flatten([road1.geometry.coordinates, road2.geometry.coordinates]);
+      if (_.intersection(intersectCoords, roadsCoords).length === 0) {
+        return false;
+      } else {
+        return intersectPoint;
+      }
+    }
+  } else {
+    return false;
   }
 }
 

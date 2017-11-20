@@ -2,7 +2,7 @@
 var turf = require('@turf/turf');
 var _ = require('underscore');
 var rbush = require('rbush');
-var geojsonCoords = require('geojson-coords');
+var geojsonCoords = require('@mapbox/geojson-coords');
 var flatten = require('geojson-flatten');
 
 module.exports = function(tileLayers, tile, writeData, done) {

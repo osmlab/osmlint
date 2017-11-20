@@ -86,3 +86,4 @@ function objBbox(obj) {
   bbox.id = obj.properties['@id'];
   return bbox;
 }
+

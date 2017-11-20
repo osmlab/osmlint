@@ -4,6 +4,9 @@
   "scripts": {
     "test": "eslint src test validators/*/*.js && NODE_ENV=test tape test/*.test.js | tap-spec"
   },
+  "engines": {
+    "node": "~6.11.3"
+  },
   "bin": {
     "osmlint": "cli.js"
   },
@@ -12,8 +15,11 @@
     "url": "https://github.com/osmlab/osmlint.git"
   },
   "dependencies": {
+    "@mapbox/geojson-coords": "0.0.0",
     "@mapbox/geojson-normalize": "0.0.1",
+    "@mapbox/mbtiles": "^0.9.0",
     "@mapbox/point-geometry": "^0.1.0",
+    "@mapbox/sphericalmercator": "^1.0.5",
     "@mapbox/tile-cover": "^3.0.2",
     "@mapbox/tile-reduce": "^3.2.0",
     "@mapbox/tilebelt": "^1.0.1",
@@ -21,9 +27,7 @@
     "@mapbox/vector-tile": "^1.3.0",
     "@turf/turf": "^5.0.4",
     "fast-levenshtein": "2.0.6",
-    "geojson-coords": "0.0.0",
     "geojson-flatten": "^0.2.1",
-    "lineclip": "^1.1.5",
     "linematch": "^1.0.3",
     "mapbox-data-team": "^1.4.11",
     "minimist": "^1.1.1",
