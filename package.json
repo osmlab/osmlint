@@ -28,6 +28,7 @@
     "@turf/turf": "^5.0.4",
     "fast-levenshtein": "2.0.6",
     "geojson-flatten": "^0.2.1",
+    "lineclip": "^1.1.5",
     "linematch": "^1.0.3",
     "mapbox-data-team": "^1.4.11",
     "minimist": "^1.1.1",

@@ -1,0 +1,8 @@
+
+machine:
+  node:
+    version: 4.4.6
+dependencies:
+  override:
+    - npm install
+    - npm install sqlite3 --build-from-source
