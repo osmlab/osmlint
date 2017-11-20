@@ -1,5 +1,5 @@
 'use strict';
-var tileReduce = require('tile-reduce');
+var tileReduce = require('@mapbox/tile-reduce');
 var path = require('path');
 
 module.exports = function(opts, mbtilesPath, callback) {
