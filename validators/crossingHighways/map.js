@@ -2,44 +2,16 @@
 var turf = require('@turf/turf');
 var _ = require('underscore');
 var rbush = require('rbush');
+var preserveRoadType = require('../../helper/preserveRoadType');
+var formatRbush = require('../../helper/formatRbush');
+var roadAreIntersecting = require('../../helper/roadAreIntersecting');
 
 module.exports = function(tileLayers, tile, writeData, done) {
   var layer = tileLayers.osm.osm;
   var listOfHighways = {};
   var highwaysBboxes = [];
-  var majorRoads = {
-    motorway: true,
-    trunk: true,
-    primary: true,
-    secondary: true,
-    tertiary: true,
-    motorway_link: true,
-    trunk_link: true,
-    primary_link: true,
-    secondary_link: true,
-    tertiary_link: true
-  };
-  var minorRoads = {
-    unclassified: true,
-    residential: true,
-    living_street: true,
-    service: true,
-    road: true
-  };
-  var pathRoads = {
-    pedestrian: true,
-    track: true,
-    footway: true,
-    path: true,
-    cycleway: true,
-    steps: true
-  };
-  var preserveType = {};
-  preserveType = _.extend(preserveType, majorRoads);
-  preserveType = _.extend(preserveType, minorRoads);
-  //preserveType = _.extend(preserveType, pathRoads);
+  var preserveType = preserveRoadType.types(2);
   var osmlint = 'crossinghighways';
-
   for (var i = 0; i < layer.features.length; i++) {
     var val = layer.features[i];
     if (
@@ -48,7 +20,7 @@ module.exports = function(tileLayers, tile, writeData, done) {
         val.geometry.type === 'MultiLineString') &&
       val.properties.layer === undefined
     ) {
-      highwaysBboxes.push(objBbox(val));
+      highwaysBboxes.push(formatRbush.objBbox(val));
       listOfHighways[val.properties['@id']] = val;
     }
   }
@@ -65,7 +37,7 @@ module.exports = function(tileLayers, tile, writeData, done) {
       var overlapHighway = listOfHighways[overlapBbox.id];
       if (
         bbox.id !== overlapBbox.id &&
-        isIntersecting(highwayToEvaluate, overlapHighway) &&
+        roadAreIntersecting(highwayToEvaluate, overlapHighway) &&
         !checkCoordinates(highwayToEvaluate, overlapHighway)
       ) {
         var intersectPoint = turf.lineIntersect(
@@ -99,10 +71,7 @@ module.exports = function(tileLayers, tile, writeData, done) {
                 _fromWay: highwayToEvaluate.properties['@id'],
                 _toWay: overlapHighway.properties['@id'],
                 _osmlint: osmlint,
-                _type: classification(
-                  majorRoads,
-                  minorRoads,
-                  pathRoads,
+                _type: preserveRoadType.fromToTypes(
                   highwayToEvaluate.properties.highway,
                   overlapHighway.properties.highway
                 )
@@ -151,60 +120,4 @@ function checkCoordinates(high1, high2) {
     return true;
   }
   return false;
-}
-
-function isIntersecting(high1, high2) {
-  var coord1 = high1.geometry.coordinates;
-  var coord2 = high2.geometry.coordinates;
-  var x1 = coord1[0][0];
-  var y1 = coord1[0][1];
-  var x2 = coord1[coord1.length - 1][0];
-  var y2 = coord1[coord1.length - 1][1];
-  var x3 = coord2[0][0];
-  var y3 = coord2[0][1];
-  var x4 = coord2[coord2.length - 1][0];
-  var y4 = coord2[coord2.length - 1][1];
-  var adx = x2 - x1;
-  var ady = y2 - y1;
-  var bdx = x4 - x3;
-  var bdy = y4 - y3;
-  var s = (-ady * (x1 - x3) + adx * (y1 - y3)) / (-bdx * ady + adx * bdy);
-  var t = (+bdx * (y1 - y3) - bdy * (x1 - x3)) / (-bdx * ady + adx * bdy);
-  return s >= 0 && s <= 1 && t >= 0 && t <= 1;
-}
-
-function classification(major, minor, path, fromHighway, toHighway) {
-  if (major[fromHighway] && major[toHighway]) {
-    return 'major-major';
-  } else if (
-    (major[fromHighway] && minor[toHighway]) ||
-    (minor[fromHighway] && major[toHighway])
-  ) {
-    return 'major-minor';
-  } else if (
-    (major[fromHighway] && path[toHighway]) ||
-    (path[fromHighway] && major[toHighway])
-  ) {
-    return 'major-path';
-  } else if (minor[fromHighway] && minor[toHighway]) {
-    return 'minor-minor';
-  } else if (
-    (minor[fromHighway] && path[toHighway]) ||
-    (path[fromHighway] && minor[toHighway])
-  ) {
-    return 'minor-path';
-  } else if (path[fromHighway] && path[toHighway]) {
-    return 'path-path';
-  }
-}
-
-function objBbox(obj, id) {
-  var bboxExtent = ['minX', 'minY', 'maxX', 'maxY'];
-  var bbox = {};
-  var valBbox = turf.bbox(obj);
-  for (var d = 0; d < valBbox.length; d++) {
-    bbox[id || bboxExtent[d]] = valBbox[d];
-  }
-  bbox.id = obj.properties['@id'];
-  return bbox;
 }

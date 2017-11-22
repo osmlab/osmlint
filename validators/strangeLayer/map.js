@@ -1,6 +1,5 @@
 'use strict';
 var turf = require('@turf/turf');
-var _ = require('underscore');
 
 module.exports = function(tileLayers, tile, writeData, done) {
   var layer = tileLayers.osm.osm;
@@ -31,10 +30,6 @@ module.exports = function(tileLayers, tile, writeData, done) {
     cycleway: true,
     steps: true
   };
-  var preserveType = {};
-  preserveType = _.extend(preserveType, majorRoads);
-  preserveType = _.extend(preserveType, minorRoads);
-  preserveType = _.extend(preserveType, pathRoads);
   var osmlint = 'strangelayer';
   var result = [];
   for (var i = 0; i < layer.features.length; i++) {

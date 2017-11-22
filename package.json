@@ -2,9 +2,9 @@
   "name": "osmlint",
   "version": "0.0.5",
   "scripts": {
-    "lint": "eslint validators/**/*.js test",
+    "lint": "eslint validators test helper",
     "test": "npm run lint && NODE_ENV=test tape test/*.test.js | tap-spec",
-    "format": "prettier --single-quote --write \"{validators,test}/**/*.js\""
+    "format": "prettier --single-quote --write \"{validators,test,helper}/**/*.js\""
   },
   "engines": {
     "node": "~6.11.3"
@@ -40,8 +40,7 @@
     "underscore": "^1.8.3"
   },
   "devDependencies": {
-    "eslint": "^1.10.2",
-    "eslint-config-mourner": "^1.0.1",
+    "eslint": "^4.11.0",
     "geojson-validation": "^0.1.6",
     "log-interceptor": "^1.0.0",
     "prettier": "^1.8.2",
