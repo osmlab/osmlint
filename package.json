@@ -2,7 +2,9 @@
   "name": "osmlint",
   "version": "0.0.4",
   "scripts": {
-    "test": "eslint src test validators/*/*.js && NODE_ENV=test tape test/*.test.js | tap-spec"
+    "lint": "eslint validators/**/*.js test",
+    "test": "npm run lint && NODE_ENV=test tape test/*.test.js | tap-spec",
+    "format": "prettier --single-quote --trailing-comma es5 --write \"{validators,test}/**/*.js\""
   },
   "engines": {
     "node": "~6.11.3"

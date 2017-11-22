@@ -5,4 +5,3 @@ machine:
 dependencies:
   override:
     - npm install
-    - npm install sqlite3 --build-from-source
