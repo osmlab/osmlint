@@ -12,20 +12,20 @@ module.exports = function(tileLayers, tile, writeData, done) {
   var highwaysBboxes = [];
   var suspRoundaboutBboxes = [];
   var majorRoads = {
-    'motorway': true,
-    'trunk': true,
-    'primary': true,
-    'secondary': true,
-    'tertiary': true,
-    'motorway_link': true,
-    'trunk_link': true,
-    'primary_link': true,
-    'secondary_link': true,
-    'tertiary_link': true
+    motorway: true,
+    trunk: true,
+    primary: true,
+    secondary: true,
+    tertiary: true,
+    motorway_link: true,
+    trunk_link: true,
+    primary_link: true,
+    secondary_link: true,
+    tertiary_link: true
   };
   var minorRoads = {
-    'unclassified': true,
-    'residential': true
+    unclassified: true,
+    residential: true
   };
 
   var preserveType = {};
@@ -33,7 +33,10 @@ module.exports = function(tileLayers, tile, writeData, done) {
   preserveType = _.extend(preserveType, minorRoads);
   for (var i = 0; i < layer.features.length; i++) {
     var val = layer.features[i];
-    if (val.geometry.type === 'MultiLineString' && preserveType[val.properties.highway]) {
+    if (
+      val.geometry.type === 'MultiLineString' &&
+      preserveType[val.properties.highway]
+    ) {
       var flat = flatten(val);
       var id = val.properties['@id'] + 'L';
       for (var f = 0; f < flat.length; f++) {
@@ -46,11 +49,17 @@ module.exports = function(tileLayers, tile, writeData, done) {
         }
       }
     }
-    if (preserveType[val.properties.highway] && val.geometry.type === 'LineString') {
+    if (
+      preserveType[val.properties.highway] &&
+      val.geometry.type === 'LineString'
+    ) {
       var bboxHighway = objBbox(val);
       listOfHighways[val.properties['@id']] = val;
       var coords = val.geometry.coordinates;
-      if (coords[0][0] === coords[coords.length - 1][0] && coords[0][1] === coords[coords.length - 1][1]) {
+      if (
+        coords[0][0] === coords[coords.length - 1][0] &&
+        coords[0][1] === coords[coords.length - 1][1]
+      ) {
         suspRoundaboutBboxes.push(bboxHighway);
       } else {
         highwaysBboxes.push(bboxHighway);
@@ -75,13 +84,27 @@ module.exports = function(tileLayers, tile, writeData, done) {
         var overlapHighway = listOfHighways[overlaps[y].id];
         var coordsOverlapHighway = overlapHighway.geometry.coordinates;
         //if the highway is entering to roundabout
-        if (coordgObjSerial[coordsOverlapHighway[coordsOverlapHighway.length - 1].join(',')]) {
-          if (coordgObjSerial[coordsOverlapHighway[coordsOverlapHighway.length - 1].join(',')].type) {
-            coordgObjSerial[coordsOverlapHighway[coordsOverlapHighway.length - 1].join(',') + y] = {
+        if (
+          coordgObjSerial[
+            coordsOverlapHighway[coordsOverlapHighway.length - 1].join(',')
+          ]
+        ) {
+          if (
+            coordgObjSerial[
+              coordsOverlapHighway[coordsOverlapHighway.length - 1].join(',')
+            ].type
+          ) {
+            coordgObjSerial[
+              coordsOverlapHighway[coordsOverlapHighway.length - 1].join(',') +
+                y
+            ] = {
               type: 'entry'
             };
           }
-          coordgObjSerial[coordsOverlapHighway[coordsOverlapHighway.length - 1].join(',')].type = 'entry';
+          coordgObjSerial[
+            coordsOverlapHighway[coordsOverlapHighway.length - 1].join(',')
+          ].type =
+            'entry';
         }
         //if the highway is getting out from roundabout
         if (coordgObjSerial[coordsOverlapHighway[0].join(',')]) {
@@ -104,7 +127,12 @@ module.exports = function(tileLayers, tile, writeData, done) {
           ++entradas;
         }
       }
-      if ((salidas > 1 && entradas > 1 && !roundaboutToEvaluate.properties.junction && !roundaboutToEvaluate.properties.oneway)) {
+      if (
+        salidas > 1 &&
+        entradas > 1 &&
+        !roundaboutToEvaluate.properties.junction &&
+        !roundaboutToEvaluate.properties.oneway
+      ) {
         roundaboutToEvaluate.properties._osmlint = osmlint;
         if (majorRoads[roundaboutToEvaluate.properties.highway]) {
           roundaboutToEvaluate.properties._type = 'major';

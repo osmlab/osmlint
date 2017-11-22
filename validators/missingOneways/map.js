@@ -9,8 +9,8 @@ module.exports = function(tileLayers, tile, writeData, done) {
   var bboxes = [];
   var highways = {};
   var majorRoads = {
-    'motorway': true,
-    'motorway_link': true
+    motorway: true,
+    motorway_link: true
   };
 
   var preserveType = majorRoads;
@@ -21,11 +21,17 @@ module.exports = function(tileLayers, tile, writeData, done) {
     var val = layer.features[i];
     var id = val.properties['@id'];
     //Value LineString highways
-    if (val.geometry.type === 'Polygon' && preserveType[val.properties.highway]) {
+    if (
+      val.geometry.type === 'Polygon' &&
+      preserveType[val.properties.highway]
+    ) {
       val.geometry.coordinates = val.geometry.coordinates[0];
       val.geometry.type = 'LineString';
     }
-    if (val.geometry.type === 'LineString' && preserveType[val.properties.highway]) {
+    if (
+      val.geometry.type === 'LineString' &&
+      preserveType[val.properties.highway]
+    ) {
       var coordsWayL = val.geometry.coordinates;
       var idWayL = id + 'L';
       for (var j = 0; j < coordsWayL.length; j++) {
@@ -33,7 +39,10 @@ module.exports = function(tileLayers, tile, writeData, done) {
         bboxes.push(itemL);
       }
       highways[idWayL] = val;
-    } else if (val.geometry.type === 'MultiLineString' && preserveType[val.properties.highway]) {
+    } else if (
+      val.geometry.type === 'MultiLineString' &&
+      preserveType[val.properties.highway]
+    ) {
       var arrayWays = flatten(val);
       for (var f = 0; f < arrayWays.length; f++) {
         if (arrayWays[f].geometry.type === 'LineString') {
@@ -55,28 +64,53 @@ module.exports = function(tileLayers, tile, writeData, done) {
   for (var key in highways) {
     var valueHighway = highways[key];
     var firstCoor = valueHighway.geometry.coordinates[0];
-    var endCoor = valueHighway.geometry.coordinates[valueHighway.geometry.coordinates.length - 1];
+    var endCoor =
+      valueHighway.geometry.coordinates[
+        valueHighway.geometry.coordinates.length - 1
+      ];
     //check if they evaluate road is motorway_link and has oneway, the goal is obtaining this roads
-    if (!valueHighway.properties.oneway && valueHighway.properties.highway === 'motorway_link') {
+    if (
+      !valueHighway.properties.oneway &&
+      valueHighway.properties.highway === 'motorway_link'
+    ) {
       valueHighway.properties._osmlint = osmlint;
-      valueHighway.properties._type = classification(majorRoads, {}, {}, valueHighway.properties.highway);
+      valueHighway.properties._type = classification(
+        majorRoads,
+        {},
+        {},
+        valueHighway.properties.highway
+      );
       // evaluate the first node of road
-      var overlapsFirstcoor = highwaysTree.search(objBbox(turf.point(firstCoor), 'id'));
+      var overlapsFirstcoor = highwaysTree.search(
+        objBbox(turf.point(firstCoor), 'id')
+      );
 
       if (overlapsFirstcoor.length > 1) {
         for (var u = 0; u < overlapsFirstcoor.length; u++) {
           var connectRoadFrist = highways[overlapsFirstcoor[u].id];
-          if (valueHighway.properties['@id'] !== connectRoadFrist.properties['@id'] && connectRoadFrist.properties.oneway && connectRoadFrist.properties.highway === 'motorway') {
+          if (
+            valueHighway.properties['@id'] !==
+              connectRoadFrist.properties['@id'] &&
+            connectRoadFrist.properties.oneway &&
+            connectRoadFrist.properties.highway === 'motorway'
+          ) {
             features[valueHighway.properties['@id']] = valueHighway;
           }
         }
       }
       // evaluate the end node of road
-      var overlapsEndcoor = highwaysTree.search(objBbox(turf.point(endCoor), 'id'));
+      var overlapsEndcoor = highwaysTree.search(
+        objBbox(turf.point(endCoor), 'id')
+      );
       if (overlapsEndcoor.length > 1) {
         for (var p = 0; p < overlapsEndcoor.length; p++) {
           var connectRoadEnd = highways[overlapsEndcoor[p].id];
-          if (valueHighway.properties['@id'] !== connectRoadEnd.properties['@id'] && connectRoadEnd.properties.oneway && connectRoadEnd.properties.highway === 'motorway') {
+          if (
+            valueHighway.properties['@id'] !==
+              connectRoadEnd.properties['@id'] &&
+            connectRoadEnd.properties.oneway &&
+            connectRoadEnd.properties.highway === 'motorway'
+          ) {
             if (features[valueHighway.properties['@id']]) {
               delete features[valueHighway.properties['@id']];
             } else {
@@ -95,7 +129,6 @@ module.exports = function(tileLayers, tile, writeData, done) {
   }
 
   done(null, null);
-
 };
 
 function classification(major, minor, path, highway) {

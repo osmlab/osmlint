@@ -16,8 +16,16 @@ test('mixedLayer', function(t) {
   processors.mixedLayer(mixedLayerOpts, mixedLayerTiles, function() {
     var logs = logInterceptor.end();
     var geoJSON = JSON.parse(logs);
-    t.equal(geoJSON.features[0].properties._osmlint, 'mixedlayer', 'Should be mixedlayer');
-    t.equal(geoJSON.features[0].geometry.type, 'LineString', 'Should be  LineString');
+    t.equal(
+      geoJSON.features[0].properties._osmlint,
+      'mixedlayer',
+      'Should be mixedlayer'
+    );
+    t.equal(
+      geoJSON.features[0].geometry.type,
+      'LineString',
+      'Should be  LineString'
+    );
     t.end();
   });
 });

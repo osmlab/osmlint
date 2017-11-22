@@ -8,31 +8,31 @@ module.exports = function(tileLayers, tile, writeData, done) {
   var highways = {};
   var bboxes = [];
   var majorRoads = {
-    'motorway': true,
-    'trunk': true,
-    'primary': true,
-    'secondary': true,
-    'tertiary': true,
-    'motorway_link': true,
-    'trunk_link': true,
-    'primary_link': true,
-    'secondary_link': true,
-    'tertiary_link': true
+    motorway: true,
+    trunk: true,
+    primary: true,
+    secondary: true,
+    tertiary: true,
+    motorway_link: true,
+    trunk_link: true,
+    primary_link: true,
+    secondary_link: true,
+    tertiary_link: true
   };
   var minorRoads = {
-    'unclassified': true,
-    'residential': true,
-    'living_street': true,
+    unclassified: true,
+    residential: true,
+    living_street: true,
     // 'service': true,
-    'road': true
+    road: true
   };
   var pathRoads = {
-    'pedestrian': true,
-    'track': true,
-    'footway': true,
-    'path': true,
-    'cycleway': true,
-    'steps': true
+    pedestrian: true,
+    track: true,
+    footway: true,
+    path: true,
+    cycleway: true,
+    steps: true
   };
   var preserveType = {};
   preserveType = _.extend(preserveType, majorRoads);
@@ -42,7 +42,12 @@ module.exports = function(tileLayers, tile, writeData, done) {
 
   for (var i = 0; i < layer.features.length; i++) {
     var val = layer.features[i];
-    if (preserveType[val.properties.highway] && (val.geometry.type === 'LineString' || val.geometry.type === 'MultiLineString') && val.properties.layer === undefined) {
+    if (
+      preserveType[val.properties.highway] &&
+      (val.geometry.type === 'LineString' ||
+        val.geometry.type === 'MultiLineString') &&
+      val.properties.layer === undefined
+    ) {
       var bboxHighway = objBbox(val);
       bboxes.push(bboxHighway);
       highways[val.properties['@id']] = val;
@@ -68,17 +73,41 @@ module.exports = function(tileLayers, tile, writeData, done) {
           // if (intersect.geometry.type === 'LineString' || intersect.geometry.type === 'MultiLineString') {
           var coordinates = intersect.geometry.coordinates;
           var type;
-          if (majorRoads[fromHighway.properties.highway] && majorRoads[toHighway.properties.highway]) {
+          if (
+            majorRoads[fromHighway.properties.highway] &&
+            majorRoads[toHighway.properties.highway]
+          ) {
             type = 'major-major';
-          } else if ((majorRoads[fromHighway.properties.highway] && minorRoads[toHighway.properties.highway]) || (minorRoads[fromHighway.properties.highway] && majorRoads[toHighway.properties.highway])) {
+          } else if (
+            (majorRoads[fromHighway.properties.highway] &&
+              minorRoads[toHighway.properties.highway]) ||
+            (minorRoads[fromHighway.properties.highway] &&
+              majorRoads[toHighway.properties.highway])
+          ) {
             type = 'major-minor';
-          } else if ((majorRoads[fromHighway.properties.highway] && pathRoads[toHighway.properties.highway]) || (pathRoads[fromHighway.properties.highway] && majorRoads[toHighway.properties.highway])) {
+          } else if (
+            (majorRoads[fromHighway.properties.highway] &&
+              pathRoads[toHighway.properties.highway]) ||
+            (pathRoads[fromHighway.properties.highway] &&
+              majorRoads[toHighway.properties.highway])
+          ) {
             type = 'major-path';
-          } else if (minorRoads[fromHighway.properties.highway] && minorRoads[toHighway.properties.highway]) {
+          } else if (
+            minorRoads[fromHighway.properties.highway] &&
+            minorRoads[toHighway.properties.highway]
+          ) {
             type = 'minor-minor';
-          } else if ((minorRoads[fromHighway.properties.highway] && pathRoads[toHighway.properties.highway]) || (pathRoads[fromHighway.properties.highway] && minorRoads[toHighway.properties.highway])) {
+          } else if (
+            (minorRoads[fromHighway.properties.highway] &&
+              pathRoads[toHighway.properties.highway]) ||
+            (pathRoads[fromHighway.properties.highway] &&
+              minorRoads[toHighway.properties.highway])
+          ) {
             type = 'minor-path';
-          } else if (pathRoads[fromHighway.properties.highway] && pathRoads[toHighway.properties.highway]) {
+          } else if (
+            pathRoads[fromHighway.properties.highway] &&
+            pathRoads[toHighway.properties.highway]
+          ) {
             type = 'path-path';
           }
 
@@ -92,7 +121,10 @@ module.exports = function(tileLayers, tile, writeData, done) {
             for (var l = 0; l < coordinates.length; l++) {
               var coor = coordinates[l];
               output[coor[0]] = turf.point(coor[0], props);
-              output[coor[coor.length - 1]] = turf.point(coor[coor.length - 1], props);
+              output[coor[coor.length - 1]] = turf.point(
+                coor[coor.length - 1],
+                props
+              );
             }
           } else {
             output[coordinates] = turf.point(coordinates, props);
@@ -114,7 +146,6 @@ module.exports = function(tileLayers, tile, writeData, done) {
   }
 
   done(null, null);
-
 };
 
 function objBbox(obj, id) {

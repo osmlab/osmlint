@@ -11,43 +11,43 @@ module.exports = function(tileLayers, tile, writeData, done) {
   var highwaybboxes = [];
   var waterwaybboxes = [];
   var majorRoads = {
-    'motorway': true,
-    'trunk': true,
-    'primary': true,
-    'secondary': true,
-    'tertiary': true,
-    'motorway_link': true,
-    'trunk_link': true,
-    'primary_link': true,
-    'secondary_link': true,
-    'tertiary_link': true
+    motorway: true,
+    trunk: true,
+    primary: true,
+    secondary: true,
+    tertiary: true,
+    motorway_link: true,
+    trunk_link: true,
+    primary_link: true,
+    secondary_link: true,
+    tertiary_link: true
   };
   var minorRoads = {
-    'unclassified': true,
-    'residential': true,
-    'living_street': true,
-    'service': true,
-    'road': true
+    unclassified: true,
+    residential: true,
+    living_street: true,
+    service: true,
+    road: true
   };
   var pathRoads = {
-    'pedestrian': true,
-    'track': true,
-    'footway': true,
-    'path': true,
-    'cycleway': true,
-    'steps': true
+    pedestrian: true,
+    track: true,
+    footway: true,
+    path: true,
+    cycleway: true,
+    steps: true
   };
   var preserveType = {};
   preserveType = _.extend(preserveType, majorRoads);
   preserveType = _.extend(preserveType, minorRoads);
   // preserveType = _.extend(preserveType, pathRoads);
   var dontPreserveWaterways = {
-    'dam': true,
-    'weir': true,
-    'waterfall': true,
-    'stream': true,
-    'ditch': true,
-    'derelict_canal': true
+    dam: true,
+    weir: true,
+    waterfall: true,
+    stream: true,
+    ditch: true,
+    derelict_canal: true
   };
   var fords = {};
   var osmlint = 'crossingwaterwayshighways';
@@ -55,7 +55,12 @@ module.exports = function(tileLayers, tile, writeData, done) {
     var val = layer.features[i];
     var id = val.properties['@id'];
     // var bbox;
-    if (preserveType[val.properties.highway] && val.properties.bridge === undefined && val.properties.tunnel === undefined && val.properties.ford === undefined) {
+    if (
+      preserveType[val.properties.highway] &&
+      val.properties.bridge === undefined &&
+      val.properties.tunnel === undefined &&
+      val.properties.ford === undefined
+    ) {
       if (val.geometry.type === 'LineString') {
         var idWayL = id + 'L';
         // bbox = turf.bbox(val);
@@ -75,7 +80,13 @@ module.exports = function(tileLayers, tile, writeData, done) {
           }
         }
       }
-    } else if (((val.properties.waterway && !dontPreserveWaterways[val.properties.waterway]) || val.properties.natural === 'water') && (val.geometry.type === 'LineString' || val.geometry.type === 'Polygon') && val.properties.tunnel === undefined) {
+    } else if (
+      ((val.properties.waterway &&
+        !dontPreserveWaterways[val.properties.waterway]) ||
+        val.properties.natural === 'water') &&
+      (val.geometry.type === 'LineString' || val.geometry.type === 'Polygon') &&
+      val.properties.tunnel === undefined
+    ) {
       if (val.geometry.type === 'Polygon') {
         val.geometry.type = 'LineString';
         val.geometry.coordinates = val.geometry.coordinates[0];
@@ -99,7 +110,10 @@ module.exports = function(tileLayers, tile, writeData, done) {
     var overlaphighwaysBbox = highwaysTree.search(waterBbox);
     for (var k = 0; k < overlaphighwaysBbox.length; k++) {
       var overlapHigBbox = overlaphighwaysBbox[k];
-      var intersect = turf.lineIntersect(highways[overlapHigBbox.id], waterways[waterBbox.id]);
+      var intersect = turf.lineIntersect(
+        highways[overlapHigBbox.id],
+        waterways[waterBbox.id]
+      );
       // var intersectPoint = turf.lineIntersect(overlapObj, objToEvaluate);
       if (intersect && intersect.features.length > 0) {
         if (intersect.features.length > 1) {
@@ -110,7 +124,12 @@ module.exports = function(tileLayers, tile, writeData, done) {
           _fromWay: highways[overlapHigBbox.id].properties['@id'],
           _toWay: waterways[waterBbox.id].properties['@id'],
           _osmlint: osmlint,
-          _type: classification(majorRoads, minorRoads, pathRoads, highways[overlapHigBbox.id].properties.highway)
+          _type: classification(
+            majorRoads,
+            minorRoads,
+            pathRoads,
+            highways[overlapHigBbox.id].properties.highway
+          )
         };
         intersect.properties = props;
         highways[overlapHigBbox.id].properties._osmlint = osmlint;
@@ -126,12 +145,13 @@ module.exports = function(tileLayers, tile, writeData, done) {
               output[waterBbox.id + overlapHigBbox.id + l] = point;
             }
           }
-        } else if (intersect.geometry.type === 'Point' && !fords[intersect.geometry.coordinates.join(',')]) {
+        } else if (
+          intersect.geometry.type === 'Point' &&
+          !fords[intersect.geometry.coordinates.join(',')]
+        ) {
           output[waterBbox.id + overlapHigBbox.id] = intersect;
         }
-
       }
-
     }
   }
 

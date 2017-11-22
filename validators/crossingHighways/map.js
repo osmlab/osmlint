@@ -8,31 +8,31 @@ module.exports = function(tileLayers, tile, writeData, done) {
   var listOfHighways = {};
   var highwaysBboxes = [];
   var majorRoads = {
-    'motorway': true,
-    'trunk': true,
-    'primary': true,
-    'secondary': true,
-    'tertiary': true,
-    'motorway_link': true,
-    'trunk_link': true,
-    'primary_link': true,
-    'secondary_link': true,
-    'tertiary_link': true
+    motorway: true,
+    trunk: true,
+    primary: true,
+    secondary: true,
+    tertiary: true,
+    motorway_link: true,
+    trunk_link: true,
+    primary_link: true,
+    secondary_link: true,
+    tertiary_link: true
   };
   var minorRoads = {
-    'unclassified': true,
-    'residential': true,
-    'living_street': true,
-    'service': true,
-    'road': true
+    unclassified: true,
+    residential: true,
+    living_street: true,
+    service: true,
+    road: true
   };
   var pathRoads = {
-    'pedestrian': true,
-    'track': true,
-    'footway': true,
-    'path': true,
-    'cycleway': true,
-    'steps': true
+    pedestrian: true,
+    track: true,
+    footway: true,
+    path: true,
+    cycleway: true,
+    steps: true
   };
   var preserveType = {};
   preserveType = _.extend(preserveType, majorRoads);
@@ -42,7 +42,12 @@ module.exports = function(tileLayers, tile, writeData, done) {
 
   for (var i = 0; i < layer.features.length; i++) {
     var val = layer.features[i];
-    if (preserveType[val.properties.highway] && (val.geometry.type === 'LineString' || val.geometry.type === 'MultiLineString') && val.properties.layer === undefined) {
+    if (
+      preserveType[val.properties.highway] &&
+      (val.geometry.type === 'LineString' ||
+        val.geometry.type === 'MultiLineString') &&
+      val.properties.layer === undefined
+    ) {
       highwaysBboxes.push(objBbox(val));
       listOfHighways[val.properties['@id']] = val;
     }
@@ -58,15 +63,34 @@ module.exports = function(tileLayers, tile, writeData, done) {
     for (var k = 0; k < overlaps.length; k++) {
       var overlapBbox = overlaps[k];
       var overlapHighway = listOfHighways[overlapBbox.id];
-      if (bbox.id !== overlapBbox.id && isIntersecting(highwayToEvaluate, overlapHighway) && !checkCoordinates(highwayToEvaluate, overlapHighway)) {
-        var intersectPoint = turf.lineIntersect(overlapHighway, highwayToEvaluate);
+      if (
+        bbox.id !== overlapBbox.id &&
+        isIntersecting(highwayToEvaluate, overlapHighway) &&
+        !checkCoordinates(highwayToEvaluate, overlapHighway)
+      ) {
+        var intersectPoint = turf.lineIntersect(
+          overlapHighway,
+          highwayToEvaluate
+        );
         if (intersectPoint && intersectPoint.features.length > 0) {
           intersectPoint = intersectPoint.features[0];
-          if ((intersectPoint.geometry.type === 'Point' || intersectPoint.geometry.type === 'MultiPoint')) {
-            var mergeHighwaysCoords = _.flatten(overlapHighway.geometry.coordinates);
-            mergeHighwaysCoords.concat(_.flatten(highwayToEvaluate.geometry.coordinates));
-            var intersectPointCoord = _.flatten(intersectPoint.geometry.coordinates);
-            if (_.difference(mergeHighwaysCoords, intersectPointCoord).length === mergeHighwaysCoords.length) {
+          if (
+            intersectPoint.geometry.type === 'Point' ||
+            intersectPoint.geometry.type === 'MultiPoint'
+          ) {
+            var mergeHighwaysCoords = _.flatten(
+              overlapHighway.geometry.coordinates
+            );
+            mergeHighwaysCoords.concat(
+              _.flatten(highwayToEvaluate.geometry.coordinates)
+            );
+            var intersectPointCoord = _.flatten(
+              intersectPoint.geometry.coordinates
+            );
+            if (
+              _.difference(mergeHighwaysCoords, intersectPointCoord).length ===
+              mergeHighwaysCoords.length
+            ) {
               highwayToEvaluate.properties._osmlint = osmlint;
               overlapHighway.properties._osmlint = osmlint;
               output[bbox.id] = highwayToEvaluate;
@@ -75,12 +99,25 @@ module.exports = function(tileLayers, tile, writeData, done) {
                 _fromWay: highwayToEvaluate.properties['@id'],
                 _toWay: overlapHighway.properties['@id'],
                 _osmlint: osmlint,
-                _type: classification(majorRoads, minorRoads, pathRoads, highwayToEvaluate.properties.highway, overlapHighway.properties.highway)
+                _type: classification(
+                  majorRoads,
+                  minorRoads,
+                  pathRoads,
+                  highwayToEvaluate.properties.highway,
+                  overlapHighway.properties.highway
+                )
               };
-              if (highwayToEvaluate.properties['@id'] > overlapHighway.properties['@id']) {
-                output[bbox.id.toString().concat(overlapBbox.id)] = intersectPoint;
+              if (
+                highwayToEvaluate.properties['@id'] >
+                overlapHighway.properties['@id']
+              ) {
+                output[
+                  bbox.id.toString().concat(overlapBbox.id)
+                ] = intersectPoint;
               } else {
-                output[overlapBbox.id.toString().concat(bbox.id)] = intersectPoint;
+                output[
+                  overlapBbox.id.toString().concat(bbox.id)
+                ] = intersectPoint;
               }
             }
           }
@@ -97,16 +134,20 @@ module.exports = function(tileLayers, tile, writeData, done) {
   }
 
   done(null, null);
-
 };
 
 function checkCoordinates(high1, high2) {
   var coord1 = high1.geometry.coordinates;
   var coord2 = high2.geometry.coordinates;
-  if ((coord1[0][0] === coord2[0][0] && coord1[0][1] === coord2[0][1]) ||
-    (coord1[0][0] === coord2[coord2.length - 1][0] && coord1[0][1] === coord2[coord2.length - 1][1]) ||
-    (coord1[coord1.length - 1][0] === coord2[0][0] && coord1[coord1.length - 1][1] === coord2[0][1]) ||
-    (coord1[coord1.length - 1][0] === coord2[coord2.length - 1][0] && coord1[coord1.length - 1][1] === coord2[coord2.length - 1][1])) {
+  if (
+    (coord1[0][0] === coord2[0][0] && coord1[0][1] === coord2[0][1]) ||
+    (coord1[0][0] === coord2[coord2.length - 1][0] &&
+      coord1[0][1] === coord2[coord2.length - 1][1]) ||
+    (coord1[coord1.length - 1][0] === coord2[0][0] &&
+      coord1[coord1.length - 1][1] === coord2[0][1]) ||
+    (coord1[coord1.length - 1][0] === coord2[coord2.length - 1][0] &&
+      coord1[coord1.length - 1][1] === coord2[coord2.length - 1][1])
+  ) {
     return true;
   }
   return false;
@@ -129,19 +170,28 @@ function isIntersecting(high1, high2) {
   var bdy = y4 - y3;
   var s = (-ady * (x1 - x3) + adx * (y1 - y3)) / (-bdx * ady + adx * bdy);
   var t = (+bdx * (y1 - y3) - bdy * (x1 - x3)) / (-bdx * ady + adx * bdy);
-  return (s >= 0 && s <= 1 && t >= 0 && t <= 1);
+  return s >= 0 && s <= 1 && t >= 0 && t <= 1;
 }
 
 function classification(major, minor, path, fromHighway, toHighway) {
   if (major[fromHighway] && major[toHighway]) {
     return 'major-major';
-  } else if ((major[fromHighway] && minor[toHighway]) || (minor[fromHighway] && major[toHighway])) {
+  } else if (
+    (major[fromHighway] && minor[toHighway]) ||
+    (minor[fromHighway] && major[toHighway])
+  ) {
     return 'major-minor';
-  } else if ((major[fromHighway] && path[toHighway]) || (path[fromHighway] && major[toHighway])) {
+  } else if (
+    (major[fromHighway] && path[toHighway]) ||
+    (path[fromHighway] && major[toHighway])
+  ) {
     return 'major-path';
   } else if (minor[fromHighway] && minor[toHighway]) {
     return 'minor-minor';
-  } else if ((minor[fromHighway] && path[toHighway]) || (path[fromHighway] && minor[toHighway])) {
+  } else if (
+    (minor[fromHighway] && path[toHighway]) ||
+    (path[fromHighway] && minor[toHighway])
+  ) {
     return 'minor-path';
   } else if (path[fromHighway] && path[toHighway]) {
     return 'path-path';

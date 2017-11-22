@@ -7,18 +7,21 @@ module.exports = function(opts, qaTilesPath, tigerTilesPath, callback) {
     bbox: opts.bbox,
     zoom: opts.zoom,
     map: path.join(__dirname, '/map.js'),
-    sources: [{
-      name: 'osm',
-      mbtiles: qaTilesPath,
-      raw: true
-    }, {
-      name: 'tiger',
-      mbtiles: tigerTilesPath,
-      raw: true
-    }]
+    sources: [
+      {
+        name: 'osm',
+        mbtiles: qaTilesPath,
+        raw: true
+      },
+      {
+        name: 'tiger',
+        mbtiles: tigerTilesPath,
+        raw: true
+      }
+    ]
   })
-  .on('reduce', function() {})
-  .on('end', function() {
-    callback && callback();
-  });
+    .on('reduce', function() {})
+    .on('end', function() {
+      callback && callback();
+    });
 };

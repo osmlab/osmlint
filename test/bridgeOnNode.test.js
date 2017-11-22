@@ -19,7 +19,11 @@ test('bridgeOnNode', function(t) {
       var geoJSON = JSON.parse(logs[i]);
       t.comment('Pass: ' + (i + 1));
       if (geoJSON.features.length > 0) {
-        t.equal(geoJSON.features[0].properties._osmlint, 'bridgeonnode', 'Should be bridgeonnode');
+        t.equal(
+          geoJSON.features[0].properties._osmlint,
+          'bridgeonnode',
+          'Should be bridgeonnode'
+        );
         t.equal(geoJSON.features[0].geometry.type, 'Point', 'Should be  Point');
       }
     }

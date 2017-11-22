@@ -8,31 +8,37 @@ module.exports = function(tileLayers, tile, writeData, done) {
   var result = [];
   var objs = {};
   var places = {
-    'country': true,
-    'state': true,
-    'region': true,
-    'province': true,
-    'district': true,
-    'county': true,
-    'municipality': true,
-    'city': true,
-    'borough': true,
-    'suburb': true,
-    'quarter': true,
-    'city_block': true,
-    'plot': true,
-    'twon': true,
-    'village': true,
-    'hamlet': true,
-    'farm': true,
-    'allotments': true,
-    'neighbourhood': true
+    country: true,
+    state: true,
+    region: true,
+    province: true,
+    district: true,
+    county: true,
+    municipality: true,
+    city: true,
+    borough: true,
+    suburb: true,
+    quarter: true,
+    city_block: true,
+    plot: true,
+    twon: true,
+    village: true,
+    hamlet: true,
+    farm: true,
+    allotments: true,
+    neighbourhood: true
   };
 
   for (var i = 0; i < layer.features.length; i++) {
     var val = layer.features[i];
-    if (val.properties.place && places[val.properties.place] && (val.geometry.type === 'Point' || val.geometry.type === 'Polygon') && val.properties.name) {
-      var pname = val.properties.place + '-' + val.properties.name.toLowerCase();
+    if (
+      val.properties.place &&
+      places[val.properties.place] &&
+      (val.geometry.type === 'Point' || val.geometry.type === 'Polygon') &&
+      val.properties.name
+    ) {
+      var pname =
+        val.properties.place + '-' + val.properties.name.toLowerCase();
       if (objs[pname]) {
         objs[pname].push(val);
       } else {
@@ -66,5 +72,4 @@ module.exports = function(tileLayers, tile, writeData, done) {
   }
 
   done(null, null);
-
 };

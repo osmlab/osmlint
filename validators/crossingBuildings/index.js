@@ -7,15 +7,16 @@ module.exports = function(opts, mbtilesPath, callback) {
     bbox: opts.bbox,
     zoom: opts.zoom,
     map: path.join(__dirname, '/map.js'),
-    sources: [{
-      name: 'osm',
-      mbtiles: mbtilesPath,
-      raw: false
-    }]
+    sources: [
+      {
+        name: 'osm',
+        mbtiles: mbtilesPath,
+        raw: false
+      }
+    ]
   })
-  .on('reduce', function() {})
-  .on('end', function() {
-    callback && callback();
-  });
+    .on('reduce', function() {})
+    .on('end', function() {
+      callback && callback();
+    });
 };
-

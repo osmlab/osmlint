@@ -8,7 +8,15 @@ module.exports = function(tileLayers, tile, writeData, done) {
   for (var i = 0; i < layer.features.length; i++) {
     var val = layer.features[i];
 
-    if (val.properties.highway && val.properties.name && val.properties.name.replace(/\s/g, '').replace(/-/g, '').toLowerCase().indexOf('noname') > -1) {
+    if (
+      val.properties.highway &&
+      val.properties.name &&
+      val.properties.name
+        .replace(/\s/g, '')
+        .replace(/-/g, '')
+        .toLowerCase()
+        .indexOf('noname') > -1
+    ) {
       val.properties._osmlint = osmlint;
       result.push(val);
     }

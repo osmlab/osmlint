@@ -15,15 +15,20 @@ module.exports = function(tileLayers, tile, writeData, done) {
     // When there are multiple ref’s for a junction, it should be assigned with ref:left=* and ref:right=*
     if (val.geometry.type === 'Point' && val.properties.ref) {
       var refs = val.properties.ref.split(';');
-      if ((refs.length - 1) > 1) {
+      if (refs.length - 1 > 1) {
         val.properties._osmlint = osmlint;
         result.push(val);
-      } else if ((refs.length - 1) === 1) {
+      } else if (refs.length - 1 === 1) {
         // ref elements must match with  ref:right and ref:left value
         if (!(val.properties['ref:right'] && val.properties['ref:left'])) {
           val.properties._osmlint = osmlint;
           result.push(val);
-        } else if (!(val.properties['ref:left'] === refs[0] && val.properties['ref:right'] === refs[1])) {
+        } else if (
+          !(
+            val.properties['ref:left'] === refs[0] &&
+            val.properties['ref:right'] === refs[1]
+          )
+        ) {
           val.properties._osmlint = osmlint;
           result.push(val);
         }

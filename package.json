@@ -4,7 +4,7 @@
   "scripts": {
     "lint": "eslint validators/**/*.js test",
     "test": "npm run lint && NODE_ENV=test tape test/*.test.js | tap-spec",
-    "format": "prettier --single-quote --trailing-comma es5 --write \"{validators,test}/**/*.js\""
+    "format": "prettier --single-quote --write \"{validators,test}/**/*.js\""
   },
   "engines": {
     "node": "~6.11.3"
@@ -34,6 +34,7 @@
     "linematch": "^1.0.3",
     "mapbox-data-team": "^1.4.11",
     "minimist": "^1.1.1",
+    "prettier": "^1.8.2",
     "rbush": "^2.0.1",
     "time": "^0.12.0",
     "underscore": "^1.8.3"
@@ -43,6 +44,7 @@
     "eslint-config-mourner": "^1.0.1",
     "geojson-validation": "^0.1.6",
     "log-interceptor": "^1.0.0",
+    "prettier": "^1.8.2",
     "tap-spec": "^4.1.1",
     "tape": "^4.6.0"
   }

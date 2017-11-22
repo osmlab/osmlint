@@ -7,31 +7,31 @@ module.exports = function(tileLayers, tile, writeData, done) {
   var layer = tileLayers.osm.osm;
   var valueAngle = 10;
   var majorRoads = {
-    'motorway': true,
-    'trunk': true,
-    'primary': true,
-    'secondary': true,
-    'tertiary': true,
-    'motorway_link': true,
-    'trunk_link': true,
-    'primary_link': true,
-    'secondary_link': true,
-    'tertiary_link': true
+    motorway: true,
+    trunk: true,
+    primary: true,
+    secondary: true,
+    tertiary: true,
+    motorway_link: true,
+    trunk_link: true,
+    primary_link: true,
+    secondary_link: true,
+    tertiary_link: true
   };
   var minorRoads = {
-    'unclassified': true,
-    'residential': true,
-    'living_street': true,
+    unclassified: true,
+    residential: true,
+    living_street: true,
     // 'service': true,
-    'road': true
+    road: true
   };
   var pathRoads = {
-    'pedestrian': true,
-    'track': true,
-    'footway': true,
-    'path': true,
-    'cycleway': true,
-    'steps': true
+    pedestrian: true,
+    track: true,
+    footway: true,
+    path: true,
+    cycleway: true,
+    steps: true
   };
   var preserveType = {};
   preserveType = _.extend(preserveType, majorRoads);
@@ -43,12 +43,22 @@ module.exports = function(tileLayers, tile, writeData, done) {
 
   for (var i = 0; i < layer.features.length; i++) {
     var valueHighway = layer.features[i];
-    if (preserveType[valueHighway.properties.highway] && valueHighway.geometry.type === 'LineString' && valueHighway.geometry.coordinates.length > 2) {
+    if (
+      preserveType[valueHighway.properties.highway] &&
+      valueHighway.geometry.type === 'LineString' &&
+      valueHighway.geometry.coordinates.length > 2
+    ) {
       highways.push(valueHighway);
-    } else if (preserveType[valueHighway.properties.highway] && valueHighway.geometry.type === 'MultiLineString') {
+    } else if (
+      preserveType[valueHighway.properties.highway] &&
+      valueHighway.geometry.type === 'MultiLineString'
+    ) {
       var flat = flatten(valueHighway);
       for (var f = 0; f < flat.length; f++) {
-        if (flat[f].geometry.type === 'LineString' && flat[f].geometry.coordinates.length > 2) {
+        if (
+          flat[f].geometry.type === 'LineString' &&
+          flat[f].geometry.coordinates.length > 2
+        ) {
           flat[f].properties = valueHighway.properties;
           highways.push(flat[f]);
         }
@@ -90,7 +100,6 @@ module.exports = function(tileLayers, tile, writeData, done) {
   }
 
   done(null, null);
-
 };
 
 function findAngle(A, B, C) {

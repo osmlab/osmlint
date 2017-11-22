@@ -5,7 +5,10 @@ var path = require('path');
 var processors = require('../index.js');
 
 var zoom = 12;
-var bigv1objectsv1Tiles = path.join(__dirname, '/fixtures/bigv1objects.mbtiles');
+var bigv1objectsv1Tiles = path.join(
+  __dirname,
+  '/fixtures/bigv1objects.mbtiles'
+);
 var bigv1objectsOpts = {
   bbox: [-70.950394, -15.532753, -70.837784, -15.315314],
   zoom: zoom

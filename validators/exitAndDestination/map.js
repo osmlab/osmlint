@@ -8,7 +8,11 @@ module.exports = function(tileLayers, tile, writeData, done) {
   var output = {};
   for (var z = 0; z < layer.features.length; z++) {
     var obj = layer.features[z];
-    if (obj.properties.highway && hasTag(obj.properties) && obj.properties['@timestamp'] >= start) {
+    if (
+      obj.properties.highway &&
+      hasTag(obj.properties) &&
+      obj.properties['@timestamp'] >= start
+    ) {
       output[obj.properties['@id']] = obj;
     }
   }
@@ -22,17 +26,17 @@ module.exports = function(tileLayers, tile, writeData, done) {
 
 function hasTag(properties) {
   var preserveTags = {
-    'destination': true,
+    destination: true,
     'destination:ref': true,
     'destination:street': true,
     'destination:lanes': true,
     'destination:ref:lanes': true,
     'destination:ref:to': true,
     'destination:ref:to:lanes': true,
-    'ref': true,
+    ref: true,
     'ref:left': true,
     'ref:right': true,
-    'noref': true
+    noref: true
   };
   for (var prop in properties) {
     if (preserveTags[prop]) {

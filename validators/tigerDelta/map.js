@@ -14,8 +14,8 @@ module.exports = function(data, tile, writeData, done) {
   var diff = linematch(tiger, streets, 20).filter(filterShort);
   if (diff.length) {
     var fc = {
-      'type': 'FeatureCollection',
-      'features': []
+      type: 'FeatureCollection',
+      features: []
     };
 
     toGeoJSON(diff, tile).forEach(function(line) {
@@ -66,7 +66,10 @@ function toLines(layer) {
   for (var i = 0; i < layer.length; i++) {
     var feature = layer.feature(i);
     //only consider polygon features with Tiger name or OSM highway tag
-    if (feature.type === 2 && (feature.properties.FULLNAME !== '' || feature.properties.highway)) {
+    if (
+      feature.type === 2 &&
+      (feature.properties.FULLNAME !== '' || feature.properties.highway)
+    ) {
       var geom = feature.loadGeometry();
       for (var k = 0; k < geom.length; k++) {
         lineclip(normalizeLine(geom[k], layer.extent), bbox, lines); // clip to tile bbox and add to result
@@ -79,10 +82,7 @@ function toLines(layer) {
 function normalizeLine(line, extent) {
   var newLine = [];
   for (var i = 0; i < line.length; i++) {
-    newLine.push([
-      line[i].x * 4096 / extent,
-      line[i].y * 4096 / extent
-    ]);
+    newLine.push([line[i].x * 4096 / extent, line[i].y * 4096 / extent]);
   }
   return newLine;
 }
@@ -91,7 +91,8 @@ function filterShort(line) {
   return dist(line) >= 30; //line length is at least 30 pixels
 }
 
-function dist(line) { //approximate distance
+function dist(line) {
+  //approximate distance
   var d = 0;
   for (var i = 1; i < line.length; i++) {
     var dx = line[i][0] - line[i - 1][0];

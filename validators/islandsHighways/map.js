@@ -16,31 +16,31 @@ module.exports = function(tileLayers, tile, writeData, done) {
   var highways = {};
   var bboxes = [];
   var majorRoads = {
-    'motorway': true,
-    'trunk': true,
-    'primary': true,
-    'secondary': true,
-    'tertiary': true,
-    'motorway_link': true,
-    'trunk_link': true,
-    'primary_link': true,
-    'secondary_link': true,
-    'tertiary_link': true
+    motorway: true,
+    trunk: true,
+    primary: true,
+    secondary: true,
+    tertiary: true,
+    motorway_link: true,
+    trunk_link: true,
+    primary_link: true,
+    secondary_link: true,
+    tertiary_link: true
   };
   var minorRoads = {
-    'unclassified': true,
-    'residential': true,
-    'living_street': true,
+    unclassified: true,
+    residential: true,
+    living_street: true,
     // 'service': true,
-    'road': true
+    road: true
   };
   var pathRoads = {
-    'pedestrian': true,
-    'track': true,
-    'footway': true,
-    'path': true,
-    'cycleway': true,
-    'steps': true
+    pedestrian: true,
+    track: true,
+    footway: true,
+    path: true,
+    cycleway: true,
+    steps: true
   };
   var preserveType = {};
   preserveType = _.extend(preserveType, majorRoads);
@@ -55,7 +55,10 @@ module.exports = function(tileLayers, tile, writeData, done) {
       });
       bboxes.push(bboxA);
       highways[val.properties['@id']] = val;
-    } else if (val.geometry.type === 'MultiLineString' && val.properties.highway) {
+    } else if (
+      val.geometry.type === 'MultiLineString' &&
+      val.properties.highway
+    ) {
       var flat = flatten(val);
       var id = val.properties['@id'] + 'L';
       for (var f = 0; f < flat.length; f++) {
@@ -84,8 +87,14 @@ module.exports = function(tileLayers, tile, writeData, done) {
     var valueHighway = highways[valueBbox.id.id];
     valueHighway.properties._osmlint = osmlint;
     var firstCoord = valueHighway.geometry.coordinates[0];
-    var endCoord = valueHighway.geometry.coordinates[valueHighway.geometry.coordinates.length - 1];
-    if (!turf.booleanPointInPolygon(turf.point(firstCoord), bufferLayer) && !turf.booleanPointInPolygon(turf.point(endCoord), bufferLayer)) {
+    var endCoord =
+      valueHighway.geometry.coordinates[
+        valueHighway.geometry.coordinates.length - 1
+      ];
+    if (
+      !turf.booleanPointInPolygon(turf.point(firstCoord), bufferLayer) &&
+      !turf.booleanPointInPolygon(turf.point(endCoord), bufferLayer)
+    ) {
       var overlapBboxes = highwaysTree.search(valueBbox);
 
       if (overlapBboxes.length === 1) {
@@ -101,15 +110,34 @@ module.exports = function(tileLayers, tile, writeData, done) {
         var valueCoordinates = geojsonCoords(valueHighway);
         var nearCoordinates = geojsonCoords(nearHighways);
         //filter all highways without any connection
-        if (_.intersection(_.flatten(valueCoordinates), _.flatten(nearCoordinates)).length < 2) {
+        if (
+          _.intersection(
+            _.flatten(valueCoordinates),
+            _.flatten(nearCoordinates)
+          ).length < 2
+        ) {
           var obj = {};
           var arrf = [];
           var arre = [];
           for (var l = 0; l < nearHighways.features.length; l++) {
             var coords = nearHighways.features[l].geometry.coordinates;
             for (var m = 0; m < coords.length - 1; m++) {
-              var firstDistance = distancePoint2Line(firstCoord[0], firstCoord[1], coords[m][0], coords[m][1], coords[m + 1][0], coords[m + 1][1]);
-              var endDistance = distancePoint2Line(endCoord[0], endCoord[1], coords[m][0], coords[m][1], coords[m + 1][0], coords[m + 1][1]);
+              var firstDistance = distancePoint2Line(
+                firstCoord[0],
+                firstCoord[1],
+                coords[m][0],
+                coords[m][1],
+                coords[m + 1][0],
+                coords[m + 1][1]
+              );
+              var endDistance = distancePoint2Line(
+                endCoord[0],
+                endCoord[1],
+                coords[m][0],
+                coords[m][1],
+                coords[m + 1][0],
+                coords[m + 1][1]
+              );
               obj[firstDistance] = turf.lineString([
                 [coords[m][0], coords[m][1]],
                 [coords[m + 1][0], coords[m + 1][1]]
@@ -154,7 +182,6 @@ module.exports = function(tileLayers, tile, writeData, done) {
   }
 
   done(null, null);
-
 };
 
 function distancePoint2Line(x, y, x1, y1, x2, y2) {
@@ -165,8 +192,7 @@ function distancePoint2Line(x, y, x1, y1, x2, y2) {
   var dot = A * C + B * D;
   var lenSq = C * C + D * D;
   var param = -1;
-  if (lenSq !== 0)
-    param = dot / lenSq;
+  if (lenSq !== 0) param = dot / lenSq;
   var xx, yy;
   if (param < 0) {
     xx = x1;
