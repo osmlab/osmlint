@@ -1,5 +1,5 @@
 'use strict';
-var turf = require('turf');
+var turf = require('@turf/turf');
 var _ = require('underscore');
 var rbush = require('rbush');
 module.exports = function(tileLayers, tile, writeData, done) {
@@ -8,23 +8,23 @@ module.exports = function(tileLayers, tile, writeData, done) {
   var highways = {};
   var output = {};
   var majorRoads = {
-    'motorway': true,
-    'trunk': true,
-    'primary': true,
-    'secondary': true,
-    'tertiary': true,
-    'motorway_link': true,
-    'trunk_link': true,
-    'primary_link': true,
-    'secondary_link': true,
-    'tertiary_link': true
+    motorway: true,
+    trunk: true,
+    primary: true,
+    secondary: true,
+    tertiary: true,
+    motorway_link: true,
+    trunk_link: true,
+    primary_link: true,
+    secondary_link: true,
+    tertiary_link: true
   };
   var minorRoads = {
-    'unclassified': true,
-    'residential': true,
-    'living_street': true,
-    'service': true,
-    'road': true
+    unclassified: true,
+    residential: true,
+    living_street: true,
+    service: true,
+    road: true
   };
 
   var preserveType = {};
@@ -33,11 +33,11 @@ module.exports = function(tileLayers, tile, writeData, done) {
   var osmlint = 'junctionstosplit';
   for (var z = 0; z < layer.features.length; z++) {
     var val = layer.features[z];
-    if (val.geometry.type === 'LineString' && preserveType[val.properties.highway]) {
-      var bboxA = turf.bbox(val);
-      bboxA.push({
-        id: val.properties['@id']
-      });
+    if (
+      val.geometry.type === 'LineString' &&
+      preserveType[val.properties.highway]
+    ) {
+      var bboxA = objBbox(val);
       bboxes.push(bboxA);
       highways[val.properties['@id']] = val;
     }
@@ -47,7 +47,7 @@ module.exports = function(tileLayers, tile, writeData, done) {
   highwaysTree.load(bboxes);
   for (var i = 0; i < bboxes.length; i++) {
     var valueBbox = bboxes[i];
-    var valueHighway = highways[valueBbox[4].id];
+    var valueHighway = highways[valueBbox.id];
     valueHighway.properties._osmlint = osmlint;
     if (valueHighway.properties.highway === 'motorway_link') {
       var overlaps = highwaysTree.search(valueBbox);
@@ -57,19 +57,34 @@ module.exports = function(tileLayers, tile, writeData, done) {
       for (var k = 0; k < overlaps.length; k++) {
         var overlap = overlaps[k];
         var isIntersect = false;
-        var overlapHighway = highways[overlap[4].id];
-        if (valueHighway.properties['@id'] !== overlapHighway.properties['@id'] && overlapHighway.properties.highway !== 'motorway_link') {
+        var overlapHighway = highways[overlap.id];
+        if (
+          valueHighway.properties['@id'] !== overlapHighway.properties['@id'] &&
+          overlapHighway.properties.highway !== 'motorway_link'
+        ) {
           var overlapHighwayCoords = overlapHighway.geometry.coordinates;
-          var intersection = turf.intersect(valueHighway, overlapHighway);
-          if (intersection) {
+          var intersection = turf.lineIntersect(valueHighway, overlapHighway);
+          if (intersection && intersection.features.length > 0) {
+            intersection = intersection.features[0];
             var interCoordsF = flatten(intersection.geometry.coordinates);
-            if (_.intersection(valueHighwayCoords[0], interCoordsF).length === 2) {
+            if (
+              _.intersection(valueHighwayCoords[0], interCoordsF).length === 2
+            ) {
               isEntrance = true;
             }
-            if (_.intersection(valueHighwayCoords[0], interCoordsF).length !== 2 &&
-              _.intersection(valueHighwayCoords[valueHighwayCoords.length - 1], interCoordsF).length !== 2) {
+            if (
+              _.intersection(valueHighwayCoords[0], interCoordsF).length !==
+                2 &&
+              _.intersection(
+                valueHighwayCoords[valueHighwayCoords.length - 1],
+                interCoordsF
+              ).length !== 2
+            ) {
               for (var t = 1; t < overlapHighwayCoords.length - 1; t++) {
-                if (_.intersection(overlapHighwayCoords[t], interCoordsF).length === 2) {
+                if (
+                  _.intersection(overlapHighwayCoords[t], interCoordsF)
+                    .length === 2
+                ) {
                   isIntersect = true;
                   intersectHighway = overlapHighway;
                 }
@@ -111,4 +126,15 @@ function flatten(coords) {
     }
   }
   return array;
+}
+
+function objBbox(obj, id) {
+  var bboxExtent = ['minX', 'minY', 'maxX', 'maxY'];
+  var bbox = {};
+  var valBbox = turf.bbox(obj);
+  for (var d = 0; d < valBbox.length; d++) {
+    bbox[bboxExtent[d]] = valBbox[d];
+  }
+  bbox.id = id || obj.properties['@id'];
+  return bbox;
 }

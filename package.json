@@ -2,7 +2,12 @@
   "name": "osmlint",
   "version": "0.0.4",
   "scripts": {
-    "test": "eslint src test validators/*/*.js && NODE_ENV=test tape test/*.test.js | tap-spec"
+    "lint": "eslint validators/**/*.js test",
+    "test": "npm run lint && NODE_ENV=test tape test/*.test.js | tap-spec",
+    "format": "prettier --single-quote --write \"{validators,test}/**/*.js\""
+  },
+  "engines": {
+    "node": "~6.11.3"
   },
   "bin": {
     "osmlint": "cli.js"
@@ -12,22 +17,26 @@
     "url": "https://github.com/osmlab/osmlint.git"
   },
   "dependencies": {
+    "@mapbox/geojson-coords": "0.0.0",
+    "@mapbox/geojson-normalize": "0.0.1",
+    "@mapbox/mbtiles": "^0.9.0",
+    "@mapbox/point-geometry": "^0.1.0",
+    "@mapbox/sphericalmercator": "^1.0.5",
+    "@mapbox/tile-cover": "^3.0.2",
+    "@mapbox/tile-reduce": "^3.2.0",
+    "@mapbox/tilebelt": "^1.0.1",
+    "@mapbox/tiletype": "^0.3.1",
+    "@mapbox/vector-tile": "^1.3.0",
+    "@turf/turf": "^5.0.4",
     "fast-levenshtein": "2.0.6",
-    "geojson-area": "^0.2.1",
-    "geojson-coords": "0.0.0",
-    "geojson-flatten": "^0.1.0",
-    "geojson-normalize": "0.0.1",
+    "geojson-flatten": "^0.2.1",
     "lineclip": "^1.1.5",
     "linematch": "^1.0.3",
-    "mapbox-data-team": "*",
+    "mapbox-data-team": "^1.4.11",
     "minimist": "^1.1.1",
-    "rbush": "^1.4.2",
-    "sphericalmercator": "^1.0.5",
-    "tile-reduce": "^3.1.1",
-    "tilebelt": "^1.0.1",
-    "tiletype": "^0.3.0",
-    "time": "^0.11.4",
-    "turf": "^3.0.14",
+    "prettier": "^1.8.2",
+    "rbush": "^2.0.1",
+    "time": "^0.12.0",
     "underscore": "^1.8.3"
   },
   "devDependencies": {
@@ -35,6 +44,7 @@
     "eslint-config-mourner": "^1.0.1",
     "geojson-validation": "^0.1.6",
     "log-interceptor": "^1.0.0",
+    "prettier": "^1.8.2",
     "tap-spec": "^4.1.1",
     "tape": "^4.6.0"
   }

@@ -1,5 +1,5 @@
 'use strict';
-var turf = require('turf');
+var turf = require('@turf/turf');
 
 // Filter all objects which has fixme tag.
 module.exports = function(tileLayers, tile, writeData, done) {

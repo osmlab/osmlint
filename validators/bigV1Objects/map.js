@@ -1,7 +1,7 @@
 'use strict';
 var time = require('time')(Date);
-var turf = require('turf');
-var today = (time.time() - 3 * 24 * 60 * 60);
+var turf = require('@turf/turf');
+var today = time.time() - 3 * 24 * 60 * 60;
 
 module.exports = function(tileLayers, tile, writeData, done) {
   var layer = tileLayers.osm.osm;
@@ -9,15 +9,19 @@ module.exports = function(tileLayers, tile, writeData, done) {
   var result = [];
   for (var i = 0; i < layer.features.length; i++) {
     var val = layer.features[i];
-    if ((val.properties.aeroway ||
+    if (
+      (val.properties.aeroway ||
         val.properties.leisure ||
         val.properties.landuse ||
         val.properties.man_made ||
         val.properties.building) &&
-      val.geometry.type === 'Polygon' && val.properties['@version'] === 1 && val.properties['@timestamp'] > today) {
+      val.geometry.type === 'Polygon' &&
+      val.properties['@version'] === 1 &&
+      val.properties['@timestamp'] > today
+    ) {
       var fc = {
         type: 'FeatureCollection',
-        'features': [val]
+        features: [val]
       };
       var area = turf.area(fc);
       if (area > 200000) {

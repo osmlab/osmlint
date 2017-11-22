@@ -1,5 +1,5 @@
 'use strict';
-var turf = require('turf');
+var turf = require('@turf/turf');
 var _ = require('underscore');
 var rbush = require('rbush');
 var flatten = require('geojson-flatten');
@@ -12,20 +12,20 @@ module.exports = function(tileLayers, tile, writeData, done) {
   var highwaysBboxes = [];
   var suspRoundaboutBboxes = [];
   var majorRoads = {
-    'motorway': true,
-    'trunk': true,
-    'primary': true,
-    'secondary': true,
-    'tertiary': true,
-    'motorway_link': true,
-    'trunk_link': true,
-    'primary_link': true,
-    'secondary_link': true,
-    'tertiary_link': true
+    motorway: true,
+    trunk: true,
+    primary: true,
+    secondary: true,
+    tertiary: true,
+    motorway_link: true,
+    trunk_link: true,
+    primary_link: true,
+    secondary_link: true,
+    tertiary_link: true
   };
   var minorRoads = {
-    'unclassified': true,
-    'residential': true
+    unclassified: true,
+    residential: true
   };
 
   var preserveType = {};
@@ -33,26 +33,33 @@ module.exports = function(tileLayers, tile, writeData, done) {
   preserveType = _.extend(preserveType, minorRoads);
   for (var i = 0; i < layer.features.length; i++) {
     var val = layer.features[i];
-    if (val.geometry.type === 'MultiLineString' && preserveType[val.properties.highway]) {
+    if (
+      val.geometry.type === 'MultiLineString' &&
+      preserveType[val.properties.highway]
+    ) {
       var flat = flatten(val);
       var id = val.properties['@id'] + 'L';
       for (var f = 0; f < flat.length; f++) {
         if (flat[f].geometry.type === 'LineString') {
-          var bboxM = turf.bbox(flat[f]);
           var idFlat = id + 'M' + f;
-          bboxM.push(idFlat);
+          var bboxM = objBbox(flat[f], idFlat);
           highwaysBboxes.push(bboxM);
           flat[f].properties = val.properties;
           listOfHighways[idFlat] = flat[f];
         }
       }
     }
-    if (preserveType[val.properties.highway] && val.geometry.type === 'LineString') {
-      var bboxHighway = turf.bbox(val);
-      bboxHighway.push(val.properties['@id']);
+    if (
+      preserveType[val.properties.highway] &&
+      val.geometry.type === 'LineString'
+    ) {
+      var bboxHighway = objBbox(val);
       listOfHighways[val.properties['@id']] = val;
       var coords = val.geometry.coordinates;
-      if (coords[0][0] === coords[coords.length - 1][0] && coords[0][1] === coords[coords.length - 1][1]) {
+      if (
+        coords[0][0] === coords[coords.length - 1][0] &&
+        coords[0][1] === coords[coords.length - 1][1]
+      ) {
         suspRoundaboutBboxes.push(bboxHighway);
       } else {
         highwaysBboxes.push(bboxHighway);
@@ -63,7 +70,7 @@ module.exports = function(tileLayers, tile, writeData, done) {
   var highwaysTree = rbush(highwaysBboxes.length);
   highwaysTree.load(highwaysBboxes);
   for (var k = 0; k < suspRoundaboutBboxes.length; k++) {
-    var roundaboutToEvaluate = listOfHighways[suspRoundaboutBboxes[k][4]];
+    var roundaboutToEvaluate = listOfHighways[suspRoundaboutBboxes[k].id];
     if (isOval(roundaboutToEvaluate)) {
       var coordgObjSerial = {};
       var coordsRoundabout = roundaboutToEvaluate.geometry.coordinates;
@@ -74,16 +81,30 @@ module.exports = function(tileLayers, tile, writeData, done) {
       }
       var overlaps = highwaysTree.search(suspRoundaboutBboxes[k]);
       for (var y = 0; y < overlaps.length; y++) {
-        var overlapHighway = listOfHighways[overlaps[y][4]];
+        var overlapHighway = listOfHighways[overlaps[y].id];
         var coordsOverlapHighway = overlapHighway.geometry.coordinates;
         //if the highway is entering to roundabout
-        if (coordgObjSerial[coordsOverlapHighway[coordsOverlapHighway.length - 1].join(',')]) {
-          if (coordgObjSerial[coordsOverlapHighway[coordsOverlapHighway.length - 1].join(',')].type) {
-            coordgObjSerial[coordsOverlapHighway[coordsOverlapHighway.length - 1].join(',') + y] = {
+        if (
+          coordgObjSerial[
+            coordsOverlapHighway[coordsOverlapHighway.length - 1].join(',')
+          ]
+        ) {
+          if (
+            coordgObjSerial[
+              coordsOverlapHighway[coordsOverlapHighway.length - 1].join(',')
+            ].type
+          ) {
+            coordgObjSerial[
+              coordsOverlapHighway[coordsOverlapHighway.length - 1].join(',') +
+                y
+            ] = {
               type: 'entry'
             };
           }
-          coordgObjSerial[coordsOverlapHighway[coordsOverlapHighway.length - 1].join(',')].type = 'entry';
+          coordgObjSerial[
+            coordsOverlapHighway[coordsOverlapHighway.length - 1].join(',')
+          ].type =
+            'entry';
         }
         //if the highway is getting out from roundabout
         if (coordgObjSerial[coordsOverlapHighway[0].join(',')]) {
@@ -106,7 +127,12 @@ module.exports = function(tileLayers, tile, writeData, done) {
           ++entradas;
         }
       }
-      if ((salidas > 1 && entradas > 1 && !roundaboutToEvaluate.properties.junction && !roundaboutToEvaluate.properties.oneway)) {
+      if (
+        salidas > 1 &&
+        entradas > 1 &&
+        !roundaboutToEvaluate.properties.junction &&
+        !roundaboutToEvaluate.properties.oneway
+      ) {
         roundaboutToEvaluate.properties._osmlint = osmlint;
         if (majorRoads[roundaboutToEvaluate.properties.highway]) {
           roundaboutToEvaluate.properties._type = 'major';
@@ -134,7 +160,9 @@ function isOval(highway) {
   var totalDistace = 0;
   var distances = [];
   for (var i = 0; i < points.features.length; i++) {
-    var distance = turf.distance(centroidPt, points.features[i], 'kilometers');
+    var distance = turf.distance(centroidPt, points.features[i], {
+      units: 'kilometers'
+    });
     distances.push(distance);
     totalDistace += distance;
   }
@@ -145,4 +173,15 @@ function isOval(highway) {
     }
   }
   return flag;
+}
+
+function objBbox(obj, id) {
+  var bboxExtent = ['minX', 'minY', 'maxX', 'maxY'];
+  var bbox = {};
+  var valBbox = turf.bbox(obj);
+  for (var d = 0; d < valBbox.length; d++) {
+    bbox[bboxExtent[d]] = valBbox[d];
+  }
+  bbox.id = id || obj.properties['@id'];
+  return bbox;
 }

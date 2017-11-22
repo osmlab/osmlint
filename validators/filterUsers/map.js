@@ -1,6 +1,6 @@
 'use strict';
 
-var turf = require('turf');
+var turf = require('@turf/turf');
 var users = require('mapbox-data-team').getUsernames();
 
 users = users.reduce(function(memo, currentValue) {
@@ -12,8 +12,7 @@ users = users.reduce(function(memo, currentValue) {
 module.exports = function(tileLayers, tile, writeData, done) {
   var layer = tileLayers.osm.osm;
   var result = layer.features.filter(function(val) {
-    return (users.hasOwnProperty(val.properties['@user']));
-
+    return users.hasOwnProperty(val.properties['@user']);
   });
   if (result.length > 0) {
     var fc = turf.featureCollection(result);

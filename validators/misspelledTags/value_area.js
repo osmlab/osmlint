@@ -138,7 +138,6 @@ module.exports = {
     'waste_transfer_station',
     'watering_place',
     'water_point'
-
   ],
 
   barrier: [
@@ -323,11 +322,7 @@ module.exports = {
     'siren'
   ],
 
-  geological: [
-    'moraine',
-    'outcrop',
-    'palaeontological_site'
-  ],
+  geological: ['moraine', 'outcrop', 'palaeontological_site'],
 
   cycleway: [
     'lane',
@@ -758,12 +753,7 @@ module.exports = {
     'tower',
     'transformer'
   ],
-  public_transport: [
-    'stop_position',
-    'platform',
-    'station',
-    'stop_area'
-  ],
+  public_transport: ['stop_position', 'platform', 'station', 'stop_area'],
 
   railway: [
     'abandoned',

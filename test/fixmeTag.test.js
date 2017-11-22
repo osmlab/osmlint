@@ -19,7 +19,11 @@ test('fixmeTag', function(t) {
       var geoJSON = JSON.parse(logs[i]);
       for (var j = 0; j < geoJSON.features.length; j++) {
         t.comment('Pass: ' + (i + 1));
-        t.equal(geoJSON.features[j].properties._osmlint, 'fixmetag', 'Should be fixmetag');
+        t.equal(
+          geoJSON.features[j].properties._osmlint,
+          'fixmetag',
+          'Should be fixmetag'
+        );
       }
     }
     t.end();

@@ -1,6 +1,6 @@
 'use strict';
 
-var turf = require('turf');
+var turf = require('@turf/turf');
 var _ = require('underscore');
 var levenshtein = require('fast-levenshtein');
 
@@ -12,10 +12,13 @@ module.exports = function(tileLayers, tile, writeData, done) {
 
   for (var i = 0; i < layer.features.length; i++) {
     var val = layer.features[i];
-    if (val.properties.highway &&
+    if (
+      val.properties.highway &&
       val.properties.name &&
-      (val.properties.name.indexOf(' ' + val.properties['@user']) > -1 || val.properties.name.indexOf(val.properties['@user'] + ' ') > -1 ||
-        levenshtein.get(val.properties.name, val.properties['@user']) < 2)) {
+      (val.properties.name.indexOf(' ' + val.properties['@user']) > -1 ||
+        val.properties.name.indexOf(val.properties['@user'] + ' ') > -1 ||
+        levenshtein.get(val.properties.name, val.properties['@user']) < 2)
+    ) {
       val.properties._osmlint = osmlint;
       highways.push(val);
     }

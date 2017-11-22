@@ -1,5 +1,5 @@
 'use strict';
-var turf = require('turf');
+var turf = require('@turf/turf');
 var _ = require('underscore');
 var rbush = require('rbush');
 
@@ -15,9 +15,9 @@ module.exports = function(tileLayers, tile, writeData, done) {
     if (val.geometry.type === 'Polygon' && val.properties.building) {
       var kinks = turf.kinks(val);
       if (kinks && kinks.features.length === 0) {
-        var valBbox = turf.bbox(val);
-        valBbox.push(val.properties['@id']);
-        bboxes.push(valBbox);
+        // var valBbox = turf.bbox(val);
+        // valBbox.push(val.properties['@id']);
+        bboxes.push(objBbox(val));
         buildings[val.properties['@id']] = val;
       } else if (kinks && kinks.features.length === 1) {
         val.properties._osmlint = osmlint;
@@ -43,14 +43,21 @@ module.exports = function(tileLayers, tile, writeData, done) {
     var overlaps = buildingTraceTree.search(bbox);
     for (var k = 0; k < overlaps.length; k++) {
       var overlap = overlaps[k];
-      if (overlap[4] !== bbox[4]) {
-        var intersect = turf.intersect(buildings[overlap[4]], buildings[bbox[4]]);
-        if (intersect && (intersect.geometry.type === 'Polygon' || intersect.geometry.type === 'MultiPolygon')) {
+      if (overlap.id !== bbox.id) {
+        var intersect = turf.intersect(
+          buildings[overlap.id],
+          buildings[bbox.id]
+        );
+        if (
+          intersect &&
+          (intersect.geometry.type === 'Polygon' ||
+            intersect.geometry.type === 'MultiPolygon')
+        ) {
           var area = turf.area(intersect);
           if (area > overlapArea) {
-            var buildingA = buildings[overlap[4]];
+            var buildingA = buildings[overlap.id];
             buildingA.properties._osmlint = osmlint;
-            var buildingB = buildings[bbox[4]];
+            var buildingB = buildings[bbox.id];
             buildingB.properties._osmlint = osmlint;
             var points = turf.explode(intersect);
             var multiPoint = turf.combine(points).features[0];
@@ -60,9 +67,9 @@ module.exports = function(tileLayers, tile, writeData, done) {
               _osmlint: osmlint
             };
             //save detection
-            output[overlap[4]] = buildingA;
-            output[bbox[4]] = buildingB;
-            output[overlap[4] + bbox[4] + 'M'] = multiPoint;
+            output[overlap.id] = buildingA;
+            output[bbox.id] = buildingB;
+            output[overlap.id + bbox.id + 'M'] = multiPoint;
           }
         }
       }
@@ -76,3 +83,13 @@ module.exports = function(tileLayers, tile, writeData, done) {
   }
   done(null, null);
 };
+
+function objBbox(obj) {
+  var bbox = {};
+  var valBbox = turf.bbox(obj);
+  for (var d = 0; d < valBbox.length; d++) {
+    bbox[bbox[d]] = valBbox[d];
+  }
+  bbox.id = obj.properties['@id'];
+  return bbox;
+}
