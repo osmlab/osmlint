@@ -28,13 +28,13 @@ module.exports = function(tileLayers, tile, writeData, done) {
     }
   }
   //Load the bboxes into rbush
-  var highwaysTree = rbush(featureBboxes.length);
-  highwaysTree.load(featureBboxes);
+  var tree = rbush(featureBboxes.length);
+  tree.load(featureBboxes);
   //Go through all bboxes
   for (var j = 0; j < featureBboxes.length; j++) {
     var bbox = featureBboxes[j];
     var road = listFeatures[bbox.id];
-    var overlaps = highwaysTree.search(bbox);
+    var overlaps = tree.search(bbox);
     for (var k = 0; k < overlaps.length; k++) {
       var overlapBbox = overlaps[k];
       var overlapRoad = listFeatures[overlapBbox.id];
