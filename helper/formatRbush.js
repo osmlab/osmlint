@@ -4,6 +4,12 @@ module.exports = {
   objBbox
 };
 
+/**
+ * Format the bbox of the feature in rbush required https://github.com/mourner/rbush#adding-data
+ * @param  {Object -> Feature} osm object
+ * @param  {String||Object} osm object identifier
+ * @return {Object} e.g {minX:20,minY:40,maxX:30,maxY:50,id:osmId};
+ */
 function objBbox(feature, id) {
   var bboxExtent = ['minX', 'minY', 'maxX', 'maxY'];
   var bbox = {};

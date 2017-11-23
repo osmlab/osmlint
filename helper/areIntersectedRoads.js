@@ -1,4 +1,10 @@
 'use strict';
+/**
+ * Check out if two road are intersecting
+ * @param  {Objects->Feature} Road 1
+ * @param  {Objects->Feature} Road 2
+ * @return {Boolean} Returns a true when the roads are intersecting
+ */
 module.exports = function(feature1, feature2) {
   var coord1 = feature1.geometry.coordinates;
   var coord2 = feature2.geometry.coordinates;

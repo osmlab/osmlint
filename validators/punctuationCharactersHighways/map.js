@@ -61,6 +61,7 @@ function hasSpecialCharacter(val, str) {
 
 function allowedCharacters(str) {
   return (
+    /*eslint quotes: [2, "single", "avoid-escape"]*/
     str.indexOf("'") === -1 &&
     str.indexOf('(') === -1 &&
     str.indexOf(')') === -1 &&
