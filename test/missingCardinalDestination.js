@@ -16,11 +16,7 @@ test('missingCardinalDestination', function(t) {
   processors.missingCardinalDestination(opts, mbtile, function() {
     var logs = logInterceptor.end();
     var geoJSON = JSON.parse(logs[0]);
-    t.equal(
-      geoJSON.features[0].geometry.type,
-      'LineString',
-      'Should be LineString'
-    );
+    t.equal(geoJSON.features[0].geometry.type, 'LineString', 'Should be LineString');
     t.equal(
       geoJSON.features[0].properties._osmlint,
       'missingcardinaldestination',

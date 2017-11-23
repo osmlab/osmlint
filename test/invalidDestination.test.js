@@ -16,16 +16,8 @@ test('invalidDestination', function(t) {
   processors.invalidDestination(opts, mbtile, function() {
     var logs = logInterceptor.end();
     var geoJSON = JSON.parse(logs[0]);
-    t.equal(
-      geoJSON.features[0].geometry.type,
-      'LineString',
-      'Should be LineString'
-    );
-    t.equal(
-      geoJSON.features[0].properties._osmlint,
-      'invaliddestination',
-      'Should be invaliddestination'
-    );
+    t.equal(geoJSON.features[0].geometry.type, 'LineString', 'Should be LineString');
+    t.equal(geoJSON.features[0].properties._osmlint, 'invaliddestination', 'Should be invaliddestination');
     t.end();
   });
 });

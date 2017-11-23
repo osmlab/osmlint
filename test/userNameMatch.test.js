@@ -18,16 +18,8 @@ test('userNameMatch', function(t) {
       var geoJSON = JSON.parse(logs[i]);
       t.comment('Pass: ' + (i + 1));
       if (geoJSON.features.length > 0) {
-        t.equal(
-          geoJSON.features[0].properties._osmlint,
-          'usernamematch',
-          'Should be usernamematch'
-        );
-        t.equal(
-          geoJSON.features[0].geometry.type,
-          'LineString',
-          'LineString be polygon'
-        );
+        t.equal(geoJSON.features[0].properties._osmlint, 'usernamematch', 'Should be usernamematch');
+        t.equal(geoJSON.features[0].geometry.type, 'LineString', 'LineString be polygon');
       }
     }
     t.end();

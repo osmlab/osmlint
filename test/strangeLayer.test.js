@@ -16,15 +16,7 @@ test('strangeLayer', function(t) {
   processors.strangeLayer(optsStrangeLayer, strangelayerTiles, function() {
     var logs = logInterceptor.end();
     var geoJSON = JSON.parse(logs);
-    t.equal(
-      geoJSON.features[0].properties._osmlint,
-      'strangelayer',
-      'Should be strangelayer'
-    );
-    t.equal(
-      geoJSON.features[0].geometry.type,
-      'LineString',
-      'Should be  LineString'
-    );
+    t.equal(geoJSON.features[0].properties._osmlint, 'strangelayer', 'Should be strangelayer');
+    t.equal(geoJSON.features[0].geometry.type, 'LineString', 'Should be  LineString');
   });
 });

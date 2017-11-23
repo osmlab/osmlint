@@ -39,13 +39,11 @@ module.exports = function(tileLayers, tile, writeData, done) {
       (valueHighway.properties.bridge &&
         valueHighway.properties.bridge !== 'no' &&
         valueHighway.properties.layer &&
-        (isNaN(valueHighway.properties.layer) ||
-          parseInt(valueHighway.properties.layer) < 0)) ||
+        (isNaN(valueHighway.properties.layer) || parseInt(valueHighway.properties.layer) < 0)) ||
       (valueHighway.properties.tunnel &&
         valueHighway.properties.tunnel !== 'no' &&
         valueHighway.properties.layer &&
-        (isNaN(valueHighway.properties.layer) ||
-          parseInt(valueHighway.properties.layer) > 0))
+        (isNaN(valueHighway.properties.layer) || parseInt(valueHighway.properties.layer) > 0))
     ) {
       valueHighway.properties._osmlint = osmlint;
       valueHighway.properties._type = classification(

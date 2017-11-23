@@ -10,15 +10,7 @@ module.exports = function(tileLayers, tile, writeData, done) {
   var preserveTypeKeys = _.keys(preserveType);
   var result = layer.features.filter(function(val) {
     var keys = _.keys(val.properties);
-    keys = _.difference(keys, [
-      '@id',
-      '@type',
-      '@version',
-      '@changeset',
-      '@uid',
-      '@user',
-      '@timestamp'
-    ]);
+    keys = _.difference(keys, ['@id', '@type', '@version', '@changeset', '@uid', '@user', '@timestamp']);
     for (var i = keys.length - 1; i >= 0; i--) {
       var preserveTypeValueKeys = preserveType[keys[i]];
       if (preserveTypeKeys.indexOf(keys[i]) === -1) {
@@ -35,8 +27,7 @@ module.exports = function(tileLayers, tile, writeData, done) {
         for (var k = preserveTypeValueKeys.length - 1; k >= 0; k--) {
           if (
             val.properties[keys[i]] !== preserveTypeValueKeys[k] &&
-            levenshtein.get(val.properties[keys[i]], preserveTypeValueKeys[k]) <
-              2
+            levenshtein.get(val.properties[keys[i]], preserveTypeValueKeys[k]) < 2
           ) {
             val.properties._osmlint = osmlint;
             return true;

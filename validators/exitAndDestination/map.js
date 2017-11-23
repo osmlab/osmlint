@@ -8,11 +8,7 @@ module.exports = function(tileLayers, tile, writeData, done) {
   var output = {};
   for (var z = 0; z < layer.features.length; z++) {
     var obj = layer.features[z];
-    if (
-      obj.properties.highway &&
-      hasTag(obj.properties) &&
-      obj.properties['@timestamp'] >= start
-    ) {
+    if (obj.properties.highway && hasTag(obj.properties) && obj.properties['@timestamp'] >= start) {
       output[obj.properties['@id']] = obj;
     }
   }

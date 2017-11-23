@@ -23,12 +23,7 @@ module.exports = function(tileLayers, tile, writeData, done) {
         if (!(val.properties['ref:right'] && val.properties['ref:left'])) {
           val.properties._osmlint = osmlint;
           result.push(val);
-        } else if (
-          !(
-            val.properties['ref:left'] === refs[0] &&
-            val.properties['ref:right'] === refs[1]
-          )
-        ) {
+        } else if (!(val.properties['ref:left'] === refs[0] && val.properties['ref:right'] === refs[1])) {
           val.properties._osmlint = osmlint;
           result.push(val);
         }

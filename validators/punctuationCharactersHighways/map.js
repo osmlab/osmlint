@@ -24,10 +24,8 @@ module.exports = function(tileLayers, tile, writeData, done) {
     if (
       val.properties.highway &&
       preserveType[val.properties.highway] &&
-      ((val.properties.name &&
-        hasSpecialCharacter('name', val.properties.name)) ||
-        (val.properties.destination &&
-          hasSpecialCharacter('destination', val.properties.destination)) ||
+      ((val.properties.name && hasSpecialCharacter('name', val.properties.name)) ||
+        (val.properties.destination && hasSpecialCharacter('destination', val.properties.destination)) ||
         (val.properties.ref && hasSpecialCharacter('ref', val.properties.ref)))
     )
       result.push(val);
@@ -55,11 +53,7 @@ function hasSpecialCharacter(val, str) {
     str.indexOf(';') === -1
   ) {
     return true;
-  } else if (
-    pattern.test(str) === false &&
-    val === 'ref' &&
-    str.indexOf(';') === -1
-  ) {
+  } else if (pattern.test(str) === false && val === 'ref' && str.indexOf(';') === -1) {
     return true;
   }
   return false;
@@ -67,7 +61,7 @@ function hasSpecialCharacter(val, str) {
 
 function allowedCharacters(str) {
   return (
-    str.indexOf('\'') === -1 &&
+    str.indexOf("'") === -1 &&
     str.indexOf('(') === -1 &&
     str.indexOf(')') === -1 &&
     str.indexOf(',') === -1 &&

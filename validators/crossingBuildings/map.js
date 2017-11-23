@@ -44,15 +44,8 @@ module.exports = function(tileLayers, tile, writeData, done) {
     for (var k = 0; k < overlaps.length; k++) {
       var overlap = overlaps[k];
       if (overlap.id !== bbox.id) {
-        var intersect = turf.intersect(
-          buildings[overlap.id],
-          buildings[bbox.id]
-        );
-        if (
-          intersect &&
-          (intersect.geometry.type === 'Polygon' ||
-            intersect.geometry.type === 'MultiPolygon')
-        ) {
+        var intersect = turf.intersect(buildings[overlap.id], buildings[bbox.id]);
+        if (intersect && (intersect.geometry.type === 'Polygon' || intersect.geometry.type === 'MultiPolygon')) {
           var area = turf.area(intersect);
           if (area > overlapArea) {
             var buildingA = buildings[overlap.id];

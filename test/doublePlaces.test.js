@@ -19,21 +19,9 @@ test('doublePlaces', function(t) {
     var logs = logInterceptor.end();
     for (var i = 0; i < 1; i++) {
       var geoJSON = JSON.parse(logs[i]);
-      t.equal(
-        GJV.isFeatureCollection(geoJSON),
-        true,
-        'Should be a FeatureCollection'
-      );
-      t.equal(
-        geoJSON.features[0].geometry.type,
-        'MultiPoint',
-        'Should be MultiPoint'
-      );
-      t.equal(
-        geoJSON.features[0].properties._osmlint,
-        'doubleplaces',
-        'Should be doubleplaces'
-      );
+      t.equal(GJV.isFeatureCollection(geoJSON), true, 'Should be a FeatureCollection');
+      t.equal(geoJSON.features[0].geometry.type, 'MultiPoint', 'Should be MultiPoint');
+      t.equal(geoJSON.features[0].properties._osmlint, 'doubleplaces', 'Should be doubleplaces');
     }
     t.end();
   });

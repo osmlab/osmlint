@@ -72,23 +72,16 @@ module.exports = function(tileLayers, tile, writeData, done) {
     var overlapHighwaysBboxes = highwaysTree.search(highwaysBboxes[j]);
     for (var k = 0; k < overlapHighwaysBboxes.length; k++) {
       var overlapHighway = listOfHighways[overlapHighwaysBboxes[k].id];
-      if (
-        highwayToEvaluate.properties['@id'] !== overlapHighway.properties['@id']
-      ) {
+      if (highwayToEvaluate.properties['@id'] !== overlapHighway.properties['@id']) {
         if (!isContinuousRoads(highwayToEvaluate, overlapHighway)) {
-          var intersectPoint = isIntersectingInNode(
-            highwayToEvaluate,
-            overlapHighway
-          );
+          var intersectPoint = isIntersectingInNode(highwayToEvaluate, overlapHighway);
           if (intersectPoint) {
             if (
               highwayToEvaluate.properties.bridge &&
               highwayToEvaluate.properties.bridge !== 'no' &&
               !overlapHighway.properties.bridge
             ) {
-              var intersectCoords = _.flatten(
-                intersectPoint.geometry.coordinates
-              );
+              var intersectCoords = _.flatten(intersectPoint.geometry.coordinates);
               var highsCoords = _.flatten([
                 highwayToEvaluate.geometry.coordinates,
                 overlapHighway.geometry.coordinates
@@ -109,10 +102,7 @@ module.exports = function(tileLayers, tile, writeData, done) {
                 intersectPoint.properties = props;
                 output[highwayToEvaluate.properties['@id']] = highwayToEvaluate;
                 output[overlapHighway.properties['@id']] = overlapHighway;
-                output[
-                  highwayToEvaluate.properties['@id'] +
-                    overlapHighway.properties['@id']
-                ] = intersectPoint;
+                output[highwayToEvaluate.properties['@id'] + overlapHighway.properties['@id']] = intersectPoint;
               }
             }
           }
@@ -133,22 +123,13 @@ module.exports = function(tileLayers, tile, writeData, done) {
 function classification(major, minor, path, fromHighway, toHighway) {
   if (major[fromHighway] && major[toHighway]) {
     return 'major-major';
-  } else if (
-    (major[fromHighway] && minor[toHighway]) ||
-    (minor[fromHighway] && major[toHighway])
-  ) {
+  } else if ((major[fromHighway] && minor[toHighway]) || (minor[fromHighway] && major[toHighway])) {
     return 'major-minor';
-  } else if (
-    (major[fromHighway] && path[toHighway]) ||
-    (path[fromHighway] && major[toHighway])
-  ) {
+  } else if ((major[fromHighway] && path[toHighway]) || (path[fromHighway] && major[toHighway])) {
     return 'major-path';
   } else if (minor[fromHighway] && minor[toHighway]) {
     return 'minor-minor';
-  } else if (
-    (minor[fromHighway] && path[toHighway]) ||
-    (path[fromHighway] && minor[toHighway])
-  ) {
+  } else if ((minor[fromHighway] && path[toHighway]) || (path[fromHighway] && minor[toHighway])) {
     return 'minor-path';
   } else if (path[fromHighway] && path[toHighway]) {
     return 'path-path';
@@ -184,16 +165,9 @@ function isIntersectingInNode(road1, road2) {
       intersectPoint = turf.combine(intersectPoint);
     }
     intersectPoint = intersectPoint.features[0];
-    if (
-      intersectPoint &&
-      (intersectPoint.geometry.type === 'Point' ||
-        intersectPoint.geometry.type === 'MultiPoint')
-    ) {
+    if (intersectPoint && (intersectPoint.geometry.type === 'Point' || intersectPoint.geometry.type === 'MultiPoint')) {
       var intersectCoords = _.flatten(intersectPoint.geometry.coordinates);
-      var roadsCoords = _.flatten([
-        road1.geometry.coordinates,
-        road2.geometry.coordinates
-      ]);
+      var roadsCoords = _.flatten([road1.geometry.coordinates, road2.geometry.coordinates]);
       if (_.intersection(intersectCoords, roadsCoords).length === 0) {
         return false;
       } else {

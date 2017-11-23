@@ -25,8 +25,7 @@ module.exports = function(tileLayers, tile, writeData, done) {
       if (
         val.properties.highway &&
         majorRoads[val.properties.highway] &&
-        (ref.indexOf('-') > -1 ||
-          (name.indexOf(ref) > -1 && hasNumbers(ref) && ref.length > 1))
+        (ref.indexOf('-') > -1 || (name.indexOf(ref) > -1 && hasNumbers(ref) && ref.length > 1))
       ) {
         val.properties._osmlint = osmlint;
         result.push(val);

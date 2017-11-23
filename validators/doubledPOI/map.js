@@ -34,8 +34,7 @@ module.exports = function(tileLayers, tile, writeData, done) {
             objnames[nlc].properties.name.toLowerCase() === nlc &&
             objnames[nlc].geometry.type !== val.geometry.type &&
             getDistance(objnames[nlc], val) < 0.03 &&
-            objnames[nlc].properties[featuresE[j]] ===
-              val.properties[featuresE[j]]
+            objnames[nlc].properties[featuresE[j]] === val.properties[featuresE[j]]
           ) {
             objnames[nlc].properties._osmlint = osmlint;
             val.properties._osmlint = osmlint;

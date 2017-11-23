@@ -55,10 +55,7 @@ module.exports = function(tileLayers, tile, writeData, done) {
       });
       bboxes.push(bboxA);
       highways[val.properties['@id']] = val;
-    } else if (
-      val.geometry.type === 'MultiLineString' &&
-      val.properties.highway
-    ) {
+    } else if (val.geometry.type === 'MultiLineString' && val.properties.highway) {
       var flat = flatten(val);
       var id = val.properties['@id'] + 'L';
       for (var f = 0; f < flat.length; f++) {
@@ -87,10 +84,7 @@ module.exports = function(tileLayers, tile, writeData, done) {
     var valueHighway = highways[valueBbox.id.id];
     valueHighway.properties._osmlint = osmlint;
     var firstCoord = valueHighway.geometry.coordinates[0];
-    var endCoord =
-      valueHighway.geometry.coordinates[
-        valueHighway.geometry.coordinates.length - 1
-      ];
+    var endCoord = valueHighway.geometry.coordinates[valueHighway.geometry.coordinates.length - 1];
     if (
       !turf.booleanPointInPolygon(turf.point(firstCoord), bufferLayer) &&
       !turf.booleanPointInPolygon(turf.point(endCoord), bufferLayer)
@@ -110,12 +104,7 @@ module.exports = function(tileLayers, tile, writeData, done) {
         var valueCoordinates = geojsonCoords(valueHighway);
         var nearCoordinates = geojsonCoords(nearHighways);
         //filter all highways without any connection
-        if (
-          _.intersection(
-            _.flatten(valueCoordinates),
-            _.flatten(nearCoordinates)
-          ).length < 2
-        ) {
+        if (_.intersection(_.flatten(valueCoordinates), _.flatten(nearCoordinates)).length < 2) {
           var obj = {};
           var arrf = [];
           var arre = [];
@@ -142,10 +131,7 @@ module.exports = function(tileLayers, tile, writeData, done) {
                 [coords[m][0], coords[m][1]],
                 [coords[m + 1][0], coords[m + 1][1]]
               ]);
-              obj[endDistance] = turf.lineString([
-                [coords[m][0], coords[m][1]],
-                [coords[m + 1][0], coords[m + 1][1]]
-              ]);
+              obj[endDistance] = turf.lineString([[coords[m][0], coords[m][1]], [coords[m + 1][0], coords[m + 1][1]]]);
               arrf.push(firstDistance);
               arre.push(endDistance);
             }

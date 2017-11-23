@@ -59,9 +59,7 @@ module.exports = function(tileLayers, tile, writeData, done) {
           val.properties.tunnel !== 'building_passage' &&
           !val.properties.bridge &&
           !val.properties.layer) ||
-        (val.properties.building &&
-          val.properties.building !== 'no' &&
-          val.properties.building !== 'roof')
+        (val.properties.building && val.properties.building !== 'no' && val.properties.building !== 'roof')
       ) {
         objsBboxes.push(objBbox(val));
         listOfObjects[val.properties['@id']] = val;
@@ -95,9 +93,7 @@ module.exports = function(tileLayers, tile, writeData, done) {
             intersectPoint = intersectPoint.features[0];
             if (
               (intersectPoint.geometry.type === 'Point' &&
-                listOfAvoidPoints[
-                  intersectPoint.geometry.coordinates.join(',')
-                ]) ||
+                listOfAvoidPoints[intersectPoint.geometry.coordinates.join(',')]) ||
               intersectPoint.geometry.type === 'MultiPoint'
             ) {
               objToEvaluate.properties._osmlint = osmlint;
@@ -106,20 +102,11 @@ module.exports = function(tileLayers, tile, writeData, done) {
                 _fromWay: objToEvaluate.properties['@id'],
                 _toWay: overlapObj.properties['@id'],
                 _osmlint: osmlint,
-                _type: classification(
-                  majorRoads,
-                  minorRoads,
-                  pathRoads,
-                  objToEvaluate.properties.highway
-                )
+                _type: classification(majorRoads, minorRoads, pathRoads, objToEvaluate.properties.highway)
               };
               output[objToEvaluate.properties['@id']] = objToEvaluate;
               output[overlapObj.properties['@id']] = overlapObj;
-              output[
-                objToEvaluate.properties['@id'] +
-                  '-' +
-                  overlapObj.properties['@id']
-              ] = intersectPoint;
+              output[objToEvaluate.properties['@id'] + '-' + overlapObj.properties['@id']] = intersectPoint;
             }
           }
         }

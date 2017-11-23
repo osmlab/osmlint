@@ -81,8 +81,7 @@ module.exports = function(tileLayers, tile, writeData, done) {
         }
       }
     } else if (
-      ((val.properties.waterway &&
-        !dontPreserveWaterways[val.properties.waterway]) ||
+      ((val.properties.waterway && !dontPreserveWaterways[val.properties.waterway]) ||
         val.properties.natural === 'water') &&
       (val.geometry.type === 'LineString' || val.geometry.type === 'Polygon') &&
       val.properties.tunnel === undefined
@@ -110,10 +109,7 @@ module.exports = function(tileLayers, tile, writeData, done) {
     var overlaphighwaysBbox = highwaysTree.search(waterBbox);
     for (var k = 0; k < overlaphighwaysBbox.length; k++) {
       var overlapHigBbox = overlaphighwaysBbox[k];
-      var intersect = turf.lineIntersect(
-        highways[overlapHigBbox.id],
-        waterways[waterBbox.id]
-      );
+      var intersect = turf.lineIntersect(highways[overlapHigBbox.id], waterways[waterBbox.id]);
       // var intersectPoint = turf.lineIntersect(overlapObj, objToEvaluate);
       if (intersect && intersect.features.length > 0) {
         if (intersect.features.length > 1) {
@@ -124,12 +120,7 @@ module.exports = function(tileLayers, tile, writeData, done) {
           _fromWay: highways[overlapHigBbox.id].properties['@id'],
           _toWay: waterways[waterBbox.id].properties['@id'],
           _osmlint: osmlint,
-          _type: classification(
-            majorRoads,
-            minorRoads,
-            pathRoads,
-            highways[overlapHigBbox.id].properties.highway
-          )
+          _type: classification(majorRoads, minorRoads, pathRoads, highways[overlapHigBbox.id].properties.highway)
         };
         intersect.properties = props;
         highways[overlapHigBbox.id].properties._osmlint = osmlint;
@@ -145,10 +136,7 @@ module.exports = function(tileLayers, tile, writeData, done) {
               output[waterBbox.id + overlapHigBbox.id + l] = point;
             }
           }
-        } else if (
-          intersect.geometry.type === 'Point' &&
-          !fords[intersect.geometry.coordinates.join(',')]
-        ) {
+        } else if (intersect.geometry.type === 'Point' && !fords[intersect.geometry.coordinates.join(',')]) {
           output[waterBbox.id + overlapHigBbox.id] = intersect;
         }
       }

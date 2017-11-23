@@ -66,22 +66,13 @@ function fromToTypes(fromRoad, toRoad) {
   var fromToRoad;
   if (majorRoads[fromRoad] && majorRoads[toRoad]) {
     fromToRoad = 'major-major';
-  } else if (
-    (majorRoads[fromRoad] && minorRoads[toRoad]) ||
-    (minorRoads[fromRoad] && majorRoads[toRoad])
-  ) {
+  } else if ((majorRoads[fromRoad] && minorRoads[toRoad]) || (minorRoads[fromRoad] && majorRoads[toRoad])) {
     fromToRoad = 'major-minor';
-  } else if (
-    (majorRoads[fromRoad] && pathRoads[toRoad]) ||
-    (pathRoads[fromRoad] && majorRoads[toRoad])
-  ) {
+  } else if ((majorRoads[fromRoad] && pathRoads[toRoad]) || (pathRoads[fromRoad] && majorRoads[toRoad])) {
     fromToRoad = 'major-path';
   } else if (minorRoads[fromRoad] && minorRoads[toRoad]) {
     fromToRoad = 'minor-minor';
-  } else if (
-    (minorRoads[fromRoad] && pathRoads[toRoad]) ||
-    (pathRoads[fromRoad] && minorRoads[toRoad])
-  ) {
+  } else if ((minorRoads[fromRoad] && pathRoads[toRoad]) || (pathRoads[fromRoad] && minorRoads[toRoad])) {
     fromToRoad = 'minor-path';
   } else if (pathRoads[fromRoad] && pathRoads[toRoad]) {
     fromToRoad = 'path-path';
