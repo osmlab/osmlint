@@ -1,4 +1,4 @@
 #### Description
 
-Thsi validator detect any spacial characters `'!"#$%&\'()*+,-./:;<=>?@[\\]^_{|}~'`  in highways which has `name`, `destination` or `ref`.
+This validator detect any special characters `'!"#$%&\'()*+,-./:;<=>?@[\\]^_{|}~'`  in the `name`, `destination` or `ref` tag of a highway.
 
