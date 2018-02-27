@@ -19,8 +19,7 @@ module.exports = function(tileLayers, tile, writeData, done) {
 
   result = result.filter(function(value) {
     var firstCoord = value.geometry.coordinates[0];
-    var endCoord =
-      value.geometry.coordinates[value.geometry.coordinates.length - 1];
+    var endCoord = value.geometry.coordinates[value.geometry.coordinates.length - 1];
     if (firstCoord[0] === endCoord[0] && firstCoord[1] === endCoord[1]) {
       return false;
     }

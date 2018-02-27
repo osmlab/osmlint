@@ -42,19 +42,13 @@ module.exports = function(tileLayers, tile, writeData, done) {
   var trafficLights = [];
   for (var i = 0; i < layer.features.length; i++) {
     var val = layer.features[i];
-    if (
-      preserveType[val.properties.highway] &&
-      val.geometry.type === 'LineString'
-    ) {
+    if (preserveType[val.properties.highway] && val.geometry.type === 'LineString') {
       var coords = val.geometry.coordinates;
       for (var k = 0; k < coords.length; k++) {
         highwayCoords[coords[k].join(',')] = true;
       }
     }
-    if (
-      val.properties.highway === 'traffic_signals' &&
-      val.geometry.type === 'Point'
-    ) {
+    if (val.properties.highway === 'traffic_signals' && val.geometry.type === 'Point') {
       trafficLights.push(val);
     }
   }

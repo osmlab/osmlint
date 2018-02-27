@@ -66,10 +66,7 @@ function toLines(layer) {
   for (var i = 0; i < layer.length; i++) {
     var feature = layer.feature(i);
     //only consider polygon features with Tiger name or OSM highway tag
-    if (
-      feature.type === 2 &&
-      (feature.properties.FULLNAME !== '' || feature.properties.highway)
-    ) {
+    if (feature.type === 2 && (feature.properties.FULLNAME !== '' || feature.properties.highway)) {
       var geom = feature.loadGeometry();
       for (var k = 0; k < geom.length; k++) {
         lineclip(normalizeLine(geom[k], layer.extent), bbox, lines); // clip to tile bbox and add to result

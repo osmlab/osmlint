@@ -66,10 +66,7 @@ module.exports = function(tileLayers, tile, writeData, done) {
       var isClippedL = false;
       if (
         turf.booleanPointInPolygon(turf.point(coordsWayL[0]), bufferLayer) ||
-        turf.booleanPointInPolygon(
-          turf.point(coordsWayL[coordsWayL.length - 1]),
-          bufferLayer
-        )
+        turf.booleanPointInPolygon(turf.point(coordsWayL[coordsWayL.length - 1]), bufferLayer)
       ) {
         isClippedL = true;
       }
@@ -92,10 +89,7 @@ module.exports = function(tileLayers, tile, writeData, done) {
         bboxes.push(itemL);
       }
       highways[idWayL] = val;
-    } else if (
-      val.geometry.type === 'MultiLineString' &&
-      val.properties.highway
-    ) {
+    } else if (val.geometry.type === 'MultiLineString' && val.properties.highway) {
       //MultiLineString evaluation
       var arrayWays = flatten(val);
       for (var f = 0; f < arrayWays.length; f++) {
@@ -103,14 +97,8 @@ module.exports = function(tileLayers, tile, writeData, done) {
           var coordsWayM = arrayWays[f].geometry.coordinates;
           var isClippedM = false;
           if (
-            turf.booleanPointInPolygon(
-              turf.point(coordsWayM[0]),
-              bufferLayer
-            ) ||
-            turf.booleanPointInPolygon(
-              turf.point(coordsWayM[coordsWayM.length - 1]),
-              bufferLayer
-            )
+            turf.booleanPointInPolygon(turf.point(coordsWayM[0]), bufferLayer) ||
+            turf.booleanPointInPolygon(turf.point(coordsWayM[coordsWayM.length - 1]), bufferLayer)
           ) {
             isClippedM = true;
           }
@@ -144,10 +132,7 @@ module.exports = function(tileLayers, tile, writeData, done) {
   for (var key in highways) {
     var valueHighway = highways[key];
     var firstCoor = valueHighway.geometry.coordinates[0];
-    var endCoor =
-      valueHighway.geometry.coordinates[
-        valueHighway.geometry.coordinates.length - 1
-      ];
+    var endCoor = valueHighway.geometry.coordinates[valueHighway.geometry.coordinates.length - 1];
     if (
       valueHighway.properties.oneway &&
       valueHighway.properties.oneway !== 'no' &&
@@ -166,15 +151,9 @@ module.exports = function(tileLayers, tile, writeData, done) {
         var flagFirst = [];
         for (var u = 0; u < overlapsFirstcoor.length; u++) {
           var connectRoad = highways[overlapsFirstcoor[u].id.id];
-          flagFirst.push(
-            connection(
-              overlapsFirstcoor[u].id.position,
-              connectRoad.properties.oneway
-            )
-          );
+          flagFirst.push(connection(overlapsFirstcoor[u].id.position, connectRoad.properties.oneway));
           if (
-            (valueHighway.properties['@id'] === connectRoad.properties['@id'] &&
-              overlapsFirstcoor[u].id.isClipped) ||
+            (valueHighway.properties['@id'] === connectRoad.properties['@id'] && overlapsFirstcoor[u].id.isClipped) ||
             (overlapsFirstcoor[u].id.position === 'middle' ||
               connectRoad.properties.oneway === 'no' ||
               typeof connectRoad.properties.oneway === 'undefined')
@@ -194,12 +173,7 @@ module.exports = function(tileLayers, tile, writeData, done) {
           firstPointNoConnection.properties = {
             _fromWay: valueHighway.properties['@id'],
             _osmlint: osmlint,
-            _type: classification(
-              majorRoads,
-              minorRoads,
-              pathRoads,
-              valueHighway.properties.highway
-            )
+            _type: classification(majorRoads, minorRoads, pathRoads, valueHighway.properties.highway)
           };
           features[firstCoor.join('-')] = firstPointNoConnection;
         }
@@ -214,12 +188,7 @@ module.exports = function(tileLayers, tile, writeData, done) {
         endPointNoExit.properties = {
           _fromWay: valueHighway.properties['@id'],
           _osmlint: osmlint,
-          _type: classification(
-            majorRoads,
-            minorRoads,
-            pathRoads,
-            valueHighway.properties.highway
-          )
+          _type: classification(majorRoads, minorRoads, pathRoads, valueHighway.properties.highway)
         };
         features[endCoor.join('-')] = endPointNoExit;
       } else {
@@ -227,16 +196,9 @@ module.exports = function(tileLayers, tile, writeData, done) {
         var flagEnd = [];
         for (var m = 0; m < overlapsEndcoor.length; m++) {
           var connectRoadEnd = highways[overlapsEndcoor[m].id.id];
-          flagEnd.push(
-            connection(
-              overlapsEndcoor[m].id.position,
-              connectRoadEnd.properties.oneway
-            )
-          );
+          flagEnd.push(connection(overlapsEndcoor[m].id.position, connectRoadEnd.properties.oneway));
           if (
-            (valueHighway.properties['@id'] ===
-              connectRoadEnd.properties['@id'] &&
-              overlapsEndcoor[m].id.isClipped) ||
+            (valueHighway.properties['@id'] === connectRoadEnd.properties['@id'] && overlapsEndcoor[m].id.isClipped) ||
             (overlapsEndcoor[m].id.position === 'middle' ||
               connectRoadEnd.properties.oneway === 'no' ||
               typeof connectRoadEnd.properties.oneway === 'undefined')
@@ -256,12 +218,7 @@ module.exports = function(tileLayers, tile, writeData, done) {
           endPointNoConnection.properties = {
             _fromWay: valueHighway.properties['@id'],
             _osmlint: osmlint,
-            _type: classification(
-              majorRoads,
-              minorRoads,
-              pathRoads,
-              valueHighway.properties.highway
-            )
+            _type: classification(majorRoads, minorRoads, pathRoads, valueHighway.properties.highway)
           };
           features[endCoor.join('-')] = endPointNoConnection;
         }

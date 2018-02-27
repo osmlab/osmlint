@@ -18,12 +18,9 @@ module.exports = function(tileLayers, tile, writeData, done) {
     if (
       (val.properties.highway &&
         motorwayRoads[val.properties.highway] &&
-        (val.properties.destination &&
-          val.properties.destination.indexOf('|') > 0)) ||
-      ((val.properties['destination:ref'] &&
-        val.properties['destination:ref'].indexOf('|') > 0) ||
-        (val.properties['destination:street'] &&
-          val.properties['destination:street'].indexOf('|') > 0))
+        (val.properties.destination && val.properties.destination.indexOf('|') > 0)) ||
+      ((val.properties['destination:ref'] && val.properties['destination:ref'].indexOf('|') > 0) ||
+        (val.properties['destination:street'] && val.properties['destination:street'].indexOf('|') > 0))
     ) {
       val.properties._osmlint = osmlint;
       result.push(val);

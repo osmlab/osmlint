@@ -33,19 +33,9 @@ module.exports = function(tileLayers, tile, writeData, done) {
   };
 
   var result = layer.features.filter(function(val) {
-    if (
-      val.properties.highway &&
-      val.properties.bridge &&
-      val.properties.bridge !== 'no' &&
-      !val.properties.layer
-    ) {
+    if (val.properties.highway && val.properties.bridge && val.properties.bridge !== 'no' && !val.properties.layer) {
       val.properties._osmlint = 'missinglayerbridges';
-      val.properties._type = classification(
-        majorRoads,
-        minorRoads,
-        pathRoads,
-        val.properties.highway
-      );
+      val.properties._type = classification(majorRoads, minorRoads, pathRoads, val.properties.highway);
       return true;
     }
   });

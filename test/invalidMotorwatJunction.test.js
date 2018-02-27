@@ -18,11 +18,7 @@ test('invalidMotorwayJunctions', function(t) {
 
     var geoJSON = JSON.parse(logs[0]);
     t.equal(geoJSON.features[0].geometry.type, 'Point', 'Should be Point');
-    t.equal(
-      geoJSON.features[0].properties._osmlint,
-      'invalidmotorwayjunctions',
-      'Should be invalidmotorwayjunctions'
-    );
+    t.equal(geoJSON.features[0].properties._osmlint, 'invalidmotorwayjunctions', 'Should be invalidmotorwayjunctions');
     t.end();
   });
 });

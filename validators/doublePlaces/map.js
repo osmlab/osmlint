@@ -37,8 +37,7 @@ module.exports = function(tileLayers, tile, writeData, done) {
       (val.geometry.type === 'Point' || val.geometry.type === 'Polygon') &&
       val.properties.name
     ) {
-      var pname =
-        val.properties.place + '-' + val.properties.name.toLowerCase();
+      var pname = val.properties.place + '-' + val.properties.name.toLowerCase();
       if (objs[pname]) {
         objs[pname].push(val);
       } else {

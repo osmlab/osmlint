@@ -18,16 +18,8 @@ test('doubledPOI', function(t) {
       var geoJSON = JSON.parse(logs[i]);
       t.comment('Pass: ' + (i + 1));
       if (geoJSON.features.length > 0) {
-        t.equal(
-          geoJSON.features[0].properties._osmlint,
-          'doubledpoi',
-          'Should be doubledPOI'
-        );
-        t.equal(
-          geoJSON.features[0].geometry.type,
-          'Polygon',
-          'Should be polygon'
-        );
+        t.equal(geoJSON.features[0].properties._osmlint, 'doubledpoi', 'Should be doubledPOI');
+        t.equal(geoJSON.features[0].geometry.type, 'Polygon', 'Should be polygon');
       }
     }
     t.end();

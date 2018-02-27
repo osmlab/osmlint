@@ -42,10 +42,7 @@ module.exports = function(tileLayers, tile, writeData, done) {
   var osmlint = 'missingcardinaldestination';
   for (var z = 0; z < layer.features.length; z++) {
     var val = layer.features[z];
-    if (
-      val.geometry.type === 'LineString' &&
-      preserveType[val.properties.highway]
-    ) {
+    if (val.geometry.type === 'LineString' && preserveType[val.properties.highway]) {
       var bboxA = turf.bbox(val);
       bboxA.push({
         id: val.properties['@id']
@@ -63,16 +60,13 @@ module.exports = function(tileLayers, tile, writeData, done) {
     valueHighway.properties._osmlint = osmlint;
     if (
       valueHighway.properties.highway === 'motorway_link' &&
-      (valueHighway.properties['destination:ref'] &&
-        !hasCardinal(valueHighway.properties['destination:ref']))
+      (valueHighway.properties['destination:ref'] && !hasCardinal(valueHighway.properties['destination:ref']))
     ) {
       var overlaps = highwaysTree.search(valueBbox);
       for (var k = 0; k < overlaps.length; k++) {
         var overlap = overlaps[k];
         var overlapHighway = highways[overlap[4].id];
-        if (
-          valueHighway.properties['@id'] !== overlapHighway.properties['@id']
-        ) {
+        if (valueHighway.properties['@id'] !== overlapHighway.properties['@id']) {
           var firstCoord = valueHighway.geometry.coordinates[0];
           //entrance
           if (overlapHighway.properties.highway !== 'motorway_link') {

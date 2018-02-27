@@ -13,17 +13,10 @@ module.exports = function(tileLayers, tile, writeData, done) {
   };
   for (var i = 0; i < layer.features.length; i++) {
     var val = layer.features[i];
-    if (
-      val.properties.waterway &&
-      preserveType[val.properties.waterway] &&
-      val.geometry.type === 'LineString'
-    ) {
+    if (val.properties.waterway && preserveType[val.properties.waterway] && val.geometry.type === 'LineString') {
       var intersect = turf.lineIntersect(val, val);
       if (intersect && intersect.features.length > 0) {
-        if (
-          intersect &&
-          intersect.features.length + 1 > val.geometry.coordinates.length
-        ) {
+        if (intersect && intersect.features.length + 1 > val.geometry.coordinates.length) {
           var coords = {};
           for (var x = 0; x < val.geometry.coordinates.length; x++) {
             var coord = val.geometry.coordinates[x];

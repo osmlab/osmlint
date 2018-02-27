@@ -38,10 +38,7 @@ module.exports = function(tileLayers, tile, writeData, done) {
   }
   for (var h = 0; h < tigerLayer.features.length; h++) {
     var tigerVal = tigerLayer.features[h];
-    if (
-      tigerVal.properties.FULLNAME &&
-      tigerVal.geometry.type === 'LineString'
-    ) {
+    if (tigerVal.properties.FULLNAME && tigerVal.geometry.type === 'LineString') {
       tigerFC.push(tigerVal);
     }
   }
@@ -59,10 +56,7 @@ module.exports = function(tileLayers, tile, writeData, done) {
         var tigerPoints = turf.explode(tigerWay);
         var nodes;
         nodes = turf.within(tigerPoints, turf.featureCollection([buffer]));
-        if (
-          nodes.features.length >= tigerPoints.features.length / 2 &&
-          tigerWay.properties.FULLNAME
-        ) {
+        if (nodes.features.length >= tigerPoints.features.length / 2 && tigerWay.properties.FULLNAME) {
           osmWay.properties._osmlint = osmlint;
           osmWay.properties.name = tigerWay.properties.FULLNAME;
           result.push(osmWay);

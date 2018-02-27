@@ -37,8 +37,7 @@ module.exports = function(tileLayers, tile, writeData, done) {
       val.properties.highway &&
       preserveType[val.properties.highway] &&
       ((val.properties.construction &&
-        (val.properties.construction === 'yes' ||
-          val.properties.construction === 'widening')) ||
+        (val.properties.construction === 'yes' || val.properties.construction === 'widening')) ||
         (val.properties.proposed && val.properties.proposed === 'yes'))
     ) {
       val.properties._osmlint = osmlint;

@@ -49,16 +49,10 @@ module.exports = function(tileLayers, tile, writeData, done) {
       valueHighway.geometry.coordinates.length > 2
     ) {
       highways.push(valueHighway);
-    } else if (
-      preserveType[valueHighway.properties.highway] &&
-      valueHighway.geometry.type === 'MultiLineString'
-    ) {
+    } else if (preserveType[valueHighway.properties.highway] && valueHighway.geometry.type === 'MultiLineString') {
       var flat = flatten(valueHighway);
       for (var f = 0; f < flat.length; f++) {
-        if (
-          flat[f].geometry.type === 'LineString' &&
-          flat[f].geometry.coordinates.length > 2
-        ) {
+        if (flat[f].geometry.type === 'LineString' && flat[f].geometry.coordinates.length > 2) {
           flat[f].properties = valueHighway.properties;
           highways.push(flat[f]);
         }

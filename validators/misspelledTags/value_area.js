@@ -324,15 +324,7 @@ module.exports = {
 
   geological: ['moraine', 'outcrop', 'palaeontological_site'],
 
-  cycleway: [
-    'lane',
-    'opposite',
-    'opposite_lane',
-    'track',
-    'opposite_track',
-    'share_busway',
-    'shared_lane'
-  ],
+  cycleway: ['lane', 'opposite', 'opposite_lane', 'track', 'opposite_track', 'share_busway', 'shared_lane'],
 
   highway: [
     'motorway',

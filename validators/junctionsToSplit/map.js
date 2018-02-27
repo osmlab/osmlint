@@ -33,10 +33,7 @@ module.exports = function(tileLayers, tile, writeData, done) {
   var osmlint = 'junctionstosplit';
   for (var z = 0; z < layer.features.length; z++) {
     var val = layer.features[z];
-    if (
-      val.geometry.type === 'LineString' &&
-      preserveType[val.properties.highway]
-    ) {
+    if (val.geometry.type === 'LineString' && preserveType[val.properties.highway]) {
       var bboxA = objBbox(val);
       bboxes.push(bboxA);
       highways[val.properties['@id']] = val;
@@ -67,24 +64,15 @@ module.exports = function(tileLayers, tile, writeData, done) {
           if (intersection && intersection.features.length > 0) {
             intersection = intersection.features[0];
             var interCoordsF = flatten(intersection.geometry.coordinates);
-            if (
-              _.intersection(valueHighwayCoords[0], interCoordsF).length === 2
-            ) {
+            if (_.intersection(valueHighwayCoords[0], interCoordsF).length === 2) {
               isEntrance = true;
             }
             if (
-              _.intersection(valueHighwayCoords[0], interCoordsF).length !==
-                2 &&
-              _.intersection(
-                valueHighwayCoords[valueHighwayCoords.length - 1],
-                interCoordsF
-              ).length !== 2
+              _.intersection(valueHighwayCoords[0], interCoordsF).length !== 2 &&
+              _.intersection(valueHighwayCoords[valueHighwayCoords.length - 1], interCoordsF).length !== 2
             ) {
               for (var t = 1; t < overlapHighwayCoords.length - 1; t++) {
-                if (
-                  _.intersection(overlapHighwayCoords[t], interCoordsF)
-                    .length === 2
-                ) {
+                if (_.intersection(overlapHighwayCoords[t], interCoordsF).length === 2) {
                   isIntersect = true;
                   intersectHighway = overlapHighway;
                 }

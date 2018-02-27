@@ -5,10 +5,7 @@ var path = require('path');
 var processors = require('../index.js');
 
 var zoom = 12;
-var tiles = path.join(
-  __dirname,
-  '/fixtures/deprecatedConstructionProposalTag.mbtiles'
-);
+var tiles = path.join(__dirname, '/fixtures/deprecatedConstructionProposalTag.mbtiles');
 var opts = {
   bbox: [-117.15065, 33.530663, -117.07684, 33.57544],
   zoom: zoom
@@ -26,11 +23,7 @@ test('Deprecated construction proposal tag', function(t) {
         'deprecatedconstructionproposaltag',
         'Should be deprecatedconstructionproposaltag'
       );
-      t.equal(
-        geoJSON.features[0].properties['@id'],
-        113104928,
-        'Should be 113104928'
-      );
+      t.equal(geoJSON.features[0].properties['@id'], 113104928, 'Should be 113104928');
     }
     t.end();
   });

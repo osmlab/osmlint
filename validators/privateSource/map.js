@@ -5,15 +5,7 @@ module.exports = function(tileLayers, tile, writeData, done) {
   var layer = tileLayers.osm.osm;
   var osmlint = 'privatesource';
   var result = [];
-  var unallowedSource = [
-    'google',
-    'nokia',
-    'here',
-    'waze',
-    'apple',
-    'tomtom',
-    'wikimapia'
-  ];
+  var unallowedSource = ['google', 'nokia', 'here', 'waze', 'apple', 'tomtom', 'wikimapia'];
   for (var i = 0; i < layer.features.length; i++) {
     var val = layer.features[i];
     if (val.properties.source && typeof val.properties.source !== 'number') {

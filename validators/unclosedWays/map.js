@@ -27,18 +27,12 @@ module.exports = function(tileLayers, tile, writeData, done) {
     if (
       val.geometry.type === 'LineString' &&
       valueType &&
-      !(
-        val.properties.source &&
-        val.properties.source.indexOf(preventSource[val.properties.source]) < 0
-      )
+      !(val.properties.source && val.properties.source.indexOf(preventSource[val.properties.source]) < 0)
     ) {
       var coordinates = val.geometry.coordinates;
       var firstCoord = coordinates[0];
       var lastCoord = coordinates[coordinates.length - 1];
-      if (
-        turf.inside(turf.point(firstCoord), buffer) ||
-        turf.inside(turf.point(lastCoord), buffer)
-      ) {
+      if (turf.inside(turf.point(firstCoord), buffer) || turf.inside(turf.point(lastCoord), buffer)) {
         return false;
       }
       return true;

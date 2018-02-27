@@ -19,23 +19,11 @@ test('filterMajorHighways', function(t) {
     var logs = logInterceptor.end();
     for (var i = 0; i < 1; i++) {
       var geoJSON = JSON.parse(logs[i]);
-      t.equal(
-        GJV.isFeatureCollection(geoJSON),
-        true,
-        'Should be a FeatureCollection'
-      );
-      t.equal(
-        geoJSON.features[0].properties['@user'],
-        'Dmitry2013',
-        'Should be Dmitry2013'
-      );
+      t.equal(GJV.isFeatureCollection(geoJSON), true, 'Should be a FeatureCollection');
+      t.equal(geoJSON.features[0].properties['@user'], 'Dmitry2013', 'Should be Dmitry2013');
       t.equal(geoJSON.features[0].properties['@version'], 6, 'Should be 6');
       t.equal(geoJSON.features[0].properties.oneway, 'yes', 'Should be yes');
-      t.equal(
-        geoJSON.features[0].properties._osmlint,
-        'filtermajorhighways',
-        'Should be filterMajorHighways'
-      );
+      t.equal(geoJSON.features[0].properties._osmlint, 'filtermajorhighways', 'Should be filterMajorHighways');
     }
     t.end();
   });

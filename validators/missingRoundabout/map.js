@@ -33,10 +33,7 @@ module.exports = function(tileLayers, tile, writeData, done) {
   preserveType = _.extend(preserveType, minorRoads);
   for (var i = 0; i < layer.features.length; i++) {
     var val = layer.features[i];
-    if (
-      val.geometry.type === 'MultiLineString' &&
-      preserveType[val.properties.highway]
-    ) {
+    if (val.geometry.type === 'MultiLineString' && preserveType[val.properties.highway]) {
       var flat = flatten(val);
       var id = val.properties['@id'] + 'L';
       for (var f = 0; f < flat.length; f++) {
@@ -49,17 +46,11 @@ module.exports = function(tileLayers, tile, writeData, done) {
         }
       }
     }
-    if (
-      preserveType[val.properties.highway] &&
-      val.geometry.type === 'LineString'
-    ) {
+    if (preserveType[val.properties.highway] && val.geometry.type === 'LineString') {
       var bboxHighway = objBbox(val);
       listOfHighways[val.properties['@id']] = val;
       var coords = val.geometry.coordinates;
-      if (
-        coords[0][0] === coords[coords.length - 1][0] &&
-        coords[0][1] === coords[coords.length - 1][1]
-      ) {
+      if (coords[0][0] === coords[coords.length - 1][0] && coords[0][1] === coords[coords.length - 1][1]) {
         suspRoundaboutBboxes.push(bboxHighway);
       } else {
         highwaysBboxes.push(bboxHighway);
@@ -84,27 +75,13 @@ module.exports = function(tileLayers, tile, writeData, done) {
         var overlapHighway = listOfHighways[overlaps[y].id];
         var coordsOverlapHighway = overlapHighway.geometry.coordinates;
         //if the highway is entering to roundabout
-        if (
-          coordgObjSerial[
-            coordsOverlapHighway[coordsOverlapHighway.length - 1].join(',')
-          ]
-        ) {
-          if (
-            coordgObjSerial[
-              coordsOverlapHighway[coordsOverlapHighway.length - 1].join(',')
-            ].type
-          ) {
-            coordgObjSerial[
-              coordsOverlapHighway[coordsOverlapHighway.length - 1].join(',') +
-                y
-            ] = {
+        if (coordgObjSerial[coordsOverlapHighway[coordsOverlapHighway.length - 1].join(',')]) {
+          if (coordgObjSerial[coordsOverlapHighway[coordsOverlapHighway.length - 1].join(',')].type) {
+            coordgObjSerial[coordsOverlapHighway[coordsOverlapHighway.length - 1].join(',') + y] = {
               type: 'entry'
             };
           }
-          coordgObjSerial[
-            coordsOverlapHighway[coordsOverlapHighway.length - 1].join(',')
-          ].type =
-            'entry';
+          coordgObjSerial[coordsOverlapHighway[coordsOverlapHighway.length - 1].join(',')].type = 'entry';
         }
         //if the highway is getting out from roundabout
         if (coordgObjSerial[coordsOverlapHighway[0].join(',')]) {
