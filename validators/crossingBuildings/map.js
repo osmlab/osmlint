@@ -12,15 +12,13 @@ module.exports = function(tileLayers, tile, writeData, done) {
   var osmlint = 'crossingbuildings';
   for (var i = 0; i < layer.features.length; i++) {
     var val = layer.features[i];
+    val.properties._osmlint = osmlint;
     if (val.geometry.type === 'Polygon' && val.properties.building) {
       var kinks = turf.kinks(val);
       if (kinks && kinks.features.length === 0) {
-        // var valBbox = turf.bbox(val);
-        // valBbox.push(val.properties['@id']);
         bboxes.push(objBbox(val));
         buildings[val.properties['@id']] = val;
       } else if (kinks && kinks.features.length === 1) {
-        val.properties._osmlint = osmlint;
         kinks.features[0].properties._osmlint = osmlint;
         kinks.features[0].properties['@id'] = val.properties['@id'];
         //save detection
@@ -56,9 +54,7 @@ module.exports = function(tileLayers, tile, writeData, done) {
           var area = turf.area(intersect);
           if (area > overlapArea) {
             var buildingA = buildings[overlap.id];
-            buildingA.properties._osmlint = osmlint;
             var buildingB = buildings[bbox.id];
-            buildingB.properties._osmlint = osmlint;
             var points = turf.explode(intersect);
             var multiPoint = turf.combine(points).features[0];
             multiPoint.properties = {
@@ -84,12 +80,13 @@ module.exports = function(tileLayers, tile, writeData, done) {
   done(null, null);
 };
 
-function objBbox(obj) {
+function objBbox(obj, id) {
+  var bboxExtent = ['minX', 'minY', 'maxX', 'maxY'];
   var bbox = {};
   var valBbox = turf.bbox(obj);
   for (var d = 0; d < valBbox.length; d++) {
-    bbox[bbox[d]] = valBbox[d];
+    bbox[bboxExtent[d]] = valBbox[d];
   }
-  bbox.id = obj.properties['@id'];
+  bbox.id = id || obj.properties['@id'];
   return bbox;
 }
