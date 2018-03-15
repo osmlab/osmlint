@@ -4,7 +4,7 @@ var logInterceptor = require('log-interceptor');
 var path = require('path');
 var processors = require('../index.js');
 var zoom = 12;
-var crossingHighwaysTiles = path.join(
+var crossingBuildingsTiles = path.join(
   __dirname,
   '/fixtures/crossingBuildings.mbtiles'
 );
@@ -15,7 +15,7 @@ var commonOpts = {
 test('crossingBuildings', function(t) {
   t.plan(2);
   logInterceptor();
-  processors.crossingBuildings(commonOpts, crossingHighwaysTiles, function() {
+  processors.crossingBuildings(commonOpts, crossingBuildingsTiles, function() {
     var logs = logInterceptor.end();
     for (var i = 0; i < logs.length; i++) {
       var geoJSON = JSON.parse(logs[i]);
