@@ -37,7 +37,7 @@ module.exports = function(tileLayers, tile, writeData, done) {
   var preserveType = {};
   preserveType = _.extend(preserveType, majorRoads);
   preserveType = _.extend(preserveType, minorRoads);
-  //preserveType = _.extend(preserveType, pathRoads);
+  preserveType = _.extend(preserveType, pathRoads);
   var osmlint = 'crossinghighways';
 
   for (var i = 0; i < layer.features.length; i++) {
