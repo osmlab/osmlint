@@ -8,7 +8,7 @@ module.exports = function(tileLayers, tile, writeData, done) {
   var buildings = {};
   var bboxes = [];
   var output = {};
-  var osmlint = 'duplicatedbuildings';
+  var osmlint = 'duplicatebuildings';
   for (var i = 0; i < layer.features.length; i++) {
     var val = layer.features[i];
     val.properties._osmlint = osmlint;
@@ -32,6 +32,7 @@ module.exports = function(tileLayers, tile, writeData, done) {
         var difference = turf.difference(
           buildingA, buildingB
         );
+        //detecting buildings that have > 90% overlap
         if (difference && (areabuildingA - turf.area(difference)) > (areabuildingA * 0.9)) {
           var points = turf.explode(buildingA);
           var multiPoint = turf.combine(points).features[0];

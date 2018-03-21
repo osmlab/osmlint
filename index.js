@@ -47,5 +47,5 @@ module.exports = {
   'deprecatedConstructionProposalTag': require('./validators/deprecatedConstructionProposalTag'),
   'punctuationCharactersHighways': require('./validators/punctuationCharactersHighways'),
   'noName': require('./validators/noName'),
-  'duplicatedBuildings': require('./validators/duplicatedBuildings')
+  'duplicateBuildings': require('./validators/duplicateBuilding')
 };
