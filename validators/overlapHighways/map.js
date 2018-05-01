@@ -126,6 +126,11 @@ module.exports = function(tileLayers, tile, writeData, done) {
                 props
               );
             }
+          } else if (intersect.geometry.type === 'MultiPoint') {
+            for (l = 0; l < coordinates.length; l++) {
+              coor = coordinates[l];
+              output[coor] = turf.point(coor, props);
+            }
           } else {
             output[coordinates] = turf.point(coordinates, props);
           }
