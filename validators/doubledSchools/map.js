@@ -15,6 +15,7 @@ module.exports = function(tileLayers, tile, writeData, done) {
   var osmlint = 'doubledpoi';
   for (var i = 0; i < layer.features.length; i++) {
     var val = layer.features[i];
+    val.properties._osmlint = osmlint;
     if (
       val.properties.amenity &&
       keepFeatures[val.properties.amenity] &&
