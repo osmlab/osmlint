@@ -23,7 +23,7 @@ module.exports = function(tileLayers, tile, writeData, done) {
     residential: true,
     living_street: true,
     service: true
-//    road: true
+    //    road: true
   };
   var pathRoads = {
     pedestrian: true,
