@@ -15,3 +15,4 @@ node_modules/
 *.*~
 .nyc_output/
 temp/*
+npm-debug.log
