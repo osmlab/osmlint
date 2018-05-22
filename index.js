@@ -42,11 +42,12 @@ module.exports = {
   'invalidMotorwayJunctions': require('./validators/invalidMotorwayJunctions'),
   'missingDestination': require('./validators/missingDestination'),
   'junctionsToSplit': require('./validators/junctionsToSplit'),
-  'separatorToken': require('./validators/separatorTokenDestination'),
+  'separatorTokenDestination': require('./validators/separatorTokenDestination'),
   'duplicateWayNameRef': require('./validators/duplicateWayNameRef'),
   'deprecatedConstructionProposalTag': require('./validators/deprecatedConstructionProposalTag'),
   'punctuationCharactersHighways': require('./validators/punctuationCharactersHighways'),
   'noName': require('./validators/noName'),
-  'crossingHighwaysBridges': require('./validators/crossingHighwaysBridges')
+  'crossingHighwaysBridges': require('./validators/crossingHighwaysBridges'),
+  'missingCardinalDestination': require('./validators/missingCardinalDestination')
   
 };
