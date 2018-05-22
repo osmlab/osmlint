@@ -1,6 +1,6 @@
 {
   "name": "osmlint",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "scripts": {
     "lint": "eslint validators/**/*.js test",
     "test": "npm run lint && NODE_ENV=test tape test/*.test.js | tap-spec",
