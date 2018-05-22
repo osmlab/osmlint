@@ -15,7 +15,7 @@ test('separatorTokenDestination', function(t) {
     zoom: zoom
   };
   logInterceptor();
-  processors.separatorToken(
+  processors.separatorTokenDestination(
     separatorTokenOpts,
     separatorTokenTiles,
     function() {
@@ -49,7 +49,7 @@ test('separatorTokenDestination -- postProcess', function(t) {
     postProcess: true
   };
   logInterceptor();
-  processors.separatorToken(
+  processors.separatorTokenDestination(
     separatorTokenOpts,
     separatorTokenTiles,
     function() {
