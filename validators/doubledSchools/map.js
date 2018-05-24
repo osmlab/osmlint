@@ -22,6 +22,7 @@ module.exports = function(tileLayers, tile, writeData, done) {
       (val.geometry.type === 'Point' || val.geometry.type === 'Polygon')
     ) {
       var id = val.properties['@id'];
+      val.properties._osmlint = osmlint;
       if (val.geometry.type === 'Polygon') {
         var centroid = turf.centroid(val);
         centroid.properties = val.properties;
