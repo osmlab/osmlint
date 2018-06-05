@@ -65,10 +65,8 @@ module.exports = function(tileLayers, tile, writeData, done) {
         var fromHighway = highways[bbox.id];
         var toHighway = highways[overlap.id];
         var intersect = turf.lineIntersect(toHighway, fromHighway);
-        if (intersect && intersect.features.length > 0) {
-          if (intersect.features.length > 1) {
-            intersect = turf.combine(intersect);
-          }
+        if (intersect && intersect.features.length > 1) {
+          intersect = turf.combine(intersect);
           intersect = intersect.features[0];
           // if (intersect.geometry.type === 'LineString' || intersect.geometry.type === 'MultiLineString') {
           var coordinates = intersect.geometry.coordinates;
@@ -125,6 +123,11 @@ module.exports = function(tileLayers, tile, writeData, done) {
                 coor[coor.length - 1],
                 props
               );
+            }
+          } else if (intersect.geometry.type === 'MultiPoint') {
+            for (l = 0; l < coordinates.length; l++) {
+              coor = coordinates[l];
+              output[coor] = turf.point(coor, props);
             }
           } else {
             output[coordinates] = turf.point(coordinates, props);
