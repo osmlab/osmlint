@@ -1,10 +1,10 @@
-"use strict";
-var turf = require("@turf/turf");
-var _ = require("underscore");
-var rbush = require("rbush");
-var dedupe = require("dedupe");
+'use strict';
+var turf = require('@turf/turf');
+var _ = require('underscore');
+var rbush = require('rbush');
+var dedupe = require('dedupe');
 
-module.exports = function(tileLayers, tile, writeData, done) {
+module.exports = function (tileLayers, tile, writeData, done) {
   var layer = tileLayers.osm.osm;
   var highways = {};
   var bboxes = [];
@@ -40,19 +40,19 @@ module.exports = function(tileLayers, tile, writeData, done) {
   preserveType = _.extend(preserveType, majorRoads);
   preserveType = _.extend(preserveType, minorRoads);
   //preserveType = _.extend(preserveType, pathRoads);
-  var osmlint = "overlaphighways";
+  var osmlint = 'overlaphighways';
 
   for (var i = 0; i < layer.features.length; i++) {
     var val = layer.features[i];
     if (
       preserveType[val.properties.highway] &&
-      (val.geometry.type === "LineString" ||
-        val.geometry.type === "MultiLineString") &&
+      (val.geometry.type === 'LineString' ||
+        val.geometry.type === 'MultiLineString') &&
       val.properties.layer === undefined
     ) {
       var bboxHighway = objBbox(val);
       bboxes.push(bboxHighway);
-      highways[val.properties["@id"]] = val;
+      highways[val.properties['@id']] = val;
     }
   }
   var traceTree = rbush(bboxes.length);
@@ -75,38 +75,38 @@ module.exports = function(tileLayers, tile, writeData, done) {
           majorRoads[fromHighway.properties.highway] &&
           majorRoads[toHighway.properties.highway]
         ) {
-          type = "major-major";
+          type = 'major-major';
         } else if (
           (majorRoads[fromHighway.properties.highway] &&
             minorRoads[toHighway.properties.highway]) ||
           (minorRoads[fromHighway.properties.highway] &&
             majorRoads[toHighway.properties.highway])
         ) {
-          type = "major-minor";
+          type = 'major-minor';
         } else if (
           (majorRoads[fromHighway.properties.highway] &&
             pathRoads[toHighway.properties.highway]) ||
           (pathRoads[fromHighway.properties.highway] &&
             majorRoads[toHighway.properties.highway])
         ) {
-          type = "major-path";
+          type = 'major-path';
         } else if (
           minorRoads[fromHighway.properties.highway] &&
           minorRoads[toHighway.properties.highway]
         ) {
-          type = "minor-minor";
+          type = 'minor-minor';
         } else if (
           (minorRoads[fromHighway.properties.highway] &&
             pathRoads[toHighway.properties.highway]) ||
           (pathRoads[fromHighway.properties.highway] &&
             minorRoads[toHighway.properties.highway])
         ) {
-          type = "minor-path";
+          type = 'minor-path';
         } else if (
           pathRoads[fromHighway.properties.highway] &&
           pathRoads[toHighway.properties.highway]
         ) {
-          type = "path-path";
+          type = 'path-path';
         }
       }
     }
@@ -133,12 +133,12 @@ module.exports = function(tileLayers, tile, writeData, done) {
 };
 
 function objBbox(obj, id) {
-  var bboxExtent = ["minX", "minY", "maxX", "maxY"];
+  var bboxExtent = ['minX', 'minY', 'maxX', 'maxY'];
   var bbox = {};
   var valBbox = turf.bbox(obj);
   for (var d = 0; d < valBbox.length; d++) {
     bbox[bboxExtent[d]] = valBbox[d];
   }
-  bbox.id = id || obj.properties["@id"];
+  bbox.id = id || obj.properties['@id'];
   return bbox;
 }
