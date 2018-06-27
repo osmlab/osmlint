@@ -60,6 +60,8 @@ module.exports = function (tileLayers, tile, writeData, done) {
   var intersectItems = [];
   var itemCoordinates = [];
   var type;
+  var fromWay;
+  var toWay;
 
   for (var j = 0; j < bboxes.length; j++) {
     var bbox = bboxes[j];
@@ -67,6 +69,8 @@ module.exports = function (tileLayers, tile, writeData, done) {
     for (var k = 0; k < overlaps.length; k++) {
       var overlap = overlaps[k];
       if (bbox.id !== overlap.id) {
+        fromWay = bbox.id;
+        toWay = overlap.id;
         var fromHighway = highways[bbox.id];
         var toHighway = highways[overlap.id];
         var intersect = turf.lineOverlap(fromHighway, toHighway);
@@ -114,7 +118,9 @@ module.exports = function (tileLayers, tile, writeData, done) {
 
   var props = {
     _osmlint: osmlint,
-    _type: type
+    _type: type,
+    fromWay: fromWay,
+    toWay: toWay
   };
 
   for (var z = 0; z < intersectItems.length; z++) {
