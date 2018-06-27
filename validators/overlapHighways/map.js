@@ -2,13 +2,13 @@
 var turf = require("@turf/turf");
 var _ = require("underscore");
 var rbush = require("rbush");
-var lineOverlap = require("@turf/line-overlap");
-var _ = require("lodash");
+var dedupe = require("dedupe");
 
 module.exports = function(tileLayers, tile, writeData, done) {
   var layer = tileLayers.osm.osm;
   var highways = {};
   var bboxes = [];
+  var output = [];
   var majorRoads = {
     motorway: true,
     trunk: true,
@@ -57,10 +57,12 @@ module.exports = function(tileLayers, tile, writeData, done) {
   }
   var traceTree = rbush(bboxes.length);
   traceTree.load(bboxes);
-  var output = {};
+  var intersectItems = [];
+  var itemCoordinates = [];
+  var type;
+
   for (var j = 0; j < bboxes.length; j++) {
     var bbox = bboxes[j];
-    // var intersectCoordinates = [];
     var overlaps = traceTree.search(bbox);
     for (var k = 0; k < overlaps.length; k++) {
       var overlap = overlaps[k];
@@ -68,43 +70,66 @@ module.exports = function(tileLayers, tile, writeData, done) {
         var fromHighway = highways[bbox.id];
         var toHighway = highways[overlap.id];
         var intersect = turf.lineOverlap(fromHighway, toHighway);
-        if (intersect.features.length > 0) {
-          console.log(JSON.stringify(intersect));
+        intersectItems.push(intersect);
+        if (
+          majorRoads[fromHighway.properties.highway] &&
+          majorRoads[toHighway.properties.highway]
+        ) {
+          type = "major-major";
+        } else if (
+          (majorRoads[fromHighway.properties.highway] &&
+            minorRoads[toHighway.properties.highway]) ||
+          (minorRoads[fromHighway.properties.highway] &&
+            majorRoads[toHighway.properties.highway])
+        ) {
+          type = "major-minor";
+        } else if (
+          (majorRoads[fromHighway.properties.highway] &&
+            pathRoads[toHighway.properties.highway]) ||
+          (pathRoads[fromHighway.properties.highway] &&
+            majorRoads[toHighway.properties.highway])
+        ) {
+          type = "major-path";
+        } else if (
+          minorRoads[fromHighway.properties.highway] &&
+          minorRoads[toHighway.properties.highway]
+        ) {
+          type = "minor-minor";
+        } else if (
+          (minorRoads[fromHighway.properties.highway] &&
+            pathRoads[toHighway.properties.highway]) ||
+          (pathRoads[fromHighway.properties.highway] &&
+            minorRoads[toHighway.properties.highway])
+        ) {
+          type = "minor-path";
+        } else if (
+          pathRoads[fromHighway.properties.highway] &&
+          pathRoads[toHighway.properties.highway]
+        ) {
+          type = "path-path";
         }
-        // var initialCollection = [];
-        // initialCollection.push(intersect.features[0]);
-        // // console.log(initialCollection);
-        // if (initialCollection[0] !== undefined) {
-        //   intersectCoordinates.push(initialCollection[0].geometry.coordinates);
-        //   console.log(intersectCoordinates);
-        // }
-        // for (var z = 0; z < intersect.features.length; z++) {
-        // var uniqIntersect = _.uniq(intersect.features);
-        // var uniqueIntersect = _.uniq(intersect.features);
-        // console.log(JSON.stringify(Oneintersect));
       }
-
-      // }
-      // }
-      // if (intersect && intersect.features.length > 0) {
-      //   if (intersect.features.length > 1) {
-      //     intersect = turf.combine(intersect);
-      //     // console.log(JSON.stringify(intersect));
-      //   }
-      //   intersect = intersect.features[0];
-      //   // if (intersect.geometry.type === 'LineString' || intersect.geometry.type === 'MultiLineString') {
-      //   // var type;
-      // }
     }
   }
-  var result = _.values(output);
 
-  if (result.length > 0) {
-    var fc = turf.featureCollection(result);
-    writeData(JSON.stringify(fc) + "\n");
+  var props = {
+    _osmlint: osmlint,
+    _type: type
+  };
+
+  for (var z = 0; z < intersectItems.length; z++) {
+    if (intersectItems[z].features.length > 0) {
+      itemCoordinates.push(intersectItems[z].features[0].geometry.coordinates);
+    }
   }
 
-  done(null, null);
+  if (itemCoordinates.length > 0) {
+    var uniqItems = dedupe(itemCoordinates);
+    for (var u = 0; u < uniqItems.length; u++) {
+      output.push(turf.lineString(uniqItems[u], props));
+    }
+  }
+  done(null, output);
 };
 
 function objBbox(obj, id) {
