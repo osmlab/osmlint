@@ -119,8 +119,8 @@ module.exports = function (tileLayers, tile, writeData, done) {
   var props = {
     _osmlint: osmlint,
     _type: type,
-    fromWay: fromWay,
-    toWay: toWay
+    _fromWay: fromWay,
+    _toWay: toWay
   };
 
   for (var z = 0; z < intersectItems.length; z++) {
