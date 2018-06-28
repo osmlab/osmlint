@@ -9,14 +9,14 @@ var overlapHighwaysTiles = path.join(
   '/fixtures/overlapHighways.mbtiles'
 );
 
-test('overlapHighways', function(t) {
+test('overlapHighways', function (t) {
   t.plan(2);
   var commonOpts = {
     bbox: [-0.0878906, -0.0878906, 0, 0],
     zoom: zoom
   };
   logInterceptor();
-  processors.overlapHighways(commonOpts, overlapHighwaysTiles, function() {
+  processors.overlapHighways(commonOpts, overlapHighwaysTiles, function () {
     var logs = logInterceptor.end();
     for (var i = 0; i < logs.length; i++) {
       var geoJSON = JSON.parse(logs[i]);
@@ -27,14 +27,14 @@ test('overlapHighways', function(t) {
           'overlaphighways',
           'Should be overlaphighways'
         );
-        t.equal(geoJSON.features[0].geometry.type, 'Point', 'Should be Point');
+        t.equal(geoJSON.features[0].geometry.type, 'LineString', 'Should be LineString');
       }
     }
     t.end();
   });
 });
 
-test('overlapHighways -- postProcess', function(t) {
+test('overlapHighways -- postProcess', function (t) {
   t.plan(2);
   var commonOpts = {
     bbox: [-0.0878906, -0.0878906, 0, 0],
@@ -42,7 +42,7 @@ test('overlapHighways -- postProcess', function(t) {
     postProcess: true
   };
   logInterceptor();
-  processors.overlapHighways(commonOpts, overlapHighwaysTiles, function() {
+  processors.overlapHighways(commonOpts, overlapHighwaysTiles, function () {
     var logs = logInterceptor.end();
     for (var i = 0; i < logs.length; i++) {
       var geoJSON = JSON.parse(logs[i]);
@@ -53,7 +53,7 @@ test('overlapHighways -- postProcess', function(t) {
           'overlaphighways',
           'Should be overlaphighways'
         );
-        t.equal(geoJSON.features[0].geometry.type, 'MultiPoint', 'Should be MultiPoint');
+        t.equal(geoJSON.features[0].geometry.type, 'LineString', 'Should be LineString');
       }
     }
     t.end();
