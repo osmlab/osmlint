@@ -60,8 +60,9 @@ module.exports = function (tileLayers, tile, writeData, done) {
   var intersectItems = [];
   var itemCoordinates = [];
   var type;
-  var fromWay;
-  var toWay;
+  var fromID;
+  var toID;
+
 
   for (var j = 0; j < bboxes.length; j++) {
     var bbox = bboxes[j];
@@ -69,48 +70,54 @@ module.exports = function (tileLayers, tile, writeData, done) {
     for (var k = 0; k < overlaps.length; k++) {
       var overlap = overlaps[k];
       if (bbox.id !== overlap.id) {
-        fromWay = bbox.id;
-        toWay = overlap.id;
+        // fromWay = bbox.id;
+        // toWay = overlap.id;
         var fromHighway = highways[bbox.id];
         var toHighway = highways[overlap.id];
         var intersect = turf.lineOverlap(fromHighway, toHighway);
-        intersectItems.push(intersect);
-        if (
-          majorRoads[fromHighway.properties.highway] &&
-          majorRoads[toHighway.properties.highway]
-        ) {
-          type = 'major-major';
-        } else if (
-          (majorRoads[fromHighway.properties.highway] &&
-            minorRoads[toHighway.properties.highway]) ||
-          (minorRoads[fromHighway.properties.highway] &&
-            majorRoads[toHighway.properties.highway])
-        ) {
-          type = 'major-minor';
-        } else if (
-          (majorRoads[fromHighway.properties.highway] &&
-            pathRoads[toHighway.properties.highway]) ||
-          (pathRoads[fromHighway.properties.highway] &&
-            majorRoads[toHighway.properties.highway])
-        ) {
-          type = 'major-path';
-        } else if (
-          minorRoads[fromHighway.properties.highway] &&
-          minorRoads[toHighway.properties.highway]
-        ) {
-          type = 'minor-minor';
-        } else if (
-          (minorRoads[fromHighway.properties.highway] &&
-            pathRoads[toHighway.properties.highway]) ||
-          (pathRoads[fromHighway.properties.highway] &&
-            minorRoads[toHighway.properties.highway])
-        ) {
-          type = 'minor-path';
-        } else if (
-          pathRoads[fromHighway.properties.highway] &&
-          pathRoads[toHighway.properties.highway]
-        ) {
-          type = 'path-path';
+        if (intersect && intersect.features.length > 0) {
+          if (
+            majorRoads[fromHighway.properties.highway] &&
+            majorRoads[toHighway.properties.highway]
+          ) {
+            type = 'major-major';
+          } else if (
+            (majorRoads[fromHighway.properties.highway] &&
+              minorRoads[toHighway.properties.highway]) ||
+            (minorRoads[fromHighway.properties.highway] &&
+              majorRoads[toHighway.properties.highway])
+          ) {
+            type = 'major-minor';
+          } else if (
+            (majorRoads[fromHighway.properties.highway] &&
+              pathRoads[toHighway.properties.highway]) ||
+            (pathRoads[fromHighway.properties.highway] &&
+              majorRoads[toHighway.properties.highway])
+          ) {
+            type = 'major-path';
+          } else if (
+            minorRoads[fromHighway.properties.highway] &&
+            minorRoads[toHighway.properties.highway]
+          ) {
+            type = 'minor-minor';
+          } else if (
+            (minorRoads[fromHighway.properties.highway] &&
+              pathRoads[toHighway.properties.highway]) ||
+            (pathRoads[fromHighway.properties.highway] &&
+              minorRoads[toHighway.properties.highway])
+          ) {
+            type = 'minor-path';
+          } else if (
+            pathRoads[fromHighway.properties.highway] &&
+            pathRoads[toHighway.properties.highway]
+          ) {
+            type = 'path-path';
+          }
+          // console.log("fromHighway", JSON.stringify(fromHighway));
+          // console.log("toHighway", JSON.stringify(toHighway));
+          fromID = fromHighway.properties['@id'];
+          toID = toHighway.properties['@id'];
+          intersectItems.push(intersect);
         }
       }
     }
@@ -119,8 +126,8 @@ module.exports = function (tileLayers, tile, writeData, done) {
   var props = {
     _osmlint: osmlint,
     _type: type,
-    _fromWay: fromWay,
-    _toWay: toWay
+    _fromWay: fromID,
+    _toWay: toID
   };
 
   for (var z = 0; z < intersectItems.length; z++) {
@@ -132,6 +139,7 @@ module.exports = function (tileLayers, tile, writeData, done) {
   if (itemCoordinates.length > 0) {
     var uniqItems = dedupe(itemCoordinates);
     for (var u = 0; u < uniqItems.length; u++) {
+      // console.log(JSON.stringify(turf.lineString(uniqItems[u], props)));
       output.push(turf.lineString(uniqItems[u], props));
     }
   }
