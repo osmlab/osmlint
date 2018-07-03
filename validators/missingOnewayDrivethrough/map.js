@@ -1,7 +1,7 @@
 'use strict';
 var turf = require('@turf/turf');
 
-// Find highway=service;  service=drive-through without  oneway=yes.
+//Find highway=service; service=drive-through without oneway=yes.
 //https://wiki.openstreetmap.org/wiki/Tag:service%3Ddrive-through
 
 module.exports = function(tileLayers, tile, writeData, done) {
