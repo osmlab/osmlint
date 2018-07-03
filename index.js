@@ -48,6 +48,7 @@ module.exports = {
   'punctuationCharactersHighways': require('./validators/punctuationCharactersHighways'),
   'noName': require('./validators/noName'),
   'crossingHighwaysBridges': require('./validators/crossingHighwaysBridges'),
-  'missingCardinalDestination': require('./validators/missingCardinalDestination')
+  'missingCardinalDestination': require('./validators/missingCardinalDestination'),
+  'missingOnewayDrivethrough': require('./validators/missingOnewayDrivethrough')  
   
 };
